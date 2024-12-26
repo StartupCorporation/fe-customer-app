@@ -1,0 +1,22 @@
+.button {
+    display: block;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    padding: 15px 25px;
+    border-radius: 30px;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+
+    &--primary {
+        background-color: #0a218a;
+    }
+
+    &--secondary {
+        background-color: transparent;
+        border: 1px solid #31418b;
+        color: #31418b;
+    }
+}

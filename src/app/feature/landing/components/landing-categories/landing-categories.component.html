@@ -1,3 +1,32 @@
-<p>
-  landing-categories works!
-</p>
+<!-- categories.component.html -->
+<div class="categories">
+  <div class="categories__title">Категорії товарів</div>
+  <div class="categories__wrapper">
+    <div class="categories__item" 
+         *ngFor="let category of categories"
+         [class.is-flipped]="isFlipped(category.id)"
+         (click)="isFlipped(category.id) && toggleCard(category.id)">
+      <div class="categories__item-inner">
+        <!-- Front side -->
+        <div class="categories__front">
+          <button class="categories__info-btn" 
+                  (click)="toggleCard(category.id); $event.stopPropagation()">
+            i
+          </button>
+          <div class="categories__image-wrap">
+            <img [src]="category.imageLink" 
+                 [alt]="category.name" 
+                 class="categories__icon">
+          </div>
+          <div class="categories__label">{{ category.name }}</div>
+        </div>
+        <!-- Back side -->
+        <div class="categories__back">
+          <p>{{ category.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

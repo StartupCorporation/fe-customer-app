@@ -1,0 +1,42 @@
+.navbar {
+    display: flex;
+    justify-content: space-between; 
+    margin: 0 50px;
+ 
+    &__links {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 30%;
+    }
+ 
+    &__link {
+        font-size: 16px;
+        color: #595959;
+    }
+ 
+    &__logo {
+        position: relative;
+        display: block;
+        width: auto;
+        height: 70px;
+    }
+
+    &__contact {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    
+        & > .navbar__phone {
+          text-decoration: none;
+          color: #31418B;
+          font-weight: 600;
+          font-size: 20px;
+          transition: color 0.3s;
+    
+          &:hover {
+            color: #31418b;
+          }
+        }
+    }
+ }
