@@ -202,8 +202,13 @@
     &__categories,
     &__advantages,
     &__contacts,
-    &__consulting {
+    &__consulting,
+    &__footer {
       margin-top: 80px;
+    }
+
+    &__footer {
+      margin-bottom: 60px;
     }
   }
 }
