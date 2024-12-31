@@ -1,20 +1,19 @@
 .footer {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
+    justify-content: center;
 
     &__nav {
         display: flex;
-        gap: 2rem;
-        width: 33%;
+
+        width: 30%;
 
         &-link {
             font-family: $font-montserrat, sans-serif;
             font-weight: 400;
             color: $white;
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 16px;
             transition: color 0.3s ease-in-out;
             cursor: pointer;
 
@@ -23,29 +22,45 @@
                 text-decoration: underline;
             }
         }
+
+        :not(:first-child){
+            margin-left: 45px;
+        }
     }
 
     &__logo {
-        text-align: center;
-        width: 33%;
+        display: flex;
+        justify-content: center;
+        margin: 0 100px;
+
         &-image {
             border-radius: 5px;
             max-height: 50px;
-            width: auto;
+            max-width: 100px;
+        }
+
+        &-wrapper {
+            text-align: center;
+            background-color: $white;
+            width: 123px;
+            padding: 10px;
+            border-radius: 10px;
         }
     }
     &__contacts {
         display: flex;
-
+        width: 30%;
         align-items: center;
-        justify-content: space-around;
-        width: 33%;
 
         .footer__phone {
             color: $white;
             font-size: 16px;
             font-family: $font-montserrat, sans-serif;
             font-weight: 400;
+        }
+
+        :not(:last-child){
+            margin-right: 45px;
         }
     }
 }
