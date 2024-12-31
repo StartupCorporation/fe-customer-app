@@ -1,6 +1,5 @@
-<!-- categories.component.html -->
 <div class="categories">
-  <div class="categories__title">Категорії товарів</div>
+  <h2 class="categories__title">Категорії товарів</h2>
   <div class="categories__wrapper">
     <div class="categories__item" 
          *ngFor="let category of categories"
@@ -14,7 +13,7 @@
             i
           </button>
           <div class="categories__image-wrap">
-            <img [src]="category.imageLink" 
+            <img [src]="category.image" 
                  [alt]="category.name" 
                  class="categories__icon">
           </div>

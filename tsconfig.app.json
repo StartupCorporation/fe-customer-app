@@ -8,7 +8,6 @@
       "node"
     ],
     "paths": {
-      "@env": ["environments/environment/*"],
       "@shared/*": ["app/shared/*"],
       "@core/*": ["app/core/*"],
       "@features/*": ["app/features/*"],

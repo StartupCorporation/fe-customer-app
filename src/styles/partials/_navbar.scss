@@ -1,42 +1,72 @@
 .navbar {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     margin: 0 50px;
- 
+
     &__links {
+        width: 33%;
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
         align-items: center;
         width: 30%;
     }
- 
+
     &__link {
         font-size: 16px;
-        color: #595959;
+        color: $light-purple;
+        cursor: pointer;
     }
- 
+
     &__logo {
         position: relative;
         display: block;
         width: auto;
         height: 70px;
+
+        &-wrapper {
+            width: 33%;
+        }
     }
 
     &__contact {
+        width: 33%;
         display: flex;
         align-items: center;
-        gap: 15px;
-    
+        justify-content: end;
+
         & > .navbar__phone {
-          text-decoration: none;
-          color: #31418B;
-          font-weight: 600;
-          font-size: 20px;
-          transition: color 0.3s;
-    
-          &:hover {
-            color: #31418b;
-          }
+            text-decoration: none;
+            color: $blue;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s;
+
+            &:hover {
+                color: $blue;
+            }
         }
     }
- }
+
+    @media (max-width: $breakpoint-xl) {
+        .navbar__phone,&__link {
+            font-size: 14px;
+        }
+
+        &__logo {
+            height: 60px;
+        }
+
+    }
+
+    @media (max-width: $breakpoint-lg) {
+        .navbar__phone,&__link {
+            font-size: 12px;
+        }
+
+        &__logo {
+            height: 50px;
+        }
+
+
+    }
+}

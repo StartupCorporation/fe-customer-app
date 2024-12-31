@@ -11,17 +11,27 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   &__title {
     font-size: 48px;
-    color: #0a218a;
+    color: $blue;
+    font-family: $font-montserrat, sans-serif;
     font-weight: 700;
+    max-width: 520px;
   }
 
   &__subtitle {
-    font-size: 24px;
-    margin-top: 10px;
+    font-size: 20px;
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 400;
+    color: $light-purple;
+    margin-top: 16px;
+    max-width: 400px;
   }
 
   &__images {
@@ -33,7 +43,7 @@
   &__image {
     width: 40%;
     height: auto;
-    transform: translate(-70%);
+    transform: translate(-60%);
     position: relative;
     z-index: 1;
 
@@ -41,41 +51,123 @@
       width: 40%;
       height: auto;
       position: relative;
-      transform: translateX(70%) scaleX(-1);
+      transform: translateX(60%) scaleX(-1);
       z-index: 1;
+    }
+  }
+
+  @media (max-width: $breakpoint-xl) {
+    &__title {
+      font-size: 42px;
+      max-width: 450px;
+    }
+
+    &__subtitle {
+      font-size: 16px;
+      max-width: 300px;
+    }
+  }
+
+  @media (max-width: $breakpoint-lg) {
+    &__title {
+      font-size: 36px;
+    }
+
+    &__subtitle {
+      font-size: 14px;
+      max-width: 280px;
     }
   }
 
   /* Promo and Testimonial */
   .promo,
   .testimonial {
-    margin: 20px auto;
-    border: 1px solid #31418b;
-    background-color: #fff;
-    border-radius: 20px;
-    padding: 15px 20px;
-    text-align: center;
-    color: #31418b;
-    font-size: 24px;
-    max-width: 400px;
     position: absolute;
+    border: 1px solid $blue;
+    background-color: #fff;
+    padding: 15px;
+    text-align: center;
+    color: $blue;
     z-index: 50;
-    top: 75%;
-  }
-
-  .promo {
-    left: 70%;
+    top: 69%;
+    font-family: "Open Sans";
+    font-size: 20px;
+    font-weight: 400;
     text-align: left;
   }
 
+  .promo {
+    max-width: 303px;
+    right: 6%;
+    text-align: left;
+    border-radius: 20px 20px 0px 20px;
+  }
+
   .testimonial {
-    left: 10%;
+    max-width: 270px;
+    left: 6%;
+    border-radius: 20px 20px 20px 0px;
+  }
+
+  @media (max-width: $breakpoint-xxl) {
+    .promo,
+    .testimonial {
+      font-size: 18px;
+      top: 72%;
+    }
+
+    .landing-page__container {
+      height: 100px;
+    }
+  }
+
+  @media (max-width: $breakpoint-xl) {
+    .promo,
+    .testimonial {
+      font-size: 16px;
+      top: 82%;
+    }
+
+    .promo {
+      width: 250px;
+      border-radius: 20px 0px 20px 20px;
+    }
+
+    .testimonial {
+      width: 240px;
+      border-radius: 0px 20px 20px 20px;
+    }
+  }
+
+  @media (max-width: $breakpoint-lg) {
+    .promo,
+    .testimonial {
+      font-size: 12px;
+      top: 86%;
+      padding: 10px;
+    }
+
+    .promo {
+      width: 190px;
+      border-radius: 15px 0px 15px 15px;
+    }
+
+    .testimonial {
+      width: 200px;
+      border-radius: 0px 15px 15px 15px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .promo,
+    .testimonial {
+      display: none;
+    }
   }
 }
 
 .landing {
   &-page {
-    padding-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -84,9 +176,8 @@
     overflow: hidden; // Prevent horizontal scrolling
 
     &__container {
-      background-color: #ffffff;
       border-radius: 30px;
-      width: 90%;
+      max-width: $breakpoint-xxl;
       padding: 20px;
       position: relative;
     }
@@ -108,128 +199,15 @@
       }
     }
 
-    &__categories {
-      margin-top: 50px;
-    }
-  }
-}
-// categories.component.scss
-.categories {
-  margin: 0 auto;
-  width: 90%;
-
-  &__wrapper {
-    display: flex;
-    align-items: center;
-    padding: 0 60px;
-  }
-
-  &__title {
-    font-size: 40px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #ffffff;
-  }
-
-  &__item {
-    width: 400px; // Set fixed width to match the cards
-    height: 520px;
-    position: relative;
-    perspective: 1000px;
-    margin: 10px;
-    
-    &.is-flipped .categories__item-inner {
-      transform: rotateY(180deg);
-    }
-  }
-
-  &__item-inner {
-    position: relative;
-    width: 400px; // Match the width of front/back
-    height: 100%;
-    text-align: center;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
-    margin: 0 auto; // Center the inner container
-    transition: transform 0.5s ease, box-shadow 0.3s ease;
-    &:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    }
-  }
-
-  &__front,
-  &__back {
-    position: absolute;
-    width: 400px;
-    height: 100%;
-    left: 50%; // Center the card
-    transform-origin: center; // Set rotation origin to center
-    transform: translateX(-50%); // Offset the left: 50%
-    backface-visibility: hidden;
-    background-color: #ffffff;
-    border-radius: 30px;
-    padding: 20px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  }
-
-  &__back {
-    transform: translateX(-50%) rotateY(180deg); // Combine transforms
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    color: #31418b;
-    font-size: 16px;
-  }
-
-  &__image-wrap {
-    height: 90%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  &__icon {
-    width: 100%;
-    height: auto;
-    border-radius: 30px;
-  }
-
-  &__label {
-    height: 10%;
-    margin-top: 10px;
-    font-size: 20px;
-    color: #31418b;
-    font-weight: 700;
-  }
-
-  &__info-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 2px solid #31418b;
-    background: none;
-    color: #31418b;
-    font-style: italic;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 2;
-
-    &:hover {
-      background-color: #31418b;
-      color: #ffffff;
+    &__categories,
+    &__advantages,
+    &__contacts,
+    &__consulting {
+      margin-top: 80px;
     }
   }
 }
 
-
-/* Header Section */
 .page__container {
   background-color: #ffffff;
   border-radius: 30px;

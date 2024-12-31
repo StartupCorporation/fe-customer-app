@@ -1,9 +1,7 @@
-// landing-categories.component.ts
 import { Component, OnInit, Inject } from '@angular/core';
 import { CategoryModel } from '../../../products/models/category-model';
 import { NgFor } from '@angular/common';
 import { CategoryRepository } from '../../../products/repositories/category-repository';
-import { environment } from 'src/environments/environment';
 import { CategoryMockService } from '../../../products/services/mocks/category-mock.service';
 import { CategoryService } from '../../../products/services/category.service';
 

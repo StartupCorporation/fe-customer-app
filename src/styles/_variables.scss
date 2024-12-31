@@ -1,32 +1,22 @@
 /*        COLORS        */
 /* -------------------- */
-$primary: #1e2828;
-$secondary: #3d5151;
-$tertiary: #608080;
-$quaternary: #333333;
-$quinary: #55646e;
-$senary: #86a0ac;
-$septenary: #2878a0;
-$octonary: #55646e;
-$nonary: #e53c14;
-$grey-dark: #dddde3;
-$grey-medium: #e9e9ed;
 $grey-light: #f9f9fa;
 $black: #000000;
 $white: #ffffff;
-$success: #069d54;
-$warning: #ffcb47;
-$danger: #dc2e3f;
-$partial:#c06d00;
-$closed:#8a1b26;
+$light-purple: #8d8ba7;
+$blue:#0A218A;
+
+:root {
+    --grey-light: #{$grey-light};
+    --black: #{$black};
+    --white: #{$white};
+    --light-purple: #{$light-purple};
+    --blue: #{$blue};
+  }
 /*      TYPOGRAPHY      */
 /* -------------------- */
-$font-thin: "Roboto Thin";
-$font-light: "Roboto Light";
-$font-regular: "Roboto Regular";
-$font-medium: "Roboto Medium";
-$font-bold: "Roboto Bold";
-$font-black: "Roboto Black";
+$font-montserrat: "Montserrat";
+
 $h1-size: 2.5rem;
 $h2-size: 2rem;
 $h3-size: 1.75rem;

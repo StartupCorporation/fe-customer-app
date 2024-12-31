@@ -4,11 +4,11 @@ export class CategoryModel{
         public id = 0,
         public name = '',
         public description = '',
-        public imageLink = ''
+        public image = ''
     ){}
 
     public static fromJson(json: any): CategoryModel {
-        return new CategoryModel(json.id, json.name, json.description, json.imageLink);
+        return new CategoryModel(json.id, json.name, json.description, json.image);
       }
     
       public static fromArrayJson(json: any[]): CategoryModel[] {
@@ -20,7 +20,7 @@ export class CategoryModel{
           id: this.id,
           name: this.name,
           description: this.description,
-          imageLink: this.imageLink
+          image: this.image
         };
       }
 }

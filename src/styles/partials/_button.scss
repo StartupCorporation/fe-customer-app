@@ -1,22 +1,42 @@
 .button {
-    display: block;
-    position: relative;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
-    height: 60px;
-    padding: 15px 25px;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: $white;
+    background-color: $blue;
     border-radius: 30px;
-    font-size: 18px;
-    color: white;
     cursor: pointer;
-
+    min-width: 120px;
+    max-width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.3s ease-in-out;
+  
     &--primary {
-        background-color: #0a218a;
+      background-color: $blue;
     }
-
-    &--secondary {
-        background-color: transparent;
-        border: 1px solid #31418b;
-        color: #31418b;
-    }
+  
+    &--header {
+      margin-top: 40px;
+  }
 }
+  
+  @media (max-width: 768px) {
+    .button {
+      font-size: 14px;
+      padding: 8px 16px;
+    }
+  
+    .headline__title {
+      font-size: 36px;
+    }
+  
+    .headline__subtitle {
+      font-size: 18px; 
+    }
+  }
+  

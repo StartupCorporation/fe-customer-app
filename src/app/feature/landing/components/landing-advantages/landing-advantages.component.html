@@ -1,3 +1,10 @@
-<p>
-  landing-advantages works!
-</p>
+<div class="advantages">
+  <h2>Наші переваги</h2>
+  <div class="advantages-grid">
+    <div class="advantage-item" *ngFor="let advantage of advantages">
+      <app-svg-icon icon="{{advantage.icon}}" size="30"></app-svg-icon>      
+      <h3>{{ advantage.title }}</h3>
+      <p>{{ advantage.description }}</p>
+    </div>
+  </div>
+</div>

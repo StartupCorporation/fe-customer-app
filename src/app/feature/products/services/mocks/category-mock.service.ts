@@ -1,4 +1,3 @@
-// category-mock.service.ts
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { CategoryModel } from '../../../products/models/category-model';
@@ -12,21 +11,27 @@ export class CategoryMockService implements CategoryRepository {
     {
       id: 1,
       name: 'Інвертори',
-      imageLink: '/assets/category-1-Photoroom.png',
+      image: '/assets/images/category-1-Photoroom.png',
       description: 'I Love KIRILL'
     } as CategoryModel,
     {
       id: 2,
       name: 'Акумулятори',
-      imageLink: '/assets/category-2-Photoroom.png',
+      image: '/assets/images/category-2-Photoroom.png',
       description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore vero quisquam magni delectus, voluptatem quia aliquam praesentium accusantium aperiam dicta totam consectetur iusto doloremque laboriosam, nisi, suscipit eaque. Ab, dolores.'
     }as CategoryModel,
     {
-      id: 3,
+      id: 6,
+      name: 'Акумулятори',
+      image: '/assets/images/category-2-Photoroom.png',
+      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore vero quisquam magni delectus, voluptatem quia aliquam praesentium accusantium aperiam dicta totam consectetur iusto doloremque laboriosam, nisi, suscipit eaque. Ab, dolores.'
+    }as CategoryModel,
+    {
+      id: 9,
       name: 'Блок управління',
-      imageLink: '/assets/category-3-Photoroom.png',
+      image: '/assets/images/category-3-Photoroom.png',
       description: 'Description for control units...'
-    } as CategoryModel
+    } as CategoryModel,
   ];
 
   getCategories(): Observable<CategoryModel[]> {
