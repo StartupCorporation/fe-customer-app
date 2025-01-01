@@ -21,12 +21,6 @@ export class CategoryMockService implements CategoryRepository {
       description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore vero quisquam magni delectus, voluptatem quia aliquam praesentium accusantium aperiam dicta totam consectetur iusto doloremque laboriosam, nisi, suscipit eaque. Ab, dolores.'
     }as CategoryModel,
     {
-      id: 6,
-      name: 'Акумулятори',
-      image: '/assets/images/category-2-Photoroom.png',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore vero quisquam magni delectus, voluptatem quia aliquam praesentium accusantium aperiam dicta totam consectetur iusto doloremque laboriosam, nisi, suscipit eaque. Ab, dolores.'
-    }as CategoryModel,
-    {
       id: 9,
       name: 'Блок управління',
       image: '/assets/images/category-3-Photoroom.png',
