@@ -21,6 +21,7 @@
     font-family: $font-montserrat, sans-serif;
     font-weight: 700;
     max-width: 520px;
+    line-height: normal;
   }
 
   &__subtitle {
@@ -30,6 +31,7 @@
     font-weight: 400;
     color: $light-purple;
     margin-top: 16px;
+    line-height: normal;
     max-width: 400px;
   }
 
@@ -84,26 +86,25 @@
     position: absolute;
     border: 1px solid $blue;
     background-color: #fff;
-    padding: 15px;
+    padding: 12px;
     text-align: center;
     color: $blue;
     z-index: 50;
-    top: 72%;
+    top: 71%;
     font-family: "Open Sans";
     font-size: 20px;
     font-weight: 400;
     text-align: left;
+    line-height: normal;
   }
 
   .promo {
-    max-width: 303px;
     right: 6%;
     text-align: left;
     border-radius: 20px 20px 0px 20px;
   }
 
   .testimonial {
-    max-width: 280px;
     left: 6%;
     border-radius: 20px 20px 20px 0px;
   }
@@ -128,12 +129,10 @@
     }
 
     .promo {
-      width: 250px;
       border-radius: 20px 0px 20px 20px;
     }
 
     .testimonial {
-      width: 240px;
       border-radius: 0px 20px 20px 20px;
     }
   }
@@ -147,12 +146,10 @@
     }
 
     .promo {
-      width: 190px;
       border-radius: 15px 0px 15px 15px;
     }
 
     .testimonial {
-      width: 200px;
       border-radius: 0px 15px 15px 15px;
     }
   }
@@ -210,6 +207,10 @@
       margin-bottom: 60px;
     }
   }
+}
+
+.window__navbar {
+  margin-top: 15px;
 }
 
 .page__container {

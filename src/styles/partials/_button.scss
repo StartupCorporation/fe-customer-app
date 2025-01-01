@@ -4,7 +4,7 @@
     align-items: center;
     padding: 15px 20px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     color: $white;
     background-color: $blue;
     border-radius: 30px;
@@ -14,6 +14,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-family: $font-montserrat, sans-serif;
     transition: all 0.3s ease-in-out;
   
     &--primary {
