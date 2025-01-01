@@ -1,43 +1,46 @@
 .button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    padding: 15px 20px;
-    font-size: 16px;
-    font-weight: 700;
-    color: $white;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  color: $white;
+  background-color: $blue;
+  border-radius: 30px;
+  cursor: pointer;
+  min-width: 120px;
+  max-width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: $font-montserrat, sans-serif;
+  transition: all 0.3s ease-in-out;
+
+  &--primary {
     background-color: $blue;
-    border-radius: 30px;
-    cursor: pointer;
-    min-width: 120px;
-    max-width: 90%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-family: $font-montserrat, sans-serif;
-    transition: all 0.3s ease-in-out;
-  
-    &--primary {
-      background-color: $blue;
-    }
-  
-    &--header {
-      margin-top: 40px;
+  }
+
+  &--header {
+    margin-top: 40px;
+  }
+
+  &--long {
+    width: 320px;
   }
 }
-  
-  @media (max-width: 768px) {
-    .button {
-      font-size: 14px;
-      padding: 8px 16px;
-    }
-  
-    .headline__title {
-      font-size: 36px;
-    }
-  
-    .headline__subtitle {
-      font-size: 18px; 
-    }
+
+@media (max-width: 768px) {
+  .button {
+    font-size: 14px;
+    padding: 8px 16px;
   }
-  
+
+  .headline__title {
+    font-size: 36px;
+  }
+
+  .headline__subtitle {
+    font-size: 18px;
+  }
+}

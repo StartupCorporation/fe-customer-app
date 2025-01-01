@@ -1,9 +1,9 @@
 .contact-form-container {
     background-color: $white;
     border-radius: 20px;
-    padding: 2rem;
+    padding: 80px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
 
     h2 {
         color: $blue;
@@ -17,20 +17,22 @@
 
     p {
         text-align: center;
-        color: #9795B5;
-        margin-bottom: 2rem;
-        line-height: 1.5;
+        color: #9795b5;
+        line-height: 30px;
+        margin-top: 10px;
     }
 
     form {
         display: flex;
         flex-direction: column;
         align-items: center;
+        margin-top: 50px;
     }
+
     .form-row {
         display: flex;
         flex-direction: row;
-        gap: 1rem;
+        gap: 54px;
         margin-bottom: 1rem;
 
         .input-group {
@@ -39,15 +41,34 @@
             flex-direction: column;
 
             input {
-                padding: 0.75rem;
+                padding: 0.75rem 25px;
+                width: 375px;
+                height: 52px;
                 border-radius: 10px;
-                font-size: 1rem;
                 outline: none;
                 border-radius: 8px;
-                border: 1px solid #8D8BA7;
-                background: #F9F9FF;
+                font-family: $font-dm, sans-serif;
+                border: 1px solid #8d8ba7;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 18px;
+                color: #8d8ba7;
+                font-feature-settings: "liga" off, "clig" off;
+
+                background: #f9f9ff;
                 &:focus {
                     border-color: #2f3983;
+                }
+
+                &::placeholder {
+                    color: #8d8ba7;
+                    opacity: 1; /* Firefox */
+                }
+
+                &::-ms-input-placeholder {
+                    /* Edge 12 -18 */
+                    color: #8d8ba7;
                 }
             }
 
@@ -63,39 +84,24 @@
         margin-bottom: 1.5rem;
         display: flex;
         align-items: center;
+        margin-top: 20px;
 
         input[type="checkbox"] {
             width: 20px;
             height: 20px;
-            margin-right: 0.5rem;
+            margin-right: 10px;
             cursor: pointer;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 18px;
         }
 
         label {
             font-size: 1rem;
-            color: #8D8BA7;
+            font-weight: 400;
+            color: #8d8ba7;
             cursor: pointer;
         }
-    }
-
-    button[type="submit"] {
-        background-color: #2f3983;
-        color: #fff;
-        padding: 0.75rem 2rem;
-        font-size: 1rem;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-
-        &:hover {
-            background-color: darken(#2f3983, 10%);
-        }
-
-        &:disabled {
-            background-color: lighten(#2f3983, 30%); 
-            cursor: not-allowed;
-            opacity: 0.8;
-          }
     }
 }
