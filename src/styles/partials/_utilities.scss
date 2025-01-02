@@ -1,0 +1,38 @@
+.container {
+  max-width: 1628px;
+  padding: 0 1rem;
+  margin: 0 auto;
+}
+
+/* Position */
+.relative {
+  position: relative;
+}
+
+/* Visibility */
+.hidden {
+  display: none;
+}
+
+/* Typography */
+.word-break {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Cursor */
+.cursor-pointer {
+  cursor: pointer;
+}

@@ -1,0 +1,58 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter";
+}
+
+body {
+  background-color: $grey-light;
+  font-size: 1rem;
+}
+
+button {
+  outline: none;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.container_s {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.welcome-page {
+  background-color: #1a1a1a;
+  min-height: 100vh;
+}
+
+.hidden {
+  display: none;
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+html,
+body {
+  overflow: scroll; /* Enables scrolling */
+  scrollbar-width: none; /* For Firefox */
+}
+
+/* For Webkit Browsers (Chrome, Safari, Edge) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}

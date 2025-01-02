@@ -1,0 +1,30 @@
+<footer class="footer">
+
+  <nav class="footer__nav" aria-label="Footer Navigation">
+    <a
+      class="footer__nav-link"
+      *ngFor="let link of footerLinks"
+    >
+      {{ link.label }}
+    </a>
+  </nav>
+
+  <div class="footer__logo">
+    <div class="footer__logo-wrapper">
+      <img
+      [src]="logoSrc"
+      [alt]="logoAlt"
+      class="footer__logo-image"
+    />
+    </div>
+  </div>
+
+  <div class="footer__contacts">
+    <span
+      class="footer__phone"
+      *ngFor="let phone of phoneNumbers"
+    >
+      {{ phone }}
+    </span>
+  </div>
+</footer>

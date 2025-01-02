@@ -1,0 +1,77 @@
+<div class="contact-form-container">
+  <h2>Зв’яжіться з нами</h2>
+  <p>
+    Ми наберемо Вас найближчим часом, а також можемо <br>
+    по Вашому бажанню написати в інші месенджери.
+  </p>
+
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+      <!-- Name Field -->
+      <div class="input-group">
+        <input
+          type="text"
+          placeholder="*Ім’я"
+          formControlName="name"
+        />
+        <!-- Error if name is touched but invalid -->
+        <div
+          class="error-message"
+          *ngIf="contactForm.get('name')?.touched && contactForm.get('name')?.invalid"
+        >
+          Введіть Ім’я
+        </div>
+      </div>
+
+      <!-- Phone Field -->
+      <div class="input-group">
+        <input
+          type="text"
+          placeholder="*(380) 99 909 00 99"
+          formControlName="phone"
+        />
+        <!-- Error if phone is touched but invalid -->
+        <div
+          class="error-message"
+          *ngIf="contactForm.get('phone')?.touched && contactForm.get('phone')?.invalid"
+        >
+          Введіть номер телефону
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="input-group">
+        <input
+          type="email"
+          placeholder="Email"
+          formControlName="email"
+        />
+      </div>
+
+      <div class="input-group">
+        <input
+          type="text"
+          placeholder="Ваш коментарій"
+          formControlName="comment"
+        />
+      </div>
+    </div>
+
+    <div class="form-checkbox">
+      <input
+        type="checkbox"
+        id="contactByMessenger"
+        formControlName="contactByMessenger"
+      />
+      <label for="contactByMessenger">
+        Зв’яжіться зі мною у Telegram або Viber
+      </label>
+    </div>
+
+    <button type="submit"
+    class="button button--long"
+    [disabled]="!contactForm.valid"
+    >Замовити</button>
+  </form>
+</div>
