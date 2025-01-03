@@ -11,7 +11,7 @@
       <div class="input-group">
         <input
           type="text"
-          placeholder="*Ім’я"
+          placeholder="Ім’я*"
           formControlName="name"
         />
         <!-- Error if name is touched but invalid -->
@@ -27,7 +27,7 @@
       <div class="input-group">
         <input
           type="text"
-          placeholder="*(380) 99 909 00 99"
+          placeholder="(380) 99 909 00 99*"
           formControlName="phone"
         />
         <!-- Error if phone is touched but invalid -->
@@ -59,15 +59,17 @@
     </div>
 
     <div class="form-checkbox">
-      <input
-        type="checkbox"
-        id="contactByMessenger"
-        formControlName="contactByMessenger"
-      />
-      <label for="contactByMessenger">
+      <label class="container">
         Зв’яжіться зі мною у Telegram або Viber
+        <input
+          type="checkbox"
+          id="contactByMessenger"
+          formControlName="contactByMessenger"
+        />
+        <span class="checkmark"></span>
       </label>
     </div>
+    
 
     <button type="submit"
     class="button button--long"
