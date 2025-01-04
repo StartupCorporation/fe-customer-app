@@ -4,6 +4,7 @@
     <a
       class="footer__nav-link"
       *ngFor="let link of footerLinks"
+      (click)="scrollTo(link.url)"
     >
       {{ link.label }}
     </a>
