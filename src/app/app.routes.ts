@@ -3,13 +3,17 @@ import { LandingPageComponent } from './feature/landing/pages/landing-page/landi
 
 export const routes: Routes = [
     {
-        path: 'home',
-        component: LandingPageComponent
+      path: 'home',
+      component: LandingPageComponent,
     },
     {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full',
+      path: '',
+      redirectTo: 'home',
+      pathMatch: 'full',
     },
-    { path: '**', redirectTo: 'home' }
-];
+    {
+      path: '**',
+      component: LandingPageComponent
+    },
+  ];
+  
