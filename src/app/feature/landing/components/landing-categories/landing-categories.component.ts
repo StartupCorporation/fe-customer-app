@@ -18,7 +18,7 @@ export class LandingCategoriesComponent implements OnInit {
 
   //TODO: use .env variable to use mock/not mock service
   //To use API call instead of mock replace on line 23 CategoryMockService to CategoryService
-  constructor(private categoryRepository: CategoryMockService) {}
+  constructor(private categoryRepository: CategoryService) {}
 
   ngOnInit(): void {
     this.categoryRepository.getCategories().subscribe(categories => {
