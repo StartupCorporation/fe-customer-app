@@ -3,13 +3,14 @@ import { Observable, map } from 'rxjs';
 import { ApiService } from '../../../shared/services/api.service';
 import { HttpClient } from '@angular/common/http';
 import { CategoryModel } from '../models/category-model';
-import { CategoryRepository } from '../repositories/category-repository';
+
 import { EnvironmentService } from 'src/app/core/services/environment.service';
+import { ICategoryService } from './interfaces/category.service.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService extends ApiService implements CategoryRepository{
+export class CategoryService extends ApiService implements ICategoryService{
   readonly urlPath = 'category' as const;
 
   constructor(http: HttpClient, envService: EnvironmentService) {
