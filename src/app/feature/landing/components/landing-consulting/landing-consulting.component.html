@@ -9,11 +9,7 @@
     <div class="form-row">
       <!-- Name Field -->
       <div class="input-group">
-        <input
-          type="text"
-          placeholder="Ім’я*"
-          [formControl]="nameControl"
-        />
+        <input type="text" placeholder="Ім’я*" [formControl]="nameControl" />
         <div
           class="error-message"
           *ngIf="nameControl.touched && nameControl.invalid"
@@ -41,11 +37,13 @@
     <div class="form-row">
       <!-- Email Field -->
       <div class="input-group">
-        <input
-          type="email"
-          placeholder="Email"
-          [formControl]="emailControl"
-        />
+        <input type="email" placeholder="Email" [formControl]="emailControl" />
+        <div
+          class="error-message"
+          *ngIf="emailControl.touched && emailControl.invalid"
+        >
+          Введіть коретну адресу
+        </div>
       </div>
 
       <!-- Comment Field -->
@@ -61,10 +59,7 @@
     <div class="form-checkbox">
       <label class="container">
         Зв’яжіться зі мною у Telegram або Viber
-        <input
-          type="checkbox"
-          [formControl]="contactMeControl"
-        />
+        <input type="checkbox" [formControl]="contactMeControl" />
         <span class="checkmark"></span>
       </label>
     </div>
