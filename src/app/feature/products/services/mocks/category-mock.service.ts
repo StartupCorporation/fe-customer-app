@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { CategoryModel } from '../../../products/models/category-model';
-import { CategoryRepository } from '../../repositories/category-repository';
+import { ICategoryService } from '../interfaces/category.service.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryMockService implements CategoryRepository {
+export class CategoryMockService implements ICategoryService {
   private mockCategories: CategoryModel[] = [
     {
       id: 1,

@@ -11,7 +11,8 @@ export class ApiService {
   private apiUrl = '';
 
   constructor(private http: HttpClient,private envService: EnvironmentService) { 
-    this.apiUrl = this.envService.getEnvVar('API_URL') || 'Not Set';  }
+    this.apiUrl = this.envService.getEnvVar('API_URL') || 'Not Set';  
+  }
 
   get<R>(path: string): Observable<R> {
     const headers = this.getHeaders();

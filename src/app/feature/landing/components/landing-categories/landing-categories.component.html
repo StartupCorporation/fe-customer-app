@@ -3,7 +3,7 @@
   <div class="categories__wrapper">
     <div
       class="categories__item"
-      *ngFor="let category of categories"
+      *ngFor="let category of $categories | async"
       [class.is-flipped]="isFlipped(category.id)"
       (click)="isFlipped(category.id) && toggleCard(category.id)"
     >
