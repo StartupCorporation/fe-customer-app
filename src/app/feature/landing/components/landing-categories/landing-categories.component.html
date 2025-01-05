@@ -1,21 +1,40 @@
 <div class="categories">
   <h2 class="categories__title">Категорії товарів</h2>
   <div class="categories__wrapper">
-    <div class="categories__item" 
-         *ngFor="let category of categories"
-         [class.is-flipped]="isFlipped(category.id)"
-         (click)="isFlipped(category.id) && toggleCard(category.id)">
+    <div
+      class="categories__item"
+      *ngFor="let category of categories"
+      [class.is-flipped]="isFlipped(category.id)"
+      (click)="isFlipped(category.id) && toggleCard(category.id)"
+    >
       <div class="categories__item-inner">
         <!-- Front side -->
         <div class="categories__front">
-          <button class="categories__info-btn" 
-                  (click)="toggleCard(category.id); $event.stopPropagation()">
-            i
-          </button>
+          <svg
+            class="categories__info-btn"
+            id="info"
+            width="40"
+            height="40"
+            viewBox="0 0 40 40"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            (click)="toggleCard(category.id); $event.stopPropagation()"
+          >
+            <path
+              id="info"
+              d="M20 13.3333V14.1667M20 20V26.6667M20 35C28.2843 35 35 28.2843 35 20C35 11.7157 28.2843 5 20 5C11.7157 5 5 11.7157 5 20C5 28.2843 11.7157 35 20 35Z"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
           <div class="categories__image-wrap">
-            <img [src]="category.image" 
-                 [alt]="category.name" 
-                 class="categories__icon">
+            <img
+              [src]="category.image"
+              [alt]="category.name"
+              class="categories__icon"
+            />
           </div>
           <div class="categories__label">{{ category.name }}</div>
         </div>
@@ -27,5 +46,3 @@
     </div>
   </div>
 </div>
-
-
