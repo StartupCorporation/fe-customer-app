@@ -12,6 +12,8 @@ import {
 import { ConsultingModel } from '../../models/consulting.model';
 import { catchError, of } from 'rxjs';
 import { MessageModel } from 'src/app/shared/models/message-model';
+import { MessageService } from 'src/app/core/services/message.service';
+import { MessageTypeEnum } from 'src/app/shared/enums/message-type-enum';
 
 @Component({
   selector: 'app-landing-consulting',
@@ -22,7 +24,11 @@ import { MessageModel } from 'src/app/shared/models/message-model';
 export class LandingConsultingComponent implements OnInit {
   contactForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private consultingService: ConsultingService) {}
+  constructor(
+    private fb: FormBuilder,
+    private consultingService: ConsultingService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -43,19 +49,19 @@ export class LandingConsultingComponent implements OnInit {
   get nameControl(): FormControl {
     return this.getControl('customer.name');
   }
-  
+
   get phoneControl(): FormControl {
     return this.getControl('customer.phone');
   }
-  
+
   get emailControl(): FormControl {
     return this.getControl('customer.email');
   }
-  
+
   get commentControl(): FormControl {
     return this.getControl('comment');
   }
-  
+
   get contactMeControl(): FormControl {
     return this.getControl('contactMe');
   }
@@ -90,12 +96,14 @@ export class LandingConsultingComponent implements OnInit {
   }
 
   private handleSuccess(consulting: ConsultingModel): void {
-    // TODO: Add success message
+    this.messageService.addMessage(
+      new MessageModel(200, ['Запит прийнятий у обробку.'], MessageTypeEnum.Success)
+    );
   }
 
   private handleError(errorResponse: any): void {
     const error = MessageModel.fromJson(errorResponse);
-    // TODO: Add failure message
+    this.messageService.addMessage(error);
   }
 
   private resetForm(): void {
@@ -109,11 +117,13 @@ export class LandingConsultingComponent implements OnInit {
       contactMe: false,
     });
   }
-  
+
   private getControl(path: string): FormControl {
     const control = this.contactForm.get(path);
     if (!control) {
-      throw new Error(`Control with path "${path}" not found in the form group.`);
+      throw new Error(
+        `Control with path "${path}" not found in the form group.`
+      );
     }
     return control as FormControl;
   }

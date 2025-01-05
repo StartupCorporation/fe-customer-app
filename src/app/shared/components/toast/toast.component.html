@@ -1,0 +1,24 @@
+<div class="toast-container full-border">
+  <div class="toast-head">
+    <div class="toast-head-title-container full-padding">
+      <h4 class="toast-head-title"></h4>
+    </div>
+    <div class="toast-head-button-container full-padding">
+      <div class="cross-button toast-head-button" (click)="deleteMessages()">
+        <div class="cross-button__stick cross-button__stick_left"></div>
+        <div class="cross-button__stick cross-button__stick_right"></div>
+      </div>
+    </div>
+  </div>
+  <div class="toast-body">
+    <div
+      class="toast-message-container"
+      *ngFor="let message of messages"
+      [ngClass]="getStatusClass(message.type)"
+    >
+      <h4 class="toast-message full-padding">
+        {{ message.message }}
+      </h4>
+    </div>
+  </div>
+</div>
