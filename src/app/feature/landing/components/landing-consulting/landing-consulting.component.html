@@ -1,7 +1,7 @@
 <div class="contact-form-container">
   <h2>Зв’яжіться з нами</h2>
   <p>
-    Ми наберемо Вас найближчим часом, а також можемо <br>
+    Ми наберемо Вас найближчим часом, а також можемо <br />
     по Вашому бажанню написати в інші месенджери.
   </p>
 
@@ -12,12 +12,11 @@
         <input
           type="text"
           placeholder="Ім’я*"
-          formControlName="name"
+          [formControl]="nameControl"
         />
-        <!-- Error if name is touched but invalid -->
         <div
           class="error-message"
-          *ngIf="contactForm.get('name')?.touched && contactForm.get('name')?.invalid"
+          *ngIf="nameControl.touched && nameControl.invalid"
         >
           Введіть Ім’я
         </div>
@@ -28,12 +27,11 @@
         <input
           type="text"
           placeholder="(380) 99 909 00 99*"
-          formControlName="phone"
+          [formControl]="phoneControl"
         />
-        <!-- Error if phone is touched but invalid -->
         <div
           class="error-message"
-          *ngIf="contactForm.get('phone')?.touched && contactForm.get('phone')?.invalid"
+          *ngIf="phoneControl.touched && phoneControl.invalid"
         >
           Введіть номер телефону
         </div>
@@ -41,19 +39,21 @@
     </div>
 
     <div class="form-row">
+      <!-- Email Field -->
       <div class="input-group">
         <input
           type="email"
           placeholder="Email"
-          formControlName="email"
+          [formControl]="emailControl"
         />
       </div>
 
+      <!-- Comment Field -->
       <div class="input-group">
         <input
           type="text"
           placeholder="Ваш коментарій"
-          formControlName="comment"
+          [formControl]="commentControl"
         />
       </div>
     </div>
@@ -63,17 +63,18 @@
         Зв’яжіться зі мною у Telegram або Viber
         <input
           type="checkbox"
-          id="contactByMessenger"
-          formControlName="contactByMessenger"
+          [formControl]="contactMeControl"
         />
         <span class="checkmark"></span>
       </label>
     </div>
-    
 
-    <button type="submit"
-    class="button button--long"
-    [disabled]="!contactForm.valid"
-    >Замовити</button>
+    <button
+      type="submit"
+      class="button button--long"
+      [disabled]="!contactForm.valid"
+    >
+      Замовити
+    </button>
   </form>
 </div>
