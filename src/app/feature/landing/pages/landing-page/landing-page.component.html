@@ -23,3 +23,9 @@
     </div>
   </div>
 </div>
+
+<app-toast
+  [messages]="$messages | async | safeArray"
+  (deleteMessagesEvent)="deleteMessages()"
+  *ngIf="($messages | async | safeArray).length"
+></app-toast>
