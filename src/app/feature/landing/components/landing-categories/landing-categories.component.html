@@ -1,6 +1,8 @@
 <div class="categories">
   <h2 class="categories__title">Категорії товарів</h2>
-  <div class="categories__wrapper">
+  <app-carousel [itemsToScroll]="2" [itemWidth]="366"
+  [elementsQty]="($categories | async | safeArray).length"
+  >
     <div
       class="categories__item"
       *ngFor="let category of $categories | async"
@@ -64,5 +66,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </app-carousel>
 </div>

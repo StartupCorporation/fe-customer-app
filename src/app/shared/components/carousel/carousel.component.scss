@@ -1,0 +1,64 @@
+.carousel-wrapper {
+    display: flex;
+    overflow: hidden;
+    scroll-behavior: smooth;
+    //width: 100%;
+    position: relative;
+    padding: 20px;
+}
+
+
+.carousel-container {
+    position: relative;
+    padding: 0 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background-color: white;
+    cursor: pointer;
+    z-index: 3;
+
+    &.left {
+        left: -15px;
+    }
+    &.right {
+        right: -20px;
+    }
+
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+
+        width: 17px;
+        height: 4px;
+        background-color: var(--blue);
+        border-radius: 3px;
+    }
+
+    &.right::before {
+        transform: translate(-40%, -160%) rotate(45deg);
+    }
+    &.right::after {
+        transform: translate(-40%, 80%) rotate(-45deg);
+    }
+
+    &.left::before {
+        transform: translate(-60%, -160%) rotate(135deg);
+    }
+    &.left::after {
+        transform: translate(-60%, 80%) rotate(225deg);
+    }
+}

@@ -8,12 +8,14 @@ import {
 } from 'src/app/feature/products/services/interfaces/category.service.interface';
 import { Observable } from 'rxjs';
 import { SvgIconComponent } from 'src/app/shared/components/svg-icon/svg-icon.component';
+import { CarouselComponent } from "../../../../shared/components/carousel/carousel.component";
+import { SafeArrayPipe } from 'src/app/shared/pipes/safeArray.pipe';
 
 @Component({
   selector: 'app-landing-categories',
   templateUrl: './landing-categories.component.html',
   styleUrls: ['./landing-categories.component.scss'],
-  imports: [NgFor, AsyncPipe, SvgIconComponent],
+  imports: [NgFor, AsyncPipe, CarouselComponent, SafeArrayPipe],
 })
 export class LandingCategoriesComponent implements OnInit {
   $categories!: Observable<CategoryModel[]>;
