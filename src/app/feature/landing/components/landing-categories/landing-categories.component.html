@@ -5,7 +5,6 @@
       class="categories__item"
       *ngFor="let category of $categories | async"
       [class.is-flipped]="isFlipped(category.id)"
-      (click)="isFlipped(category.id) && toggleCard(category.id)"
     >
       <div class="categories__item-inner">
         <!-- Front side -->
@@ -40,7 +39,28 @@
         </div>
         <!-- Back side -->
         <div class="categories__back">
-          <p>{{ category.description }}</p>
+          <div class="image-wrapper" (click)="toggleCard(category.id)">
+            <svg
+              class="categories__cross-btn"
+              id="cross"
+              width="20px"
+              height="20px"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M20 20L4 4.00003M20 4L4.00002 20"
+                stroke="var(--blue)"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+          <div class="categories__back-description">
+            <p>{{ category.description }}</p>
+          </div>
+          <!-- <div class="categories__back-label" (click)="scrollToConsulting(category.id)">Зв'язатися з нами</div> -->
         </div>
       </div>
     </div>
