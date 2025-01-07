@@ -1,8 +1,8 @@
 <div class="contact-form-container">
   <h2>Зв’яжіться з нами</h2>
   <p>
-    Ми наберемо Вас найближчим часом, а також можемо <br />
-    по Вашому бажанню написати в інші месенджери.
+    Швидкий спосіб замовити те, що Вам потрібно або <br />
+    отримати консультацію з продукції нашого сайту.
   </p>
 
   <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
@@ -24,52 +24,42 @@
           type="text"
           placeholder="+380 99 909 00 99*"
           [formControl]="phoneControl"
+          (input)="onPhoneInput($event)"
         />
         <div
           class="error-message"
           *ngIf="phoneControl.touched && phoneControl.invalid"
         >
-          Введіть номер телефону
+          Введіть номер телефону у форматі +380 99 360 98 03
         </div>
       </div>
     </div>
 
-    <div class="form-row">
-      <!-- Email Field -->
-      <div class="input-group">
-        <input type="email" placeholder="Email" [formControl]="emailControl" />
-        <div
-          class="error-message"
-          *ngIf="emailControl.touched && emailControl.invalid"
-        >
-          Введіть коретну адресу
-        </div>
-      </div>
-
+    <div class="form-row  form-row--full-width">
       <!-- Comment Field -->
-      <div class="input-group">
-        <input
+      <div class="input-group input-group--wide">
+        <textarea 
           type="text"
-          placeholder="Ваш коментарій"
+          placeholder="Ваші побажання"
           [formControl]="commentControl"
-        />
+        ></textarea>
       </div>
     </div>
 
     <div class="form-checkbox">
       <label class="container">
         Зв’яжіться зі мною у Telegram або Viber
-        <input type="checkbox" [formControl]="contactMeControl" />
+        <input type="checkbox" [formControl]="messageMeControl" />
         <span class="checkmark"></span>
       </label>
     </div>
 
     <button
       type="submit"
-      class="button button--long"
+      class="button button-form"
       [disabled]="!contactForm.valid"
     >
-      Відправити
+      Зв’яжіться з нами
     </button>
   </form>
 </div>

@@ -1,3 +1,31 @@
+@mixin shared-input-style {
+    padding: 0.75rem 25px;
+    width: 100%;
+    height: 52px;
+    border-radius: 8px;
+    outline: none;
+    border: 1px solid #8d8ba7;
+    font-family: $font-dm, sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 18px;
+    color: black;
+    background: #f9f9ff;
+
+    &:focus {
+        border-color: #2f3983;
+    }
+
+    &::placeholder {
+        color: #8d8ba7;
+        opacity: 1; /* Firefox */
+    }
+
+    &::-ms-input-placeholder {
+        color: #8d8ba7; /* Edge 12-18 */
+    }
+}
+
 .contact-form-container {
     background-color: $white;
     border-radius: 20px;
@@ -8,11 +36,10 @@
     h2 {
         color: $blue;
         text-align: center;
-        font-feature-settings: "liga" off, "clig" off;
         font-size: 42px;
-        font-style: normal;
         font-weight: 700;
         line-height: 50px;
+        font-feature-settings: "liga" off, "clig" off;
     }
 
     p {
@@ -27,13 +54,14 @@
         flex-direction: column;
         align-items: center;
         margin-top: 50px;
+        padding: 0 287px;
     }
 
     .form-row {
         display: flex;
-        flex-direction: row;
-        gap: 54px;
+        gap: 22px;
         margin-bottom: 1rem;
+        width: 100%;
 
         .input-group {
             flex: 1;
@@ -41,35 +69,7 @@
             flex-direction: column;
 
             input {
-                padding: 0.75rem 25px;
-                width: 375px;
-                height: 52px;
-                border-radius: 10px;
-                outline: none;
-                border-radius: 8px;
-                font-family: $font-dm, sans-serif;
-                border: 1px solid #8d8ba7;
-                font-size: 18px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: 18px;
-                color: black;
-                font-feature-settings: "liga" off, "clig" off;
-
-                background: #f9f9ff;
-                &:focus {
-                    border-color: #2f3983;
-                }
-
-                &::placeholder {
-                    color: #8d8ba7;
-                    opacity: 1; /* Firefox */
-                }
-
-                &::-ms-input-placeholder {
-                    /* Edge 12 -18 */
-                    color: #8d8ba7;
-                }
+                @include shared-input-style;
             }
 
             .error-message {
@@ -77,83 +77,82 @@
                 color: #d14040;
                 font-size: 0.875rem;
             }
+
+            &--wide {
+                textarea {
+                    @include shared-input-style;
+                    width: 100%;
+                    height: 102px;
+                }
+            }
         }
     }
 
     .form-checkbox {
-        margin-bottom: 1.5rem;
+        margin: 20px 0 1.5rem;
         display: flex;
         align-items: center;
-        margin-top: 20px;
+
+        .container {
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-left: 35px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 400;
+            color: #8d8ba7;
+
+            input {
+                position: absolute;
+                opacity: 0;
+                cursor: pointer;
+                height: 0;
+                width: 0;
+            }
+
+            .checkmark {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 20px;
+                width: 20px;
+                background-color: #eee;
+                border-radius: 5px;
+                border: 1px solid #8d8ba7;
+
+                &:hover {
+                    background-color: #ccc;
+                }
+
+                &:after {
+                    content: "";
+                    position: absolute;
+                    display: none;
+                    left: 5px;
+                    top: 1px;
+                    width: 5px;
+                    height: 10px;
+                    border: solid white;
+                    border-width: 0 3px 3px 0;
+                    transform: rotate(45deg);
+                }
+            }
+
+            input:checked ~ .checkmark {
+                background-color: $blue;
+
+                &:after {
+                    display: block;
+                }
+            }
+        }
     }
 
-    .container {
-        display: flex;
-        align-items: center;
-        position: relative;
-        padding-left: 35px;
-        margin-bottom: 12px;
-        cursor: pointer;
-        font-size: 1rem;
-        font-weight: 400;
-        color: #8d8ba7;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-
-    /* Hide the browser's default checkbox */
-    .container input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
-    }
-
-    /* Create a custom checkbox */
-    .checkmark {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 20px;
-        width: 20px;
-        background-color: #eee;
-        border-radius: 5px;
-        border: 1px solid #8D8BA7;
-    }
-
-    /* On mouse-over, add a grey background color */
-    .container:hover input ~ .checkmark {
-        background-color: #ccc;
-    }
-
-    /* When the checkbox is checked, add a blue background */
-    .container input:checked ~ .checkmark {
-        background-color: $blue;
-    }
-
-    /* Create the checkmark/indicator (hidden when not checked) */
-    .checkmark:after {
-        content: "";
-        position: absolute;
-        display: none;
-    }
-
-    /* Show the checkmark when checked */
-    .container input:checked ~ .checkmark:after {
-        display: block;
-    }
-
-    /* Style the checkmark/indicator */
-    .checkmark:after {
-        left: 5px;
-        top: 1px;
-        width: 5px;
-        height: 10px;
-        border: solid white;
-        border-width: 0 3px 3px 0;
-        transform: rotate(45deg);
+    .button-form {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: normal;
+        max-width: 234px;
     }
 }

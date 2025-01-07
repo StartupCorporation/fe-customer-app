@@ -9,7 +9,7 @@ import { map } from 'rxjs';
   providedIn: 'root',
 })
 export class ConsultingService extends ApiService {
-  private urlPath = 'order/quick' as const;
+  private urlPath = 'callback_request' as const;
 
   constructor(httpClient: HttpClient, envService: EnvironmentService) {
     super(httpClient, envService);
