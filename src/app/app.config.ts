@@ -24,8 +24,8 @@ export const appConfig: ApplicationConfig = {
       useFactory: (envService: EnvironmentService, httpClient: HttpClient) => {
         const envType = envService.getEnvVar('USE_MOCKS') === 'true';
         return envType
-          ? new CategoryService(httpClient, envService)
-          : new CategoryMockService();
+          ? new CategoryMockService()
+          : new CategoryService(httpClient, envService);
       },
       deps: [EnvironmentService, HttpClient],
     },

@@ -1,0 +1,11 @@
+<div class="carousel-container">
+  @if (showScrollArrows) {
+    <button class="carousel-btn left" (click)="scrollLeft()"></button>
+  }
+  <div class="carousel-wrapper" #carousel>
+    <ng-content></ng-content>
+  </div>
+  @if (showScrollArrows) {
+    <button class="carousel-btn right" (click)="scrollRight()"></button>
+  }
+</div>

@@ -1,0 +1,124 @@
+@import "variables";
+
+.toast {
+  &-container {
+    width: 5%;
+    min-width: 340px;
+    position: fixed;
+    right: 1rem;
+    top: 4rem;
+    z-index: 999;
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+  }
+
+  &-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    background-color: $grey-medium;
+    border-bottom: 1px solid $grey-dark;
+    border-radius: 10px 10px 0 0 ;
+
+    &-title {
+      font-size: 14px;
+    //  font-family: $font-medium;
+
+      &-container {
+        display: flex;
+        align-items: center;
+        width: calc(100% - 52px);
+        height: 100%;
+      }
+    }
+
+    &-button {
+      &-container {
+        display: flex;
+        align-items: center;
+        width: 52px;
+        height: 100%;
+      }
+    }
+  }
+
+  &-body {
+    background-color: $white;
+    border-radius: 0 0 10px 10px;
+
+  }
+
+  &-message {
+    font-size: 14px;
+   // font-family: $font-medium;
+
+    &-container {
+
+      &:not(:last-child) {
+        border-bottom: 1px solid $grey-dark;
+      }
+
+      &:last-child {
+        border-radius: 0 0 10px 10px;
+
+      }
+
+      &.success {
+        border-left: 4px solid $success;
+      }
+
+      &.warning {
+        border-left: 4px solid $warning;
+      }
+
+      &.error {
+        border-left: 4px solid $danger;
+      }
+    }
+  }
+}
+
+.full-padding {
+  padding: 12px 16px;
+
+  .cross-button {
+    height: 20px;
+    width: 26px;
+    cursor: pointer;
+    &__stick {
+        height: 2px;
+        background-color: $blue;
+    }
+
+    &__stick_left {
+        transform: translateY(10px) rotate(-45deg);
+    }
+
+    &__stick_right {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    &__stick-right {
+        width: 100%;
+        height: 1px;
+        background-color: #000;
+        position: relative;
+        bottom: 50%;
+        transform: translateY(-50%);
+    }
+}
+}
+
+.full-border {
+  border: 1px solid $grey-dark;
+  border-radius: 10px;
+}
+
+@media only screen and (max-width: $breakpoint-lg) {
+  .toast {
+    &-container {
+      top: 7rem;
+    }
+  }
+}
