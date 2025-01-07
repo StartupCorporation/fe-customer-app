@@ -1,8 +1,8 @@
 <div class="contact-form-container">
   <h2>Зв’яжіться з нами</h2>
   <p>
-    Ми наберемо Вас найближчим часом, а також можемо <br />
-    по Вашому бажанню написати в інші месенджери.
+    Швидкий спосіб замовити те, що Вам потрібно або <br />
+    отримати консультацію з продукції нашого сайту.
   </p>
 
   <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
@@ -56,7 +56,7 @@
 
     <button
       type="submit"
-      class="button button--long"
+      class="button button-form"
       [disabled]="!contactForm.valid"
     >
       Зв’яжіться з нами
