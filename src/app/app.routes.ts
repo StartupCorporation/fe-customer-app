@@ -1,10 +1,15 @@
 import { Routes } from '@angular/router';
 import { LandingPageComponent } from './feature/landing/pages/landing-page/landing-page.component';
+import { ProductsPageComponent } from './feature/products/pages/products-page/products-page.component';
 
 export const routes: Routes = [
     {
       path: 'home',
       component: LandingPageComponent,
+    },
+    {
+      path: 'category/:id/products',
+      component: ProductsPageComponent,
     },
     {
       path: '',

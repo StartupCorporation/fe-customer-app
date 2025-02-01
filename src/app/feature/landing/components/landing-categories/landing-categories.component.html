@@ -7,6 +7,7 @@
       class="categories__item"
       *ngFor="let category of $categories | async"
       [class.is-flipped]="isFlipped(category.id)"
+      (click)="navigateToCategory(category.id)"
     >
       <div class="categories__item-inner">
         <!-- Front side -->
@@ -32,7 +33,7 @@
 
           <div class="categories__image-wrap">
             <img
-              [src]="category.image"
+              [src]="getImageName(category.image)"
               [alt]="category.name"
               class="categories__icon"
             />

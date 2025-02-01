@@ -1,0 +1,23 @@
+<div class="products-card__item">
+  <div class="products-card__item-inner">
+    <div class="products-card__front">
+      <div class="products-card__image-wrap">
+        <img
+          [src]="getImageName(product.images[0])"
+          [alt]="product.name"
+          class="products-card__icon"
+        />
+      </div>
+      <div class="products-card__name">{{ product.name }}</div>
+      <div class="products-card__label">
+        <div class="products-card__price">
+          {{ product.price | truncateNumber }}
+        </div>
+
+        <div class="products-card__button">
+          <button class="button button-describe">Докладніше</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

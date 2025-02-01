@@ -19,6 +19,7 @@ import { MessageTypeEnum } from 'src/app/shared/enums/message-type-enum';
 import { Observable } from 'rxjs';
 import { MessageService } from 'src/app/core/services/message.service';
 import { SafeArrayPipe } from 'src/app/shared/pipes/safeArray.pipe';
+import { LandingNavbarComponent } from "../../components/landing-navbar/landing-navbar.component";
 
 @Component({
   selector: 'app-landing-page',
@@ -34,8 +35,9 @@ import { SafeArrayPipe } from 'src/app/shared/pipes/safeArray.pipe';
     ToastComponent,
     NgIf,
     AsyncPipe,
-    SafeArrayPipe
-  ],
+    SafeArrayPipe,
+    LandingNavbarComponent
+],
 })
 export class LandingPageComponent implements OnInit, AfterViewInit {
   $messages!: Observable<MessageModel[]>;

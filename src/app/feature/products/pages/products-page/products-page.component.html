@@ -1,0 +1,22 @@
+<div class="products-page">
+  <div class="products-page__container">
+    <div class="products-page__navbar">
+      <app-landing-welcome-window/>
+    </div>
+
+
+    <div class="products-page__list">
+      <app-products-filter class="products-page__filter"></app-products-filter>
+
+      <app-products-list
+      [products]="$products | async | safeArray"
+      ></app-products-list>
+
+    </div>
+
+
+    <div class="products-page__footer">
+      <app-landing-footer/>
+    </div>
+  </div>
+</div>
