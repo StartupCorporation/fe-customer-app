@@ -3,31 +3,33 @@
     <app-landing-navbar/>
   </div>
 
-  <div class="headline">
-    <div class="headline__wrapper">
-        <h1 class="headline__title">Гібридні інвертори та акумулятори</h1>
-        <div class="headline__subtitle">
-          Deye – енергія сонця у ваших руках. Гібридні рішення для вашого
-          майбутнього.
+  @if(isHomePage$ | async) {
+    <div class="headline">
+      <div class="headline__wrapper">
+          <h1 class="headline__title">Гібридні інвертори та акумулятори</h1>
+          <div class="headline__subtitle">
+            Deye – енергія сонця у ваших руках. Гібридні рішення для вашого
+            майбутнього.
+          </div>
+          <div class="button button--primary button--header" (click)="scrollTo('consulting')">Зв’яжіться з нами</div>
+      </div>
+      <div class="headline__images">
+          <img class="headline__image" src="/assets/images/invertor-1.png" alt="Inverter" />
+          <img class="headline__image2" src="/assets/images/invertor-2.png" alt="Inverter" />
+      </div>
+  
+      <div class="promo">
+        <div class="promo__text">Економимо на енергетиці <br> вже зараз!</div>
+      </div>
+  
+      <div class="testimonial">
+        <div class="testimonial__text">
+          Відмінна якість і швидка <br> доставка! Рекомендую!
         </div>
-        <div class="button button--primary button--header" (click)="scrollTo('consulting')">Зв’яжіться з нами</div>
-    </div>
-    <div class="headline__images">
-        <img class="headline__image" src="/assets/images/invertor-1.png" alt="Inverter" />
-        <img class="headline__image2" src="/assets/images/invertor-2.png" alt="Inverter" />
-    </div>
-
-    <div class="promo">
-      <div class="promo__text">Економимо на енергетиці <br> вже зараз!</div>
-    </div>
-
-    <div class="testimonial">
-      <div class="testimonial__text">
-        Відмінна якість і швидка <br> доставка! Рекомендую!
       </div>
     </div>
-  </div>
-
-  <div class="landing-page__clojure landing-page__clojure--left"></div>
-  <div class="landing-page__clojure landing-page__clojure--right"></div>
+  
+    <div class="landing-page__clojure landing-page__clojure--left"></div>
+    <div class="landing-page__clojure landing-page__clojure--right"></div>
+  }
 </div>
