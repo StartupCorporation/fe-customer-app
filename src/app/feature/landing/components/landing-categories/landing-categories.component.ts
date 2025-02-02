@@ -46,7 +46,7 @@ export class LandingCategoriesComponent implements OnInit {
   }
 
   getImageName(name: string) {
-    return `http://localhost:9999/images/deye-admin-files/${name}`;
+    return `http://localhost:9999/images/${name}`;
   }
 
   navigateToCategory(categoryId: number) {

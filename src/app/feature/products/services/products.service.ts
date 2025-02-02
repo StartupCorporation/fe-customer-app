@@ -15,7 +15,7 @@ export class ProductsService extends ApiService {
     super(http, envService);
   }
 
-  getProducts(categoryId: number): Observable<Product[]> {
+  getProducts(categoryId: string): Observable<Product[]> {
     const url = `${this.urlPath}/${categoryId}/products`;
 
     return this.get<Product[]>(url).pipe(

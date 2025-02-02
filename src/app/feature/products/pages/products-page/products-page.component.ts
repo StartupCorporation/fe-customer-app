@@ -27,7 +27,7 @@ import { ProductsMockService } from '../../services/mocks/products-mock.service'
 })
 export class ProductsPageComponent implements OnInit {
   $products!: Observable<Product[]>;
-  categoryId!: number;
+  categoryId: string = '';
 
   private productsService = inject(ProductsService);
   private route = inject(ActivatedRoute);
@@ -36,7 +36,7 @@ export class ProductsPageComponent implements OnInit {
     this.$products = this.route.paramMap.pipe(
       switchMap((params) => {
         const id = params.get('id');
-        this.categoryId = id ? +id : 0;
+        this.categoryId = id!;
         return this.productsService.getProducts(this.categoryId);
       })
     );
