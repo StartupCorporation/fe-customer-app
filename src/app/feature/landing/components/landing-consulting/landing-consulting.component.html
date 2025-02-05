@@ -5,14 +5,14 @@
     отримати консультацію з продукції нашого сайту.
   </p>
 
-  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" #myform="ngForm">
     <div class="form-row">
       <!-- Name Field -->
       <div class="input-group">
         <input type="text" placeholder="Ім’я*" [formControl]="nameControl" />
         <div
           class="error-message"
-          *ngIf="nameControl.touched && nameControl.invalid"
+          *ngIf="nameControl.touched && nameControl.invalid && myform.submitted"
         >
           Введіть Ім’я
         </div>
@@ -28,7 +28,7 @@
         />
         <div
           class="error-message"
-          *ngIf="phoneControl.touched && phoneControl.invalid"
+          *ngIf="phoneControl.touched && phoneControl.invalid && myform.submitted"
         >
           Введіть номер телефону у форматі +380 99 360 98 03
         </div>
@@ -57,7 +57,6 @@
     <button
       type="submit"
       class="button button-form"
-      [disabled]="!contactForm.valid"
     >
       Зв’яжіться з нами
     </button>

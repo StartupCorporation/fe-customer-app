@@ -28,7 +28,7 @@ export class LandingConsultingComponent implements OnInit {
     private fb: FormBuilder,
     private consultingService: ConsultingService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -40,10 +40,12 @@ export class LandingConsultingComponent implements OnInit {
         name: ['', Validators.required],
         phone: [
           '',
-          [
-            Validators.required,
-            Validators.pattern(/^\+380 \d{2} \d{3} \d{2} \d{2}$/),
-          ],
+          {
+            validators: [
+              Validators.required,
+              Validators.pattern('^[- +()0-9]+$'),
+            ],
+          }
         ],
       }),
       comment: [''],
@@ -70,24 +72,7 @@ export class LandingConsultingComponent implements OnInit {
   onPhoneInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     let value = input.value;
-  
-    // Allow only numbers and the "+" sign
-    value = value.replace(/[^\d+]/g, '');
-  
-    // Ensure it starts with "+380" only if the user has explicitly typed it
-    if (!value.startsWith('+') && value.length > 0) {
-      value = '+' + value;
-    }
-  
-    // Add spaces based on typed content without auto-completing missing sections
-    value = value.replace(
-      /(\+380)(\d{0,2})?(\d{0,3})?(\d{0,2})?(\d{0,2})?/,
-      (match, g1, g2, g3, g4, g5) => {
-        return `${g1 || ''} ${g2 || ''} ${g3 || ''} ${g4 || ''} ${g5 || ''}`.trim();
-      }
-    );
-  
-    input.value = value;
+
     this.phoneControl.setValue(value, { emitEvent: false });
   }
 

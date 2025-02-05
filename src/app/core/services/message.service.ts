@@ -20,6 +20,15 @@ export class MessageService {
   addMessage(message: MessageModel): void {
     this.messages.push(message);
     this.messagesSubject.next(this.messages);
+
+    setTimeout(() => {
+      this.removeMessage(message);
+    }, 10000);
+  }
+
+  private removeMessage(message: MessageModel): void {
+    this.messages = this.messages.filter(m => m !== message);
+    this.messagesSubject.next(this.messages);
   }
 
   addMessageFromJson(json: any): void {

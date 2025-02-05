@@ -1,4 +1,4 @@
-@use 'variables' as *;
+@use "variables" as *;
 
 .landing-navbar {
     display: flex;
@@ -40,18 +40,18 @@
         display: flex;
         align-items: center;
         justify-content: end;
+    }
 
-        & > .navbar__phone {
-            text-decoration: none;
+    &__phone {
+        text-decoration: none;
+        color: $blue;
+        font-size: 16px;
+        transition: color 0.3s;
+        font-family: $font-montserrat, sans-serif;
+        font-weight: 400;
+
+        &:hover {
             color: $blue;
-            font-size: 16px;
-            transition: color 0.3s;
-            font-family: $font-montserrat, sans-serif;
-            font-weight: 400;
-
-            &:hover {
-                color: $blue;
-            }
         }
     }
 
