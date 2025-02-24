@@ -15,14 +15,14 @@ export class ConsultingService extends ApiService {
     super(httpClient, envService);
   }
 
-  createConsultingRequest(consultingModel: ConsultingModel) {
+  createConsultingRequest(consultingModel: ConsultingModel) { 
     const url = `${this.urlPath}`;
     return this.post<ConsultingModel,ConsultingModel>(url, consultingModel).pipe(
       map((response) => {
         const company = ConsultingModel.fromJson(response);
 
         return company;
-      })
+      }) 
     );
   }
 }

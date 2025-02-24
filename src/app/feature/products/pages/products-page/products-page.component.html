@@ -1,22 +1,38 @@
 <div class="products-page">
   <div class="products-page__container">
     <div class="products-page__navbar">
-      <app-landing-welcome-window/>
+      <app-landing-welcome-window />
     </div>
-
 
     <div class="products-page__list">
-      <app-products-filter class="products-page__filter"></app-products-filter>
+      <app-products-filter
+        class="products-page__filter"
+        [productFilters]="availableProductFilters"
+        [categoryFilters]="categoryFilters"
+        (filterChange)="onFilterChanged($event)"
+      ></app-products-filter>
 
-      <app-products-list
-      [products]="$products | async | safeArray"
-      ></app-products-list>
-
+      <div class="products-page__entities">
+        <div class="search-bar">
+          <mat-form-field>
+            <input matInput type="search"
+            placeholder="Пошук..."
+            [value]="productFilters[1].value"
+            (input)="onSearchInput($event)" />
+            <button matSuffix mat-icon-button aria-label="Search">
+            </button>
+          </mat-form-field>
+        </div>
+        <div class="products-list">
+          <app-products-list
+            [products]="products$ | async | safeArray"
+          ></app-products-list>
+        </div>
+      </div>
     </div>
 
-
     <div class="products-page__footer">
-      <app-landing-footer/>
+      <app-landing-footer />
     </div>
   </div>
 </div>

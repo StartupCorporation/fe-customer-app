@@ -1,0 +1,121 @@
+@use "variables" as *;
+/* field-filter.component.scss (if using component-level SCSS) */
+.filter-checkbox {
+    /* Example styling for the checkbox if needed */
+    margin-bottom: 1rem;
+}
+:host {
+    ::ng-deep {
+        .mdc-label {
+            color: #8d8ba7;
+            font-family: "Open Sans";
+            font-size: 16px;
+            padding-left: 10px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+
+        .mdc-checkbox__background {
+            border: 2px solid #8d8ba7;
+        }
+        .mdc-checkbox__native-control,
+        .mat-mdc-checkbox-touch-target {
+            height: 18px !important;
+            width: 18px !important;
+        }
+
+        .mdc-checkbox__background {
+            top: 0px !important;
+            left: 0px !important;
+        }
+        .mdc-checkbox {
+            padding: 0px !important;
+        }
+
+        .mdc-slider__thumb-knob {
+            border-color: $blue !important;
+            background-color: $blue !important;
+        }
+        .mdc-slider__track--active_fill {
+            border-color: $blue !important;
+            background-color: $blue !important;
+        }
+    }
+}
+
+.filter-range {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .filter-range-label,
+    .filter-range-input-label {
+        color: #8d8ba7;
+        font-family: "Open Sans";
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    .filter-range-inputs {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .filter-range-input-label {
+            white-space: nowrap;
+        }
+
+        .filter-range-input {
+            width: 50%;
+            height: 30px;
+            -moz-appearance: textfield;
+            padding: 0.1rem;
+            padding-left: 5px;
+            border-radius: 8px;
+            outline: none;
+            border: 1px solid #8d8ba7;
+            font-family: $font-dm, sans-serif;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 18px;
+            color: black;
+            background: #f9f9ff;
+
+            &:focus {
+                border-color: #2f3983;
+            }
+
+            &::placeholder {
+                color: #8d8ba7;
+                opacity: 1; /* Firefox */
+            }
+
+            &::-ms-input-placeholder {
+                color: #8d8ba7; /* Edge 12-18 */
+            }
+
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+        }
+    }
+}
+
+.filter-string {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .filter-string-label {
+        font-weight: 600;
+    }
+
+    .filter-string-input {
+        /* Additional styles if needed */
+    }
+}

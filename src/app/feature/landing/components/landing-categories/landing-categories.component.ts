@@ -50,6 +50,8 @@ export class LandingCategoriesComponent implements OnInit {
   }
 
   navigateToCategory(categoryId: number) {
-    this.router.navigate(['/category', categoryId, 'products']);
+    this.router.navigate(['/products'], { 
+      queryParams: { categoryId } 
+    });
   }
 }

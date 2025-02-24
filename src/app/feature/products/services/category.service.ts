@@ -11,7 +11,7 @@ import { ICategoryService } from './interfaces/category.service.interface';
   providedIn: 'root'
 })
 export class CategoryService extends ApiService implements ICategoryService{
-  readonly urlPath = 'category' as const;
+  readonly urlPath = 'categories' as const;
 
   constructor(http: HttpClient, envService: EnvironmentService) {
     super(http,envService);

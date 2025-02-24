@@ -1,3 +1,20 @@
 <div class="products-filter">
-  
+    <div class="products-filter__header">
+        Категорії
+    </div>
+    @for (filter of categoryFilters; track filter) {
+        <app-field-filter class="filter"
+        [filter]="filter"
+        (filterUpdated)="onFilterUpdated($event)"
+        ></app-field-filter>
+    }
+    <div class="products-filter__header">
+        Фільтри
+    </div>
+    @for (filter of productFilters; track filter) {
+        <app-field-filter class="filter"
+        [filter]="filter"
+        (filterUpdated)="onFilterUpdated($event)"
+        ></app-field-filter>
+    }
 </div>

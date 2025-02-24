@@ -2,8 +2,10 @@
     overflow: scroll;
     flex-wrap: wrap;
     display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 10px;
-    width: 1100px;
+    gap: 26px;
     // height: calc(100vh - 97px - 40px - 100px);
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -12,13 +14,5 @@
         display: none;
     }
 
-    &__card {
-        &:not(:nth-child(4n)) {
-            margin-right: 26px;
-        }
-
-        &:nth-child(n + 5) {
-            margin-top: 26px;
-        }
-    }
+ 
 }

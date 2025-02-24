@@ -9,17 +9,24 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ProductsService extends ApiService {
-  readonly urlPath = 'category' as const;
+  readonly urlPath = 'products' as const;
 
   constructor(http: HttpClient, envService: EnvironmentService) {
     super(http, envService);
   }
 
-  getProducts(categoryId: string): Observable<Product[]> {
-    const url = `${this.urlPath}/${categoryId}/products`;
+  getProducts(queryParams?: Record<string, any>): Observable<Product[]> {
+    // Build query string from the provided params
+    let path: string = this.urlPath; // "products"
 
-    return this.get<Product[]>(url).pipe(
-      map((res) => Product.fromArrayJson(res))
+    if (queryParams && Object.keys(queryParams).length > 0) {
+      const queryString = this.generateQueryParams(queryParams);
+      path = `${path}?${queryString}`;
+    }
+
+    // Now call the "get" method from ApiService:
+    return this.get<Product[]>(path).pipe(
+      map(res => Product.fromArrayJson(res))
     );
   }
 }

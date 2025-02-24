@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ShellComponent } from './core/components/shell/shell.component';
-
+import { MatIconRegistry } from '@angular/material/icon';
+import { inject } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-root',
   imports: [ShellComponent],
@@ -9,4 +11,11 @@ import { ShellComponent } from './core/components/shell/shell.component';
 })
 export class AppComponent {
   title = 'fe-customer-app';
+
+  icons: Record<string, string> = {
+    search: 'assets/icons/search.svg',
+  };
+
+
+  
 }

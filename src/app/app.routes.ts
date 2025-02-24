@@ -8,7 +8,7 @@ export const routes: Routes = [
       component: LandingPageComponent,
     },
     {
-      path: 'category/:id/products',
+      path: 'products',
       component: ProductsPageComponent,
     },
     {
