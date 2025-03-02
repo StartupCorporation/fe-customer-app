@@ -1,6 +1,6 @@
 export class CategoryModel {
   constructor(
-    public id = 0,
+    public id = '',
     public name = '',
     public description = '',
     public image = ''

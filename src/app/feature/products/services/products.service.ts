@@ -26,7 +26,7 @@ export class ProductsService extends ApiService {
 
     // Now call the "get" method from ApiService:
     return this.get<Product[]>(path).pipe(
-      map(res => Product.fromArrayJson(res))
+      map((res:any) => Product.fromArrayJson(res.content))
     );
   }
 }

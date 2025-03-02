@@ -36,14 +36,13 @@
     &__entities {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        align-items: start;
+        justify-content: start;
+        width: 100%;
     }
 
     .search-bar {
         width: 100%;
-    }
-    .products-list {
     }
 }
 

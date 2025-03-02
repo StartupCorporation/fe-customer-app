@@ -17,11 +17,11 @@ import { SafeArrayPipe } from 'src/app/shared/pipes/safeArray.pipe';
 import { MatInputModule } from '@angular/material/input';
 import { ProductsMockService } from '../../services/mocks/products-mock.service';
 import { CategoryMockService } from '../../services/mocks/category-mock.service';
+
 @Component({
   selector: 'app-products-page',
   templateUrl: './products-page.component.html',
   styleUrls: ['./products-page.component.scss'],
-  // If using a standalone component, include your imports array:
   imports: [
     LandingFooterComponent,
     LandingWelcomeWindowComponent,
@@ -35,14 +35,14 @@ import { CategoryMockService } from '../../services/mocks/category-mock.service'
 })
 export class ProductsPageComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-private route = inject(ActivatedRoute);
+  private route = inject(ActivatedRoute);
+
   constructor(
     private router: Router,
     private productsService: ProductsService,
-    private categoryService: CategoryMockService
+    private categoryService: CategoryService
   ) {}
-  // We'll store category filters in an array (each a CHECKBOX filter).
-  // Once categories load, we convert them to these filters.
+
   categoryFilters: any[] = [];
 
   // Example product filters array: one range filter + one text filter
@@ -64,20 +64,18 @@ private route = inject(ActivatedRoute);
   ];
 
   get availableProductFilters() {
-    return this.productFilters.filter(f => f.label !== 'Пошук')
+    return this.productFilters.filter((f) => f.label !== 'Пошук');
   }
 
-  // We'll fetch products based on the current query params  
-  products$ = this.route.queryParams.pipe(  
-    takeUntil(this.destroy$),  
-    // Whenever query params change, build a query object and fetch products  
-    switchMap((params) => {  
-      const queryObj = this.buildQueryObjectFromParams(params);  
-      return this.productsService.getProducts(queryObj);  
-    })  
-  );  
-  
-  
+  // We'll fetch products based on the current query params
+  products$ = this.route.queryParams.pipe(
+    takeUntil(this.destroy$),
+    switchMap((params) => {
+      const queryObj = this.buildQueryObjectFromParams(params);
+      return this.productsService.getProducts(queryObj);
+    })
+  );
+
   ngOnInit(): void {
     // 1) Load categories, then map to checkbox filters
     this.categoryService
@@ -89,11 +87,10 @@ private route = inject(ActivatedRoute);
           label: cat.name,
           type: FilterType.CHECKBOX,
           value: false,
-          // Optionally store ID or any other property if you need it
           id: cat.id,
         }));
 
-        // 2) Immediately apply current query params to these filters (if any)
+        // 2) Apply current query params to these filters (if any)
         const params = this.route.snapshot.queryParams;
         this.applyQueryParamsToFilters(params);
       });
@@ -104,8 +101,7 @@ private route = inject(ActivatedRoute);
    * We merge this updated filter, then rebuild the query params and navigate.
    */
   onFilterChanged(updatedFilter: GenericFilter): void {
-    // 1) Determine which array (categories or productFilters) holds this filter
-    //    We'll match by label or a unique ID.
+    // 1) Determine which array holds this filter (productFilters or categoryFilters)
     let found = this.productFilters.find((f) => f.label === updatedFilter.label);
     if (found) {
       Object.assign(found, updatedFilter);
@@ -120,7 +116,7 @@ private route = inject(ActivatedRoute);
     // 2) Build a new queryParams object from the updated filters
     const queryParams = this.buildQueryParamsFromFilters();
 
-    // 3) Update the URL with the new query params (staying on the same route)
+    // 3) Update the URL
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams,
@@ -132,19 +128,17 @@ private route = inject(ActivatedRoute);
    * of category filters, range filters, etc. so the UI matches the URL.
    */
   private applyQueryParamsToFilters(params: any): void {
-    // 1) Categories: if we have ?categoryId=1&categoryId=2, it's an array
+    // 1) Categories
     let categoryIds: string[] = [];
-    if (Array.isArray(params['categoryId'])) {
-      categoryIds = params['categoryId'];
-    } else if (typeof params['categoryId'] === 'string') {
-      categoryIds = [params['categoryId']];
+    if (Array.isArray(params['categoriesIds'])) {
+      categoryIds = params['categoriesIds'];
+    } else if (typeof params['categoriesIds'] === 'string') {
+      categoryIds = [params['categoriesIds']];
     }
-    // Mark category filters that match these IDs as checked
     this.categoryFilters.forEach((cf) => {
-      const thisCatId = cf['id']; // we stored id in filter
-      cf.value = categoryIds.includes(String(thisCatId));
+      cf.value = categoryIds.includes(String(cf.id));
     });
-
+  
     // 2) Search (STRING filter)
     const nameValue = params['name'] || '';
     const stringFilter = this.productFilters.find(
@@ -153,36 +147,42 @@ private route = inject(ActivatedRoute);
     if (stringFilter) {
       stringFilter.value = nameValue;
     }
-
-    // 3) Range filter: e.g. ?priceMin=10&priceMax=50
+  
+    // 3) PriceRange
     const rangeFilter = this.productFilters.find(
       (f) => f.type === FilterType.RANGE
     );
     if (rangeFilter) {
-      if (params['priceMin']) {
-        rangeFilter.valueStart = +params['priceMin'];
-      }
-      if (params['priceMax']) {
-        rangeFilter.valueEnd = +params['priceMax'];
+      const priceRangeStr = params['priceRange'];
+      if (priceRangeStr) {
+        try {
+          const parsed = JSON.parse(priceRangeStr);
+          rangeFilter.valueStart = parsed.min;
+          rangeFilter.valueEnd = parsed.max;
+        } catch (err) {
+          // fallback if parse fails
+          rangeFilter.valueStart = 0;
+          rangeFilter.valueEnd = 100;
+        }
       }
     }
   }
+  
 
   /**
    * Build a queryParams object from the local filters.
-   * Example: gather all checked categories, the search string,
-   * the price range, etc.
+   * Now using priceRange as a single JSON-ified object
    */
   private buildQueryParamsFromFilters(): any {
     const queryParams: any = {};
 
-    // 1) Gather all checked categories into ?categoryId=...
+    // 1) Gather all checked categories
     const checkedIds = this.categoryFilters
-      .filter((cf) => cf.value === true) // if .value is boolean
-      .map((cf) => cf['id']); // stored category id in 'id'
+      .filter((cf) => cf.value === true)
+      .map((cf) => cf.id);
+
     if (checkedIds.length) {
-      // for multiple IDs, Angular can handle arrays -> `?categoryId=1&categoryId=2`
-      queryParams['categoryId'] = checkedIds;
+      queryParams['categoriesIds'] = checkedIds;
     }
 
     // 2) The string (search) filter
@@ -193,13 +193,16 @@ private route = inject(ActivatedRoute);
       queryParams['name'] = stringFilter.value;
     }
 
-    // 3) The range filter
+    // 3) The range filter -> single object: ?priceRange={"min":X,"max":Y}
     const rangeFilter = this.productFilters.find(
       (f) => f.type === FilterType.RANGE
     );
     if (rangeFilter) {
-      queryParams['priceMin'] = rangeFilter.valueStart;
-      queryParams['priceMax'] = rangeFilter.valueEnd;
+      const priceRangeObj = {
+        min: rangeFilter.valueStart,
+        max: rangeFilter.valueEnd,
+      };
+      queryParams['priceRange'] = JSON.stringify(priceRangeObj);
     }
 
     return queryParams;
@@ -207,40 +210,46 @@ private route = inject(ActivatedRoute);
 
   /**
    * Build a service query object from query params that the productsService expects.
-   * (If your service expects `categoryId` array, `search`, `priceMin`, `priceMax`, etc.)
    */
   private buildQueryObjectFromParams(params: any): any {
-    // categoryId might be single or multiple
+    // 1) category IDs
     let catIds: string[] = [];
-    if (Array.isArray(params['categoryId'])) {
-      catIds = params['categoryId'];
-    } else if (typeof params['categoryId'] === 'string') {
-      catIds = [params['categoryId']];
+    if (Array.isArray(params['categoriesIds'])) {
+      catIds = params['categoriesIds'];
+    } else if (typeof params['categoriesIds'] === 'string') {
+      catIds = [params['categoriesIds']];
+    }
+
+    // 2) Parse the priceRange param
+    let priceRange = { min: 0, max: 999999 };
+    if (params['priceRange']) {
+      try {
+        priceRange = JSON.parse(params['priceRange']);
+      } catch (err) {
+        // fallback
+      }
     }
 
     return {
-      categoryId: catIds,
+      categoriesIds: catIds,
       name: params['name'] || '',
-      priceMin: params['priceMin'] || 0,
-      priceMax: params['priceMax'] || 999999,
+      priceRange: priceRange,
+      page: 0,
+      size: 10
     };
   }
 
   onSearchInput(event: Event): void {
     const searchTerm = (event.target as HTMLInputElement).value;
-  
-    // Find the string filter in your productFilters array
+    // Find the string filter
     const stringFilter = this.productFilters.find(
       (f) => f.type === FilterType.STRING
     );
     if (!stringFilter) {
       return;
     }
-  
-    // Update the filter value
+    // Update and re-emit
     stringFilter.value = searchTerm;
-  
-    // Re-emit this filter change so the component updates query params
     this.onFilterChanged(stringFilter);
   }
 
