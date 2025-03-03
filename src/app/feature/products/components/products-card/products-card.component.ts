@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { Product } from '../../models/product-model';
 import { TruncateNumberPipe } from "../../../../shared/pipes/truncate-number.pipe";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-products-card',
@@ -9,6 +10,7 @@ import { TruncateNumberPipe } from "../../../../shared/pipes/truncate-number.pip
   imports: [TruncateNumberPipe]
 })
 export class ProductsCardComponent implements OnInit {
+  private router = inject(Router);
 
   @Input() product: Product = new Product();
 
@@ -19,4 +21,7 @@ export class ProductsCardComponent implements OnInit {
     return `http://localhost:9999/images/${name}`;
   }
 
+  redirectToDetailPage() {
+    this.router.navigate([`/products/${this.product.id}`]);
+  }
 }
