@@ -58,6 +58,8 @@ export class LandingCategoriesComponent implements OnInit {
       queryParams: {
         categoriesIds: categoryIds,
         priceRange: JSON.stringify(priceRange),
+        page: 1,
+        size: 10
       },
     });
   }

@@ -1,3 +1,30 @@
-<p>
-  table-products-pagination works!
-</p>
+<div class="table-order-pagination table-pagination">
+  <h6 class="table-pagination-info">
+    Кількість продуктів
+    <span>{{ totalProducts }}</span>
+  </h6>
+
+  <div class="table-pagination-controls">
+    <button
+      class="button button--primary" 
+      [disabled]="isPreviousPageDisabled"
+      (click)="previousPage()"
+    >
+      <p>Попередн.</p>
+    </button>
+    <select
+      class="input-pagination-select"
+      [(ngModel)]="pagination.page"
+      (change)="selectPaginationChanged()"
+    >
+      <option *ngFor="let page of pagesCount">{{ page }}</option>
+    </select>
+    <button
+      class="button button--primary" 
+      [disabled]="isNextPageDisabled"
+      (click)="nextPage()"
+    >
+      <p>Наступн.</p>
+    </button>
+  </div>
+</div>

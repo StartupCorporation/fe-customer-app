@@ -3,16 +3,14 @@
     flex-wrap: wrap;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     padding: 10px;
     gap: 26px;
-    // height: calc(100vh - 97px - 40px - 100px);
+    min-height: calc(100vh - 97px - 40px - 100px - 230px);
     -ms-overflow-style: none;
     scrollbar-width: none;
 
     &::-webkit-scrollbar { 
         display: none;
     }
-
- 
 }

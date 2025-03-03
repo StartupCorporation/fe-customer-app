@@ -27,6 +27,13 @@
           <app-products-list
             [products]="products$ | async | safeArray"
           ></app-products-list>
+
+        </div>
+        <div class="products-page__pagination">
+          <app-table-products-pagination
+          [products]="products$ | async | safeArray"
+          [pagination]="paginationFilters"
+          ></app-table-products-pagination>
         </div>
       </div>
     </div>

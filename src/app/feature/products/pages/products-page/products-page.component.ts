@@ -17,6 +17,8 @@ import { SafeArrayPipe } from 'src/app/shared/pipes/safeArray.pipe';
 import { MatInputModule } from '@angular/material/input';
 import { ProductsMockService } from '../../services/mocks/products-mock.service';
 import { CategoryMockService } from '../../services/mocks/category-mock.service';
+import { TableProductsPaginationComponent } from "../../components/table-products-pagination/table-products-pagination.component";
+import { PaginationModel } from 'src/app/shared/models/pagination-model';
 
 @Component({
   selector: 'app-products-page',
@@ -31,6 +33,7 @@ import { CategoryMockService } from '../../services/mocks/category-mock.service'
     SafeArrayPipe,
     MatFormFieldModule,
     MatInputModule,
+    TableProductsPaginationComponent
   ],
 })
 export class ProductsPageComponent implements OnInit, OnDestroy {
@@ -62,6 +65,8 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       value: '',
     },
   ];
+
+  paginationFilters = new PaginationModel();
 
   get availableProductFilters() {
     return this.productFilters.filter((f) => f.label !== 'Пошук');
@@ -185,6 +190,9 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       rangeFilter.minRange = rangeFilter.valueStart;
       rangeFilter.maxRange = rangeFilter.valueEnd;
     }
+
+    this.paginationFilters.page = params['page'];
+    this.paginationFilters.size = params['size'];
   }
 
   /**
@@ -223,6 +231,9 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       queryParams['priceRange'] = JSON.stringify(priceRangeObj);
     }
 
+    queryParams['page'] = this.paginationFilters.page;
+    queryParams['size'] = this.paginationFilters.size;
+
     return queryParams;
   }
 
@@ -252,8 +263,8 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       categoriesIds: catIds,
       name: params['name'] || '',
       priceRange: priceRange,
-      page: 0,
-      size: 10
+      page: params['page'] || 0,
+      size: params['size'] || 10
     };
   }
 

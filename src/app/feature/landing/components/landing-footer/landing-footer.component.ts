@@ -12,7 +12,7 @@ export class LandingFooterComponent {
  
   constructor(private scrollService: ScrollService) {}
 
- phoneNumbers: string[] = ['+380 73 109 09 86', '+380 73 109 09 86'];
+ phoneNumbers: string[] = ['+380 73 109 09 86', '+380 63 410 42 47'];
 
   footerLinks = [
     { label: 'Категорії', url: 'categories' },

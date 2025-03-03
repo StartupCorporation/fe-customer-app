@@ -29,8 +29,8 @@
     }
 
     &__footer {
-        margin-top: 80px;
-        margin-bottom: 60px;
+        margin-top: 50px;
+        margin-bottom: 30px;
     }
 
     &__entities {
@@ -39,6 +39,12 @@
         align-items: start;
         justify-content: start;
         width: 100%;
+    }
+
+    &__pagination {
+        margin-top: 20px;
+        width: 100%;
+
     }
 
     .search-bar {
