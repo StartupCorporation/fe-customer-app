@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { FieldFilterComponent } from '../../../../shared/components/field-filter/field-filter.component';
 import { FilterType } from 'src/app/shared/enums/filter-type.enum';
@@ -10,7 +10,7 @@ import { GenericFilter } from '../../models/filter-types';
   styleUrls: ['./products-filter.component.scss'],
   imports: [MatListModule, FieldFilterComponent],
 })
-export class ProductsFilterComponent   {
+export class ProductsFilterComponent {
   @Input() productFilters: GenericFilter[] = [];
   @Input() categoryFilters: GenericFilter[] = [];
 

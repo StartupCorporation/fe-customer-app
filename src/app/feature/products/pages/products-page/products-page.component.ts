@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, switchMap, takeUntil } from 'rxjs';
+import { first, Subject, switchMap, takeUntil } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ProductsService } from '../../services/products.service';
 import { CategoryService } from '../../services/category.service';
@@ -39,9 +39,9 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private productsService: ProductsService,
-    private categoryService: CategoryService
-  ) {}
+    private productsService: ProductsMockService,
+    private categoryService: CategoryMockService
+  ) { }
 
   categoryFilters: any[] = [];
 
@@ -51,9 +51,9 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       label: 'Ціна',
       type: FilterType.RANGE,
       valueStart: 0,
-      valueEnd: 80,
+      valueEnd: 1000,
       minRange: 0,
-      maxRange: 100,
+      maxRange: 10000,
       step: 1,
     },
     {
@@ -94,6 +94,22 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         const params = this.route.snapshot.queryParams;
         this.applyQueryParamsToFilters(params);
       });
+
+    this.products$
+      .pipe(first())
+      .subscribe(res => {
+        this.redefineProductsMaxPriceRange(res);
+      });
+  }
+
+  redefineProductsMaxPriceRange(products: Product[]) {
+    const rangeFilter = this.productFilters.find(
+      (f) => f.type === FilterType.RANGE
+    );
+
+    const maxProductPrice = Math.ceil(Math.max.apply(null, products.map(p => p.price)));
+    rangeFilter.maxRange = maxProductPrice;
+    rangeFilter.valueEnd = maxProductPrice;
   }
 
   /**
@@ -138,7 +154,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     this.categoryFilters.forEach((cf) => {
       cf.value = categoryIds.includes(String(cf.id));
     });
-  
+
     // 2) Search (STRING filter)
     const nameValue = params['name'] || '';
     const stringFilter = this.productFilters.find(
@@ -147,7 +163,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     if (stringFilter) {
       stringFilter.value = nameValue;
     }
-  
+
     // 3) PriceRange
     const rangeFilter = this.productFilters.find(
       (f) => f.type === FilterType.RANGE
@@ -162,12 +178,14 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         } catch (err) {
           // fallback if parse fails
           rangeFilter.valueStart = 0;
-          rangeFilter.valueEnd = 100;
+          rangeFilter.valueEnd = 1000;
         }
       }
+
+      rangeFilter.minRange = rangeFilter.valueStart;
+      rangeFilter.maxRange = rangeFilter.valueEnd;
     }
   }
-  
 
   /**
    * Build a queryParams object from the local filters.

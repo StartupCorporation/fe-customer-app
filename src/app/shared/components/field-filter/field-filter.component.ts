@@ -23,7 +23,13 @@ export class FieldFilterComponent {
 
   FilterType = FilterType;
 
+  ngOnChanges() {
+    console.log("Filter came to filter section - " + JSON.stringify(this.filter));
+
+  }
+
   onValueChanged(): void {
+    
     this.filterUpdated.emit(this.filter);
   }
 }

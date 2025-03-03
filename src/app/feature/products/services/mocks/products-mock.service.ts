@@ -37,7 +37,7 @@ export class ProductsMockService extends ApiService {
       id: '4',
       name: 'Smartwatch',
       images: ['/assets/images/category-1-Photoroom.png'],
-      price: 49051.1,
+      price: 55555.1,
     },
     {
       id: '5',
