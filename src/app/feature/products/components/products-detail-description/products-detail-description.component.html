@@ -1,3 +1,23 @@
-<p>
-  products-detail-description works!
-</p>
+<div class="products-detail">
+  <h2 class="products-detail__title">{{product.name}}</h2>
+  <p class="products-detail__description">
+    {{product.description}}
+  </p>
+
+  <div class="products-detail__footer">
+    <div class="products-detail__price">
+      {{product.price | truncateNumber}}
+    </div>
+
+    <div class="products-detail__actions">
+      <button class="button button--primary button--order">
+        <p>Замовити</p>
+      </button>
+
+      <button class="button button--secondary button-characteristics">
+        <p>Характеристики</p>
+      </button>
+    </div>
+  </div>
+
+</div>

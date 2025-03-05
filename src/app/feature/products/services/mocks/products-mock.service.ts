@@ -14,6 +14,16 @@ export class ProductsMockService extends ApiService {
   constructor(http: HttpClient, envService: EnvironmentService) {
     super(http, envService);
   }
+
+  private mockProduct: Product =
+    {
+      id: '1',
+      name: 'Інвертор Deye SUN-6K-SG03LP1-EU',
+      images: ['/assets/images/category-1-Photoroom.png'],
+      price: 49051.0,
+      description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae architecto iste officiis dolorem quibusdam ducimus. Iste qui reprehenderit molestiae architecto minus dolore perspiciatis quam, repudiandae exercitationem tenetur.Sequi, quibusdam maxime.Lorem ipsum dolor sit amet, consectetur adipisicing elit.Laudantium est hic eaque praesentium ad unde maxime.Nesciunt, magni, ducimus veromolestias doloremque nulla, dolor deleniti ab adipisci dolore sed odit.Lorem ipsum dolor sit amet consectetur adipisicing elit.Iste, voluptate tempora sint esse quo eius nam in fuga sitimpedit ipsam illum reprehenderit quis voluptatum et fugit placeat quas? Ipsam."
+    };
+
   private mockProducts: Product[] = [
     {
       id: '1',
@@ -134,7 +144,11 @@ export class ProductsMockService extends ApiService {
 
     // Now call the "get" method from ApiService:
     this.get<Product[]>(path).pipe(map((res) => Product.fromArrayJson(res)));
-    
+
     return of(this.mockProducts);
+  }
+
+  getProductById(productId: string): Observable<Product> {
+    return of(this.mockProduct);
   }
 }

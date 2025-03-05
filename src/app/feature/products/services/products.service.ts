@@ -26,7 +26,17 @@ export class ProductsService extends ApiService {
 
     // Now call the "get" method from ApiService:
     return this.get<Product[]>(path).pipe(
-      map((res:any) => Product.fromArrayJson(res.content))
+      map((res: any) => Product.fromArrayJson(res.content))
     );
+  }
+
+  getProductById(productId: string): Observable<Product> {
+    let path: string = `${this.urlPath}/${productId}`;
+
+    return this.get<Product[]>(path)
+      .pipe(
+        map((res) => Product.fromJson(res)
+        )
+      );
   }
 }

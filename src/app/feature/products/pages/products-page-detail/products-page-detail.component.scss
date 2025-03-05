@@ -1,6 +1,6 @@
 @use "variables" as *;
 
-.products-page {
+.products-detail {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -24,17 +24,11 @@
         margin-bottom: 30px;
     }
 
- 
-}
-
-:host {
-    ::ng-deep {
-        .mat-mdc-form-field {
-            width: 100%;
-        }
-
-        .mat-mdc-text-field-wrapper {
-            border-radius: 30px;
-        }
+    &__info {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        margin-top: 35px;
+        gap: 50px;
     }
 }

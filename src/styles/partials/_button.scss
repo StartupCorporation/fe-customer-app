@@ -14,7 +14,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: $font-montserrat, sans-serif;
+  font-family: $font-mont, sans-serif;
   transition: all 0.3s ease-in-out;
 
   &--primary {
@@ -27,6 +27,12 @@
 
   &--long {
     width: 320px;
+  }
+
+  &--secondary {
+    background-color: $white;
+    color: $blue;
+    border: 2px solid $blue;
   }
 }
 

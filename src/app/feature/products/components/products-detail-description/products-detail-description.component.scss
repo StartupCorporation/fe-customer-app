@@ -1,0 +1,55 @@
+@use "variables" as *;
+
+.products-detail {
+    background-color: $white;
+    width: 100%;
+    padding: 40px 60px 60px 60px;
+    border-radius: 30px;
+
+    &__title {
+        color: $blue;
+        font-family: $font-mont;
+        font-size: 36px;
+        font-weight: 700;
+    }
+
+    &__description {
+        color: #8d8ba7;
+        font-family: $font-mont;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: normal;
+        margin-top: 20px;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 50px;
+    }
+
+    &__price {
+        color: $blue;
+        font-family: $font-mont;
+        font-size: 48px;
+        font-weight: 700;
+        line-height: normal;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .button{
+        &--order {
+            width: 160px;
+        }
+
+        &--characteristics{
+            width: 240px;
+        }
+    }
+}
