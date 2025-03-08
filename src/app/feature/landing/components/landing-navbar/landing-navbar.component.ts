@@ -25,4 +25,8 @@ export class LandingNavbarComponent {
     this.router.navigate(['/home']);
   }
 
+  openCart() {
+    
+  }
+
 }

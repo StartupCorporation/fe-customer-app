@@ -41,6 +41,13 @@
         display: flex;
         align-items: center;
         justify-content: end;
+        gap: 20px;
+
+        .cart{
+            width: 26px;
+            height: 26px;
+            background: url("/assets/icons/cart.svg") no-repeat;
+        }
     }
 
     &__phone {
@@ -78,3 +85,4 @@
         }
     }
 }
+

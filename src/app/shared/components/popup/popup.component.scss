@@ -1,0 +1,76 @@
+@use "variables" as *;
+
+.popup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1052;
+
+    .popup-overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(black, 0.4);
+    }
+
+    .popup {
+        position: relative;
+        width: 65%;
+        min-height: 35%;
+        background-color: $white;
+        z-index: 1;
+
+        &-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            border-bottom: 1px solid grey;
+
+            .popup-title {
+                padding-left: 16px;
+                font-size: 18px;
+            }
+
+            .popup-close-button {
+                width: 50px;
+                height: 50px;
+                border-left: 1px solid grey;
+                font-size: 22px;
+            }
+        }
+
+        &-body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            padding: 32px 16px;
+        }
+
+        &-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            padding: 0 16px;
+            border-top: 1px solid grey;
+        }
+    }
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(black, 0.4);
+}

@@ -1,0 +1,18 @@
+<div class="popup-container">
+  <div class="popup">
+    <div class="popup-header">
+      <p class="popup-title">{{ popupTitle }}</p>
+      <button class="popup-close-button" (click)="closeModal()">
+      </button>
+    </div>
+    <div class="popup-body">
+      <ng-content select="[header]"></ng-content>
+
+    </div>
+    <div class="popup-footer">
+      <ng-content select="[footer]"></ng-content>
+    </div>
+  </div>
+
+  <div class="modal-overlay" (click)="closeModal()"></div>
+</div>
