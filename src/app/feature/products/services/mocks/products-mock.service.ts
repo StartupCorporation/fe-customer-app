@@ -4,6 +4,7 @@ import { filter, map, Observable, of } from 'rxjs';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { HttpClient } from '@angular/common/http';
 import { EnvironmentService } from 'src/app/core/services/environment.service';
+import { delay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -47,7 +48,7 @@ export class ProductsMockService extends ApiService {
       id: '4',
       name: 'Smartwatch',
       images: ['/assets/images/category-1-Photoroom.png'],
-      price: 55555.1,
+      price: 75555.1,
     },
     {
       id: '5',
@@ -134,18 +135,73 @@ export class ProductsMockService extends ApiService {
     // },
   ];
 
-  getProducts(queryParams?: Record<string, any>): Observable<Product[]> {
-    let path: string = this.urlPath; // "products"
-
-    if (queryParams && Object.keys(queryParams).length > 0) {
-      const queryString = this.generateQueryParams(queryParams);
-      path = `${path}?${queryString}`;
+  getProducts(queryParams?: Record<string, any>): Observable<any> {
+    // Clone the mock products to avoid modifying the original
+    let filteredProducts = [...this.mockProducts];
+    
+    console.log('Mock service received query params:', queryParams);
+    
+    // Apply filters if provided
+    if (queryParams) {
+      // Filter by categories
+      let categoryIds: string[] = [];
+      if (Array.isArray(queryParams['categoriesIds'])) {
+        categoryIds = queryParams['categoriesIds'];
+      } else if (typeof queryParams['categoriesIds'] === 'string') {
+        categoryIds = [queryParams['categoriesIds']];
+      }
+      
+      if (categoryIds.length > 0) {
+        filteredProducts = filteredProducts.filter(product => 
+          categoryIds.includes(product.id.split('-')[0])  // Assuming id format is "categoryId-productId"
+        );
+      }
+      
+      // Filter by search term
+      if (queryParams['name']) {
+        const searchTerm = queryParams['name'].toLowerCase();
+        filteredProducts = filteredProducts.filter(product => 
+          product.name.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      // Filter by price range
+      const minPrice = queryParams['price.min'] ? Number(queryParams['price.min']) : undefined;
+      const maxPrice = queryParams['price.max'] ? Number(queryParams['price.max']) : undefined;
+      
+      console.log('Price filter values:', minPrice, maxPrice);
+      
+      if (minPrice !== undefined && maxPrice !== undefined) {
+        filteredProducts = filteredProducts.filter(product => 
+          product.price >= minPrice && product.price <= maxPrice
+        );
+      }
     }
-
-    // Now call the "get" method from ApiService:
-    this.get<Product[]>(path).pipe(map((res) => Product.fromArrayJson(res)));
-
-    return of(this.mockProducts);
+    
+    // Get total count before pagination
+    const totalElements = filteredProducts.length;
+    
+    // Apply pagination
+    let page = queryParams?.['page'] ? Number(queryParams['page']) : 1;
+    let size = queryParams?.['size'] ? Number(queryParams['size']) : 10;
+    
+    // Ensure page and size are valid
+    page = Math.max(1, page);
+    size = Math.max(1, Math.min(50, size));
+    
+    const startIndex = (page - 1) * size;
+    const endIndex = startIndex + size;
+    const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+    
+    // Return both the paginated products and pagination info
+    return of({
+      content: paginatedProducts,
+      pagination: {
+        totalElements: totalElements,
+        page: page,
+        size: size
+      }
+    }).pipe(delay(300)); // Simulate network delay
   }
 
   getProductById(productId: string): Observable<Product> {

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { first, Subject, switchMap, takeUntil } from 'rxjs';
+import { first, Subject, switchMap, takeUntil, tap, map } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ProductsService } from '../../services/products.service';
 import { CategoryService } from '../../services/category.service';
@@ -53,8 +53,8 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     {
       label: 'Ціна',
       type: FilterType.RANGE,
-      valueStart: 0,
-      valueEnd: 1000,
+      id: 'price',
+      value: [0, 10000], // Using value array format for consistency
       minRange: 0,
       maxRange: 10000,
       step: 1,
@@ -62,6 +62,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     {
       label: 'Пошук',
       type: FilterType.STRING,
+      id: 'name',
       value: '',
     },
   ];
@@ -77,7 +78,17 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy$),
     switchMap((params) => {
       const queryObj = this.buildQueryObjectFromParams(params);
-      return this.productsService.getProducts(queryObj);
+      return this.productsService.getProducts(queryObj).pipe(
+        tap((response: any) => {
+          // Update pagination info from response
+          if (response.pagination) {
+            this.paginationFilters.totalElements = response.pagination.totalElements;
+            this.paginationFilters.page = response.pagination.page;
+            this.paginationFilters.size = response.pagination.size;
+          }
+        }),
+        map(response => response.content || [])
+      );
     })
   );
 
@@ -100,21 +111,45 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         this.applyQueryParamsToFilters(params);
       });
 
-    this.products$
+    // Get all products first to set the max price range
+    this.productsService.getProducts()
       .pipe(first())
-      .subscribe(res => {
-        this.redefineProductsMaxPriceRange(res);
+      .subscribe((response: any) => {
+        const products = response.content || [];
+        console.log('Initial products for max price:', products.length);
+        this.redefineProductsMaxPriceRange(products);
       });
   }
 
   redefineProductsMaxPriceRange(products: Product[]) {
+    if (!products || products.length === 0) return;
+    
+    // Find the price range filter
     const rangeFilter = this.productFilters.find(
-      (f) => f.type === FilterType.RANGE
+      (f) => f.type === FilterType.RANGE && f.id === 'price'
     );
-
-    const maxProductPrice = Math.ceil(Math.max.apply(null, products.map(p => p.price)));
-    rangeFilter.maxRange = maxProductPrice;
-    rangeFilter.valueEnd = maxProductPrice;
+    
+    if (rangeFilter) {
+      // Calculate the maximum price from the products
+      const maxPrice = Math.max(...products.map(p => p.price));
+      
+      // Round up to the nearest hundred for a cleaner UI
+      const roundedMaxPrice = Math.ceil(maxPrice / 100) * 100;
+      
+      console.log('Max price found:', maxPrice, 'Rounded to:', roundedMaxPrice);
+      
+      // Update the filter's max range
+      rangeFilter.maxRange = roundedMaxPrice;
+      
+      // Only set the end value if it's not already set by user filters
+      const params = this.route.snapshot.queryParams;
+      const hasUserPriceFilter = params['price.max'] !== undefined;
+      
+      if (!hasUserPriceFilter) {
+        // Keep the min value, update the max value
+        rangeFilter.value = [rangeFilter.value[0], roundedMaxPrice];
+      }
+    }
   }
 
   /**
@@ -149,50 +184,38 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
    * of category filters, range filters, etc. so the UI matches the URL.
    */
   private applyQueryParamsToFilters(params: any): void {
-    // 1) Categories
+    // Apply category filters
     let categoryIds: string[] = [];
     if (Array.isArray(params['categoriesIds'])) {
       categoryIds = params['categoriesIds'];
     } else if (typeof params['categoriesIds'] === 'string') {
       categoryIds = [params['categoriesIds']];
     }
-    this.categoryFilters.forEach((cf) => {
-      cf.value = categoryIds.includes(String(cf.id));
+    
+    this.categoryFilters.forEach((filter) => {
+      filter.value = categoryIds.includes(filter.id);
     });
 
-    // 2) Search (STRING filter)
-    const nameValue = params['name'] || '';
-    const stringFilter = this.productFilters.find(
-      (f) => f.type === FilterType.STRING
-    );
-    if (stringFilter) {
-      stringFilter.value = nameValue;
-    }
-
-    // 3) PriceRange
-    const rangeFilter = this.productFilters.find(
-      (f) => f.type === FilterType.RANGE
-    );
-    if (rangeFilter) {
-      const priceRangeStr = params['priceRange'];
-      if (priceRangeStr) {
-        try {
-          const parsed = JSON.parse(priceRangeStr);
-          rangeFilter.valueStart = parsed.min;
-          rangeFilter.valueEnd = parsed.max;
-        } catch (err) {
-          // fallback if parse fails
-          rangeFilter.valueStart = 0;
-          rangeFilter.valueEnd = 1000;
+    // Apply product filters
+    this.productFilters.forEach((filter) => {
+      if (filter.type === FilterType.RANGE) {
+        const minParam = params[`${filter.id}.min`];
+        const maxParam = params[`${filter.id}.max`];
+        if (minParam !== undefined && maxParam !== undefined) {
+          filter.value = [Number(minParam), Number(maxParam)];
         }
+      } else if (filter.type === FilterType.STRING) {
+        filter.value = params[filter.id] || '';
       }
+    });
 
-      rangeFilter.minRange = rangeFilter.valueStart;
-      rangeFilter.maxRange = rangeFilter.valueEnd;
+    // Apply pagination
+    if (params.page) {
+      this.paginationFilters.page = Number(params.page);
     }
-
-    this.paginationFilters.page = params['page'];
-    this.paginationFilters.size = params['size'];
+    if (params.size) {
+      this.paginationFilters.size = Number(params.size);
+    }
   }
 
   /**
@@ -200,41 +223,35 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
    * Now using priceRange as a single JSON-ified object
    */
   private buildQueryParamsFromFilters(): any {
-    const queryParams: any = {};
+    const params: any = {};
 
-    // 1) Gather all checked categories
-    const checkedIds = this.categoryFilters
-      .filter((cf) => cf.value === true)
-      .map((cf) => cf.id);
-
-    if (checkedIds.length) {
-      queryParams['categoriesIds'] = checkedIds;
+    // Add category filters
+    const selectedCategories = this.categoryFilters
+      .filter((f) => f.value === true)
+      .map((f) => f.id);
+    if (selectedCategories.length > 0) {
+      params.categoriesIds = selectedCategories;
     }
 
-    // 2) The string (search) filter
-    const stringFilter = this.productFilters.find(
-      (f) => f.type === FilterType.STRING
-    );
-    if (stringFilter && stringFilter.value) {
-      queryParams['name'] = stringFilter.value;
+    // Add product filters
+    this.productFilters.forEach((filter) => {
+      if (filter.type === FilterType.RANGE && filter.value) {
+        params[`${filter.id}.min`] = filter.value[0];
+        params[`${filter.id}.max`] = filter.value[1];
+      } else if (filter.type === FilterType.STRING && filter.value) {
+        params[filter.id] = filter.value;
+      }
+    });
+
+    // Add pagination
+    if (this.paginationFilters.page) {
+      params.page = this.paginationFilters.page;
+    }
+    if (this.paginationFilters.size) {
+      params.size = this.paginationFilters.size;
     }
 
-    // 3) The range filter -> single object: ?priceRange={"min":X,"max":Y}
-    const rangeFilter = this.productFilters.find(
-      (f) => f.type === FilterType.RANGE
-    );
-    if (rangeFilter) {
-      const priceRangeObj = {
-        min: rangeFilter.valueStart,
-        max: rangeFilter.valueEnd,
-      };
-      queryParams['priceRange'] = JSON.stringify(priceRangeObj);
-    }
-
-    queryParams['page'] = this.paginationFilters.page;
-    queryParams['size'] = this.paginationFilters.size;
-
-    return queryParams;
+    return params;
   }
 
   /**
@@ -269,17 +286,22 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   }
 
   onSearchInput(event: Event): void {
-    const searchTerm = (event.target as HTMLInputElement).value;
-    // Find the string filter
-    const stringFilter = this.productFilters.find(
-      (f) => f.type === FilterType.STRING
-    );
-    if (!stringFilter) {
-      return;
+    const target = event.target as HTMLInputElement;
+    const searchFilter = this.productFilters.find(f => f.label === 'Пошук');
+    if (searchFilter) {
+      searchFilter.value = target.value;
+      this.onFilterChanged(searchFilter);
     }
-    // Update and re-emit
-    stringFilter.value = searchTerm;
-    this.onFilterChanged(stringFilter);
+  }
+
+  onPaginationChanged(): void {
+    // Update query params with the new pagination
+    const queryParams = this.buildQueryParamsFromFilters();
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge'
+    });
   }
 
   ngOnDestroy(): void {

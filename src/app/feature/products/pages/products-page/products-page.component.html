@@ -33,6 +33,7 @@
           <app-table-products-pagination
           [products]="products$ | async | safeArray"
           [pagination]="paginationFilters"
+          (paginationChanged)="onPaginationChanged()"
           ></app-table-products-pagination>
         </div>
       </div>

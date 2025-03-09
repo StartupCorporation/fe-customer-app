@@ -52,12 +52,9 @@ export class LandingCategoriesComponent implements OnInit {
   }
 
   navigateToCategory(categoryIds: string) {
-    let priceRange = { min: 0, max: 999999 };
-
     this.router.navigate(['/products'], {
       queryParams: {
         categoriesIds: categoryIds,
-        priceRange: JSON.stringify(priceRange),
         page: 1,
         size: 10
       },

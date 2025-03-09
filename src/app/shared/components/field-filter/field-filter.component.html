@@ -20,7 +20,7 @@
       <label class="filter-range-input-label">Від:</label>
       <input
         type="number"
-        [(ngModel)]="filter.valueStart"
+        [(ngModel)]="filter.value[0]"
         (ngModelChange)="onValueChanged()"
         [min]="0"
         [max]="filter.maxRange || 1000"
@@ -31,7 +31,7 @@
       <label class="filter-range-input-label">До:</label>
       <input
         type="number"
-        [(ngModel)]="filter.valueEnd"
+        [(ngModel)]="filter.value[1]"
         (ngModelChange)="onValueChanged()"
         [min]="0"
         [max]="filter.maxRange || 1000"
@@ -47,7 +47,7 @@
 >
       <input
         matSliderStartThumb
-        [(ngModel)]="filter.valueStart"
+        [(ngModel)]="filter.value[0]"
         (ngModelChange)="onValueChanged()"
         [step]="filter.step || 1"
         thumbLabel
@@ -55,7 +55,7 @@
       />
       <input
         matSliderEndThumb
-        [(ngModel)]="filter.valueEnd"
+        [(ngModel)]="filter.value[1]"
         (ngModelChange)="onValueChanged()"
         [step]="filter.step || 1"
         thumbLabel
