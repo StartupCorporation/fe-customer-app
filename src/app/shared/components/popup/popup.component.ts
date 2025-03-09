@@ -1,9 +1,10 @@
 import { AsyncPipe, CurrencyPipe, NgFor, NgIf } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnInit, OnDestroy, Output, HostListener, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, OnDestroy, Output, HostListener, ChangeDetectionStrategy, ViewContainerRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CartService } from 'src/app/core/services/cart.service';
 import { CartItem } from 'src/app/core/services/modal/cart.interface';
 import { TruncateNumberPipe } from '../../pipes/truncate-number.pipe';
+import { ProductsOrderPopupComponent } from 'src/app/feature/products/components/products-order-popup/products-order-popup.component';
 
 @Component({
   selector: 'app-popup',
@@ -14,6 +15,7 @@ import { TruncateNumberPipe } from '../../pipes/truncate-number.pipe';
 })
 export class PopupComponent implements OnInit, OnDestroy {
   private cartService = inject(CartService);
+  private viewContainerRef = inject(ViewContainerRef);
   @Input() popupTitle = 'Корзина';
   @Output() popupCloseEvent = new EventEmitter();
   
@@ -89,8 +91,21 @@ export class PopupComponent implements OnInit, OnDestroy {
   }
 
   checkout(): void {
-    // e.g. go to checkout process
-    console.log('Checkout clicked.');
+    // Show the order form popup
+    const orderPopup = document.createElement('div');
+    orderPopup.id = 'order-popup-container';
+    document.body.appendChild(orderPopup);
+    
+    const orderPopupComponentRef = this.viewContainerRef.createComponent(ProductsOrderPopupComponent);
+    orderPopupComponentRef.instance.closePopup.subscribe(() => {
+      // Remove the component when closed
+      orderPopupComponentRef.destroy();
+      document.body.removeChild(orderPopup);
+      this.closeModal(); // Close the cart modal too
+    });
+    
+    // Append the component's element to our container
+    orderPopup.appendChild(orderPopupComponentRef.location.nativeElement);
   }
 
   closeModal() {
