@@ -29,36 +29,32 @@ export class TableProductsPaginationComponent {
   }
 
   get isPreviousPageDisabled(): boolean {
-    return (
-      this.isUndefined(this.pagination.page) ||
-      parseInt(this.pagination.page.toString()) == 1
-    );
+    return this.pagination.page <= 1;
   }
 
   get isNextPageDisabled(): boolean {
-    return (
-      this.isUndefined(this.pagination.page) ||
-      parseInt(this.pagination.page.toString()) ==
-        this.max(this.pagesCount)
-    );
+    return this.pagination.page >= this.pagesCount.length;
   }
 
   previousPage() {
-    if (typeof this.pagination.page != 'number') {
-      return;
+    if (this.pagination.page > 1) {
+      this.pagination.page--;
+      this.paginationChanged.emit();
     }
-
-    this.pagination.page--;
-    this.paginationChanged.emit();
   }
 
   nextPage() {
-    if (typeof this.pagination.page != 'number') {
-      return;
+    if (this.pagination.page < this.pagesCount.length) {
+      this.pagination.page++;
+      this.paginationChanged.emit();
     }
+  }
 
-    this.pagination.page++;
-    this.paginationChanged.emit();
+  goToPage(page: number) {
+    if (page !== this.pagination.page) {
+      this.pagination.page = page;
+      this.paginationChanged.emit();
+    }
   }
 
   selectPaginationChanged() {

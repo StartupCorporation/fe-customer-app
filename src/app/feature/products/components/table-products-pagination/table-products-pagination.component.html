@@ -6,25 +6,34 @@
 
   <div class="table-pagination-controls">
     <button
-      class="button button--primary" 
+      class="pagination-arrow"
       [disabled]="isPreviousPageDisabled"
       (click)="previousPage()"
     >
-      <p>Попередн.</p>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </button>
-    <select
-      class="input-pagination-select"
-      [(ngModel)]="pagination.page"
-      (change)="selectPaginationChanged()"
-    >
-      <option *ngFor="let page of pagesCount">{{ page }}</option>
-    </select>
+
+    <div class="pagination-numbers">
+      <button
+        *ngFor="let page of pagesCount"
+        class="pagination-number"
+        [class.active]="page === pagination.page"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+    </div>
+
     <button
-      class="button button--primary" 
+      class="pagination-arrow"
       [disabled]="isNextPageDisabled"
       (click)="nextPage()"
     >
-      <p>Наступн.</p>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </button>
   </div>
 </div>

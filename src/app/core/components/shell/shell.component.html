@@ -3,11 +3,14 @@
     <app-header [authenticatedUser]="authenticatedUser"></app-header>
   </div>
   <div class="page-body"> -->
-    <router-outlet></router-outlet>
+  <router-outlet></router-outlet>
   <!-- </div>
   <div class="page-footer">
     <app-footer></app-footer>
   </div> -->
+  @if(isPopupVisible) {
   <app-popup
+  (popupCloseEvent)="closeModal()"
   ></app-popup>
+  }
 </div>

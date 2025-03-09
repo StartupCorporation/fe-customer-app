@@ -8,6 +8,7 @@ import { Product } from '../../models/product-model';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ProductsMockService } from '../../services/mocks/products-mock.service';
+import { CartService } from 'src/app/core/services/cart.service';
 
 @Component({
   selector: 'app-products-page-detail',
@@ -19,6 +20,7 @@ export class ProductsPageDetailComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private productsService = inject(ProductsMockService);
   private activatedRoute = inject(ActivatedRoute);
+  private cartService = inject(CartService);
 
   product = new Product();
 
@@ -29,6 +31,16 @@ export class ProductsPageDetailComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(product => {
       this.product = product;
+    });
+  }
+
+  addToCart(product: Product): void {
+    this.cartService.increment({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      imageUrl: product.images[0]
     });
   }
 

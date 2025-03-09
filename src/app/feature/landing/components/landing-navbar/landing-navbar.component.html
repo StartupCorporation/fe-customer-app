@@ -5,7 +5,7 @@
 
   <nav class="landing-navbar__links">
     @if(!(isHomePage$ | async)) {
-    <a class="landing-navbar__link" (click)="scrollTo('categories')">Головна</a>
+      <a class="landing-navbar__link" (click)="scrollTo('categories')">Головна</a>
     }
     <a class="landing-navbar__link" (click)="scrollTo('categories')">Категорії</a>
     <a class="landing-navbar__link" (click)="scrollTo('advantages')">Переваги</a>
@@ -13,9 +13,12 @@
   </nav>
 
   <div class="landing-navbar__contact">
-    <button class="cart"
-    (click)="openCart()"
-    ></button>
+    <div class="cart-wrapper">
+      <button class="cart" (click)="openCart()"></button>
+      @if ((cartItemsCount$ | async) ?? 0 > 0) {
+        <span class="cart-badge">{{ (cartItemsCount$ | async) ?? 0 }}</span>
+      }
+    </div>
     <a href="tel:+38073090986" class="landing-navbar__phone">+380 73 109 09 86</a>
   </div>
 </header>

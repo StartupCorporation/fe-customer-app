@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Product } from '../../models/product-model';
 import { TruncateNumberPipe } from "../../../../shared/pipes/truncate-number.pipe";
 
@@ -11,10 +11,15 @@ import { TruncateNumberPipe } from "../../../../shared/pipes/truncate-number.pip
 export class ProductsDetailDescriptionComponent implements OnInit {
 
   @Input() product = new Product();
+  @Output() addToCart = new EventEmitter<Product>();
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onOrderClick(): void {
+    this.addToCart.emit(this.product);
   }
 
 }

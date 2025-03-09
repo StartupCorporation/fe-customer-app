@@ -43,10 +43,43 @@
         justify-content: end;
         gap: 20px;
 
-        .cart{
-            width: 26px;
-            height: 26px;
-            background: url("/assets/icons/cart.svg") no-repeat;
+        .cart-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart {
+            width: 24px;
+            height: 24px;
+            background: url('/assets/icons/cart.svg') no-repeat center;
+            background-size: contain;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            background-color: $blue;
+            color: white;
+            border-radius: 8px;
+            font-size: 10px;
+            font-family: $font-mont;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
         }
     }
 

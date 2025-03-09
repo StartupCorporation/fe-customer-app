@@ -12,6 +12,7 @@
       <div class="products-detail__description">
         <app-products-detail-description
         [product]="product"
+        (addToCart)="addToCart($event)"
         ></app-products-detail-description>
       </div>
     </div>
