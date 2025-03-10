@@ -1,25 +1,32 @@
-<div class="container slider">
-    <div [@slideAnimation]="currentIndex">
-      <ng-template ngFor [ngForOf]="slides" let-slide let-i="index">
-        <div class="image-wrapper">
-            <img class="slide slide-animation nonDraggableImage"
-                 *ngIf="isCurrentSlideIndex(i)"
-                 (swiperight)="nextSlide()" (swipeleft)="prevSlide()"
-                 [src]="slide.image">
-        </div>
-      </ng-template>
-    </div>
-  
-    <button class="arrow prev" (click)="nextSlide()"></button>
-    <button class="arrow next" (click)="prevSlide()"></button>
-    <nav class="nav">
-      <div class="wrapper">
-        <ul class="dots">
-          <li class="dot" *ngFor="let slide of slides; let i = index;">
-            <span [class]="{'active':isCurrentSlideIndex(i)}"
-               (click)="setCurrentSlideIndex(i);">{{slide.description}}</span></li>
-        </ul>
+<div class="slider">
+  <div class="slider-container" [@slideAnimation]="currentIndex">
+    @for (slide of slides; track slide; let i = $index) {
+      <div class="slide" *ngIf="isCurrentSlideIndex(i)">
+        <img class="slide-image nonDraggableImage"
+             [src]="slide.image"
+             [alt]="slide.description"
+             (swiperight)="nextSlide()"
+             (swipeleft)="prevSlide()">
       </div>
-    </nav>
+    }
   </div>
+
+  <button class="arrow prev" (click)="prevSlide()"></button>
+  <button class="arrow next" (click)="nextSlide()"></button>
+  
+  <nav class="nav">
+    <div class="wrapper">
+      <ul class="dots">
+        @for (slide of slides; track slide; let i = $index) {
+          <li class="dot">
+            <span [class.active]="isCurrentSlideIndex(i)"
+                  (click)="setCurrentSlideIndex(i)">
+              <span class="sr-only">{{slide.description}}</span>
+            </span>
+          </li>
+        }
+      </ul>
+    </div>
+  </nav>
+</div>
   

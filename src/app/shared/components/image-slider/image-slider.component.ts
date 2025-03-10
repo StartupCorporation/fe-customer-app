@@ -4,6 +4,7 @@ import { slideAnimation } from '../../animations/slide.animation';
 
 @Component({
   selector: 'app-image-slider',
+  standalone: true,
   imports: [NgIf, NgFor],
   templateUrl: './image-slider.component.html',
   styleUrl: './image-slider.component.scss',
@@ -28,20 +29,19 @@ export class ImageSliderComponent {
     });
   }
 
-  setCurrentSlideIndex(index: any) {
+  setCurrentSlideIndex(index: number) {
     this.currentIndex = index;
   }
 
-  isCurrentSlideIndex(index: any) {
+  isCurrentSlideIndex(index: number): boolean {
     return this.currentIndex === index;
   }
 
   prevSlide() {
-    this.currentIndex = (this.currentIndex < this.slides.length - 1) ? ++this.currentIndex : 0;
+    this.currentIndex = (this.currentIndex > 0) ? this.currentIndex - 1 : this.slides.length - 1;
   }
 
   nextSlide() {
-    this.currentIndex = (this.currentIndex > 0) ? --this.currentIndex : this.slides.length - 1;
+    this.currentIndex = (this.currentIndex < this.slides.length - 1) ? this.currentIndex + 1 : 0;
   }
-
 }

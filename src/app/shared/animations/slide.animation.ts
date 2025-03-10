@@ -4,12 +4,28 @@ export const slideAnimation = trigger('slideAnimation', [
   transition(':increment', group([
     query(':enter', [
       style({
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        opacity: 0,
         transform: 'translateX(100%)'
       }),
-      animate('0.5s ease-out', style('*'))
+      animate('400ms ease-out', style({
+        opacity: 1,
+        transform: 'translateX(0)'
+      }))
     ]),
     query(':leave', [
-      animate('0.5s ease-out', style({
+      style({
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        opacity: 1
+      }),
+      animate('400ms ease-out', style({
+        opacity: 0,
         transform: 'translateX(-100%)'
       }))
     ])
@@ -17,12 +33,28 @@ export const slideAnimation = trigger('slideAnimation', [
   transition(':decrement', group([
     query(':enter', [
       style({
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        opacity: 0,
         transform: 'translateX(-100%)'
       }),
-      animate('0.5s ease-out', style('*'))
+      animate('400ms ease-out', style({
+        opacity: 1,
+        transform: 'translateX(0)'
+      }))
     ]),
     query(':leave', [
-      animate('0.5s ease-out', style({
+      style({
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        opacity: 1
+      }),
+      animate('400ms ease-out', style({
+        opacity: 0,
         transform: 'translateX(100%)'
       }))
     ])
