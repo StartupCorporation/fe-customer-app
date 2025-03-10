@@ -22,7 +22,7 @@
         type="number"
         [(ngModel)]="filter.value[0]"
         (ngModelChange)="onValueChanged()"
-        [min]="0"
+        [min]="filter.minRange || 0"
         [max]="filter.maxRange || 1000"
         [step]="filter.step || 1"
         class="filter-range-input"
@@ -33,7 +33,7 @@
         type="number"
         [(ngModel)]="filter.value[1]"
         (ngModelChange)="onValueChanged()"
-        [min]="0"
+        [min]="filter.minRange || 0"
         [max]="filter.maxRange || 1000"
         [step]="filter.step || 1"
         class="filter-range-input"
@@ -42,13 +42,15 @@
 
     <!-- Angular Material Dual-Thumb Slider -->
     <mat-slider         
-    [min]="0"
+    [min]="filter.minRange || 0"
     [max]="filter.maxRange || 1000"
 >
       <input
         matSliderStartThumb
         [(ngModel)]="filter.value[0]"
         (ngModelChange)="onValueChanged()"
+        [min]="filter.minRange || 0"
+        [max]="filter.maxRange || 1000"
         [step]="filter.step || 1"
         thumbLabel
         name="rangeStart-{{ filter.label }}"
@@ -57,6 +59,8 @@
         matSliderEndThumb
         [(ngModel)]="filter.value[1]"
         (ngModelChange)="onValueChanged()"
+        [min]="filter.minRange || 0"
+        [max]="filter.maxRange || 1000"
         [step]="filter.step || 1"
         thumbLabel
         name="rangeEnd-{{ filter.label }}"

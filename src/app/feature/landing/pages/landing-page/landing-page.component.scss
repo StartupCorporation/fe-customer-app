@@ -1,0 +1,21 @@
+.landing-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    &__container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__consulting {
+        margin-bottom: 50px;
+    }
+
+    &__footer {
+        margin-top: auto;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+}

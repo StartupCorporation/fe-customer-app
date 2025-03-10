@@ -38,6 +38,24 @@
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
+.no-results {
+    width: 100%;
+    height: calc(100vh - 97px - 40px - 100px - 230px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+
+    p {
+        font-size: 18px;
+        color: #ffffff;
+        max-width: 400px;
+        line-height: 1.5;
+        font-family: "Open Sans", sans-serif;
+    }
+}
+
 @keyframes spin {
     to {
         transform: rotate(360deg);

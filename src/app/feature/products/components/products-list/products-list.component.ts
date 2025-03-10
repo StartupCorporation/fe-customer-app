@@ -11,6 +11,7 @@ import { Product } from '../../models/product-model';
 export class ProductsListComponent implements OnInit {
 
   @Input() products: Product[] = [];
+  @Input() isLoading = false;
 
   ngOnInit() {
   }

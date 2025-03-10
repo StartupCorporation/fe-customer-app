@@ -13,6 +13,9 @@
         max-width: $breakpoint-xxl;
         padding: 20px;
         position: relative;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
     }
 
     &__navbar {
@@ -22,11 +25,11 @@
     &__list {
         margin-top: 21px;
         display: flex;
+        flex: 1;
     }
 
     .products-list {
         width: 100%;
-
     }
 
     &__filter {
@@ -34,8 +37,9 @@
     }
 
     &__footer {
-        margin-top: 50px;
-        margin-bottom: 30px;
+        margin-top: auto;
+        padding-top: 30px;
+        padding-bottom: 30px;
     }
 
     &__entities {
@@ -44,12 +48,12 @@
         align-items: start;
         justify-content: start;
         width: 100%;
+        flex: 1;
     }
 
     &__pagination {
         margin-top: 20px;
         width: 100%;
-
     }
 
     .search-bar {

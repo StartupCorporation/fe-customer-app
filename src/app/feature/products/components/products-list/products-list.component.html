@@ -1,13 +1,17 @@
 <div class="products-list">
-  @if (products.length > 0) {
+  @if (isLoading) {
+    <div class="loader-container">
+      <div class="loader"></div>
+    </div>
+  } @else if (products.length > 0) {
     @for (product of products; track product) {
       <app-products-card class="products-list__card"
       [product]="product"
       ></app-products-card>
     }
   } @else {
-    <div class="loader-container">
-      <div class="loader"></div>
+    <div class="no-results">
+      <p>За вашим запитом нічого не знайдено. Спробуйте змінити параметри фільтрації.</p>
     </div>
   }
 </div>

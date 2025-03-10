@@ -56,10 +56,10 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       label: 'Ціна',
       type: FilterType.RANGE,
       id: 'price',
-      value: [0, 10000], // Using value array format for consistency
+      value: [0, 1000000], // Using a large initial range that will be updated with actual product prices
       minRange: 0,
-      maxRange: 10000,
-      step: 1,
+      maxRange: 1000000,
+      step: 100,
     },
     {
       label: 'Пошук',
@@ -134,24 +134,27 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     );
     
     if (rangeFilter) {
-      // Calculate the maximum price from the products
-      const maxPrice = Math.max(...products.map(p => p.price));
+      // Calculate the minimum and maximum prices from the products
+      const prices = products.map(p => p.price);
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
       
-      // Round up to the nearest hundred for a cleaner UI
+      // Round down min and up max for cleaner UI
+      const roundedMinPrice = Math.floor(minPrice / 100) * 100;
       const roundedMaxPrice = Math.ceil(maxPrice / 100) * 100;
       
-      console.log('Max price found:', maxPrice, 'Rounded to:', roundedMaxPrice);
+      console.log('Price range found:', minPrice, maxPrice, 'Rounded to:', roundedMinPrice, roundedMaxPrice);
       
-      // Update the filter's max range
+      // Update the filter's range and value
+      rangeFilter.minRange = roundedMinPrice;
       rangeFilter.maxRange = roundedMaxPrice;
       
-      // Only set the end value if it's not already set by user filters
+      // Only set the values if they're not already set by user filters
       const params = this.route.snapshot.queryParams;
-      const hasUserPriceFilter = params['price.max'] !== undefined;
+      const hasUserPriceFilter = params['price.min'] !== undefined || params['price.max'] !== undefined;
       
       if (!hasUserPriceFilter) {
-        // Keep the min value, update the max value
-        rangeFilter.value = [rangeFilter.value[0], roundedMaxPrice];
+        rangeFilter.value = [roundedMinPrice, roundedMaxPrice];
       }
     }
   }
@@ -270,20 +273,15 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       catIds = [params['categoriesIds']];
     }
 
-    // 2) Parse the priceRange param
-    let priceRange = { min: 0, max: 999999 };
-    if (params['priceRange']) {
-      try {
-        priceRange = JSON.parse(params['priceRange']);
-      } catch (err) {
-        // fallback
-      }
-    }
+    // 2) Handle price range parameters
+    const minPrice = params['price.min'] !== undefined ? Number(params['price.min']) : undefined;
+    const maxPrice = params['price.max'] !== undefined ? Number(params['price.max']) : undefined;
 
     return {
       categoriesIds: catIds,
       name: params['name'] || '',
-      priceRange: priceRange,
+      'price.min': minPrice,
+      'price.max': maxPrice,
       page: params['page'] || 0,
       size: params['size'] || 10
     };
