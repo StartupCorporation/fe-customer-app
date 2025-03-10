@@ -14,6 +14,9 @@
     </div>
     <div class="popup-body">
       <div class="cart-container" *ngIf="cartItems$ | async as items">
+        <div *ngIf="items.length === 0" class="empty-cart-message">
+          <p>Ви поки що не додали нічого в корзину</p>
+        </div>
         <div class="cart-item" *ngFor="let item of items; trackBy: trackByFn">
           <img class="item-image" [src]="item.imageUrl" [alt]="item.name" />
           <div class="cart-item-info">
@@ -62,7 +65,7 @@
 
       <div class="cart-actions">
         <button (click)="closeModal()">Продовжити покупки</button>
-        <button (click)="checkout()">Замовити</button>
+        <button (click)="checkout()" *ngIf="((cartItems$ | async)?.length ?? 0) > 0">Замовити</button>
       </div>    </div>
   </div>
 

@@ -131,6 +131,20 @@
 
                 scrollbar-width: thin;
                 scrollbar-color: rgba($blue, 0.2) transparent;
+                
+                .empty-cart-message {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    min-height: 150px;
+                    
+                    p {
+                        font-family: $font-mont;
+                        color: #8d8ba7;
+                        font-size: 18px;
+                        text-align: center;
+                    }
+                }
             }
 
             .cart-item {
