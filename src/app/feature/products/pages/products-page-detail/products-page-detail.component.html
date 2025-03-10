@@ -1,3 +1,24 @@
-<p>
-  products-page-detail works!
-</p>
+<div class="products-detail">
+  <div class="products-detail__container">
+    <div class="products-detail__navbar">
+      <app-landing-welcome-window />
+    </div>
+
+    <div class="products-detail__info">
+
+      <div class="products-detail__image">
+        <app-image-slider></app-image-slider>
+      </div>
+      <div class="products-detail__description">
+        <app-products-detail-description
+        [product]="product"
+        (addToCart)="addToCart($event)"
+        ></app-products-detail-description>
+      </div>
+    </div>
+
+    <div class="products-detail__footer">
+      <app-landing-footer />
+    </div>
+  </div>
+</div>

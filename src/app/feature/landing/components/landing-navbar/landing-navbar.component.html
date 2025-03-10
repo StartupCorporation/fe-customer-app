@@ -1,15 +1,24 @@
 <header class="landing-navbar">
-  <div class="landing-navbar__logo-wrapper">
+  <div class="landing-navbar__logo-wrapper" (click)="navigateToHome()">
     <img class="landing-navbar__logo" src="./assets/images/deye-logo.png" alt="Deye logo" />
   </div>
 
   <nav class="landing-navbar__links">
+    @if(!(isHomePage$ | async)) {
+      <a class="landing-navbar__link" (click)="scrollTo('home')">Головна</a>
+    }
     <a class="landing-navbar__link" (click)="scrollTo('categories')">Категорії</a>
     <a class="landing-navbar__link" (click)="scrollTo('advantages')">Переваги</a>
     <a class="landing-navbar__link" (click)="scrollTo('contacts')">Контакти</a>
   </nav>
-  
+
   <div class="landing-navbar__contact">
+    <div class="cart-wrapper">
+      <button class="cart" (click)="openCart()"></button>
+      @if ((cartItemsCount$ | async) ?? 0 > 0) {
+        <span class="cart-badge">{{ (cartItemsCount$ | async) ?? 0 }}</span>
+      }
+    </div>
     <a href="tel:+38073090986" class="landing-navbar__phone">+380 73 109 09 86</a>
   </div>
 </header>

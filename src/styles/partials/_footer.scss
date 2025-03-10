@@ -5,10 +5,13 @@
 
     &__nav {
         display: flex;
+        align-items: center;
+        justify-content: end;
+        gap: 45px;
         width: 30%;
 
         &-link {
-            font-family: $font-montserrat, sans-serif;
+            font-family: $font-mont, sans-serif;
             font-weight: 400;
             color: $white;
             text-decoration: none;
@@ -20,10 +23,6 @@
                 font-weight: 600;
                 text-decoration: underline;
             }
-        }
-
-        :not(:first-child){
-            margin-left: 45px;
         }
     }
 
@@ -50,17 +49,19 @@
         display: flex;
         width: 30%;
         align-items: center;
+        justify-content: start;
+        gap: 45px;
 
         .footer__phone {
             color: $white;
             font-size: 16px;
-            font-family: $font-montserrat, sans-serif;
+            font-family: $font-mont, sans-serif;
             font-weight: 400;
         }
 
-        :not(:last-child){
-            margin-right: 45px;
-        }
+        // :not(:last-child){
+        //     margin-right: 45px;
+        // }
     }
 }
 

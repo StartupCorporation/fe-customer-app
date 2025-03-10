@@ -1,0 +1,84 @@
+<ng-container [ngSwitch]="filter.type">
+  
+  <!-- 1) CHECKBOX TYPE -->
+  <mat-checkbox
+    *ngSwitchCase="FilterType.CHECKBOX"
+    [(ngModel)]="filter.value"
+    (ngModelChange)="onValueChanged()"
+    name="chk-{{ filter.label }}"
+  >
+    {{ filter.label }}
+  </mat-checkbox>
+
+  <!-- 2) RANGE TYPE (Dual-thumb slider with numeric inputs) -->
+  <div *ngSwitchCase="FilterType.RANGE" class="filter-range">
+
+    <label class="filter-range-label">{{ filter.label }}</label>
+
+    <!-- Two Number Inputs for Manual Entry -->
+    <div class="filter-range-inputs">
+      <label class="filter-range-input-label">Від:</label>
+      <input
+        type="number"
+        [(ngModel)]="filter.value[0]"
+        (ngModelChange)="onValueChanged()"
+        [min]="0"
+        [max]="filter.maxRange || 1000"
+        [step]="filter.step || 1"
+        class="filter-range-input"
+      />
+
+      <label class="filter-range-input-label">До:</label>
+      <input
+        type="number"
+        [(ngModel)]="filter.value[1]"
+        (ngModelChange)="onValueChanged()"
+        [min]="0"
+        [max]="filter.maxRange || 1000"
+        [step]="filter.step || 1"
+        class="filter-range-input"
+      />
+    </div>
+
+    <!-- Angular Material Dual-Thumb Slider -->
+    <mat-slider         
+    [min]="0"
+    [max]="filter.maxRange || 1000"
+>
+      <input
+        matSliderStartThumb
+        [(ngModel)]="filter.value[0]"
+        (ngModelChange)="onValueChanged()"
+        [step]="filter.step || 1"
+        thumbLabel
+        name="rangeStart-{{ filter.label }}"
+      />
+      <input
+        matSliderEndThumb
+        [(ngModel)]="filter.value[1]"
+        (ngModelChange)="onValueChanged()"
+        [step]="filter.step || 1"
+        thumbLabel
+        name="rangeEnd-{{ filter.label }}"
+      />
+    </mat-slider>
+
+  </div>
+
+  <!-- 3) STRING TYPE -->
+  <div *ngSwitchCase="FilterType.STRING" class="filter-string">
+    <label>{{ filter.label }}</label>
+    <input
+      matInput
+      [(ngModel)]="filter.textValue"
+      (ngModelChange)="onValueChanged()"
+      name="txt-{{ filter.label }}"
+      placeholder="Type here..."
+    />
+  </div>
+
+  <!-- Fallback if unknown -->
+  <div *ngSwitchDefault>
+    Unknown filter type: {{ filter.type }}
+  </div>
+</ng-container>

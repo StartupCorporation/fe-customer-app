@@ -8,7 +8,7 @@ import {
 } from 'src/app/feature/products/services/interfaces/category.service.interface';
 import { Observable } from 'rxjs';
 import { SvgIconComponent } from 'src/app/shared/components/svg-icon/svg-icon.component';
-import { CarouselComponent } from "../../../../shared/components/carousel/carousel.component";
+import { CarouselComponent } from '../../../../shared/components/carousel/carousel.component';
 import { SafeArrayPipe } from 'src/app/shared/pipes/safeArray.pipe';
 import { Router } from '@angular/router';
 
@@ -19,10 +19,12 @@ import { Router } from '@angular/router';
   imports: [NgFor, AsyncPipe, CarouselComponent, SafeArrayPipe],
 })
 export class LandingCategoriesComponent implements OnInit {
-  $categories!: Observable<CategoryModel[]>;
-  flippedCards: { [key: number]: boolean } = {};
-  consultingId = 'consulting';
   private router = inject(Router);
+
+  $categories!: Observable<CategoryModel[]>;
+  flippedCards: { [key: string]: boolean } = {};
+  consultingId = 'consulting';
+
   constructor(
     @Inject(CATEGORY_SERVICE_TOKEN) private categoryService: ICategoryService,
     private scrollService: ScrollService
@@ -32,15 +34,15 @@ export class LandingCategoriesComponent implements OnInit {
     this.$categories = this.categoryService.getCategories();
   }
 
-  toggleCard(categoryId: number): void {
+  toggleCard(categoryId: string): void {
     this.flippedCards[categoryId] = !this.flippedCards[categoryId];
   }
 
-  isFlipped(categoryId: number): boolean {
+  isFlipped(categoryId: string): boolean {
     return this.flippedCards[categoryId] || false;
   }
 
-  scrollToConsulting(categoryId: number) {
+  scrollToConsulting(categoryId: string) {
     this.scrollService.scrollToTarget(this.consultingId);
     this.toggleCard(categoryId);
   }
@@ -49,7 +51,13 @@ export class LandingCategoriesComponent implements OnInit {
     return `http://localhost:9999/images/${name}`;
   }
 
-  navigateToCategory(categoryId: number) {
-    this.router.navigate(['/category', categoryId, 'products']);
+  navigateToCategory(categoryIds: string) {
+    this.router.navigate(['/products'], {
+      queryParams: {
+        categoriesIds: categoryIds,
+        page: 1,
+        size: 10
+      },
+    });
   }
 }

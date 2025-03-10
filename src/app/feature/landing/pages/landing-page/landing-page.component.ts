@@ -46,6 +46,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
   @ViewChild('advantages') advantagesSection!: ElementRef;
   @ViewChild('contacts') contactsSection!: ElementRef;
   @ViewChild('consulting') consultingSection!: ElementRef;
+  @ViewChild('home') homeSection!: ElementRef;
 
   constructor(private scrollService: ScrollService, private messageService: MessageService) {}
 
@@ -58,6 +59,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     this.scrollService.registerTarget('advantages', this.advantagesSection);
     this.scrollService.registerTarget('contacts', this.contactsSection);
     this.scrollService.registerTarget('consulting', this.consultingSection);
+    this.scrollService.registerTarget('home', this.homeSection);
   }
 
   deleteMessages() {

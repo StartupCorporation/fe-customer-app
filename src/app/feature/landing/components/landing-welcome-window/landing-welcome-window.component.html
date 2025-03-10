@@ -1,6 +1,8 @@
 <div class="window__container">
   <div class="window__navbar">
-    <app-landing-navbar/>
+    <app-landing-navbar
+    [isHomePage$]="isHomePage$"
+    ></app-landing-navbar>
   </div>
 
   @if(isHomePage$ | async) {

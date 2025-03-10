@@ -1,0 +1,39 @@
+<div class="table-order-pagination table-pagination">
+  <h6 class="table-pagination-info">
+    Кількість продуктів
+    <span>{{ pagination.totalElements }}</span>
+  </h6>
+
+  <div class="table-pagination-controls">
+    <button
+      class="pagination-arrow"
+      [disabled]="isPreviousPageDisabled"
+      (click)="previousPage()"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="pagination-numbers">
+      <button
+        *ngFor="let page of pagesCount"
+        class="pagination-number"
+        [class.active]="page === pagination.page"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+    </div>
+
+    <button
+      class="pagination-arrow"
+      [disabled]="isNextPageDisabled"
+      (click)="nextPage()"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</div>

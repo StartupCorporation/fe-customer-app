@@ -2,8 +2,21 @@
 
 .products-filter {
     background-color: $white;
-    height: 574px;
     width: 262px;
     border-radius: 30px;
-    margin-top: 10px;
+    padding: 20px;
+
+    .filter {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    &__header {
+        color: #31418b;
+        font-family: $font-mont;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
 }

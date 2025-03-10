@@ -70,15 +70,29 @@ export class ApiService {
     return this.http.post(completeUrl, body, {responseType: 'blob'});
   }
 
-  generateQueryParams(paramsObj: QueryParamsModel): string {
+  generateQueryParams(paramsObj: Record<string, any>): string {
     let params = new HttpParams();
-
-    Object.entries(paramsObj)
-      .filter(([_, value]) => typeof value !== 'undefined' && value !== null)
-      .map(([key, value]) => (params = params.set(key, value!)));
-
+  
+    for (const [key, value] of Object.entries(paramsObj)) {
+      if (Array.isArray(value)) {
+        // Repeated params: ?categoryIds=abc&categoryIds=def
+        for (const item of value) {
+          params = params.append(key, item);
+        }
+      } else if (value !== null && typeof value === 'object') {
+        // Expand object into multiple params: ?priceRange.min=0&priceRange.max=100000
+        for (const [nestedKey, nestedValue] of Object.entries(value)) {
+          params = params.append(`${key}.${nestedKey}`, String(nestedValue));
+        }
+      } else {
+        // Single param
+        params = params.set(key, value);
+      }
+    }
+  
     return params.toString();
   }
+  
 
   private getHeaders() {
     return {

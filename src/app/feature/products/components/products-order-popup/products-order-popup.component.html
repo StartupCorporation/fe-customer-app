@@ -1,0 +1,91 @@
+<div class="order-popup-container" (click)="onBackgroundClick($event)">
+  <div class="order-form-container" (click)="$event.stopPropagation()">
+    <h2>Оформлення замовлення</h2>
+    <p>
+      Заповніть форму нижче, і ми зв'яжемося з вами найближчим часом для підтвердження замовлення.
+    </p>
+
+    <form [formGroup]="orderForm" (ngSubmit)="onSubmit()" #myform="ngForm">
+      <div class="form-row">
+        <!-- Name Field -->
+        <div class="input-group">
+          <input type="text" placeholder="Ім'я*" [formControl]="nameControl" />
+          <div
+            class="error-message"
+            *ngIf="nameControl.touched && nameControl.invalid && myform.submitted"
+          >
+            Введіть Ім'я
+          </div>
+        </div>
+
+        <!-- Phone Field -->
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="+380 99 909 00 99*"
+            [formControl]="phoneControl"
+            (input)="onPhoneInput($event)"
+          />
+          <div
+            class="error-message"
+            *ngIf="phoneControl.touched && phoneControl.invalid && myform.submitted"
+          >
+            Введіть номер телефону у форматі +380 99 360 98 03
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Email Field -->
+        <div class="input-group">
+          <input 
+            type="email" 
+            placeholder="Email*" 
+            [formControl]="emailControl" 
+          />
+          <div
+            class="error-message"
+            *ngIf="emailControl.touched && emailControl.invalid && myform.submitted"
+          >
+            Введіть коректну email адресу
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row form-row--full-width">
+        <!-- Comment Field -->
+        <div class="input-group input-group--wide">
+          <textarea 
+            placeholder="Коментар до замовлення"
+            [formControl]="commentControl"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="form-checkbox">
+        <label class="container">
+          Зв'яжіться зі мною у Telegram або Viber
+          <input type="checkbox" [formControl]="contactInMessengerControl" />
+          <span class="checkmark"></span>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="button button-secondary"
+          (click)="cancel()"
+        >
+          Скасувати
+        </button>
+        <button
+          type="submit"
+          class="button button-primary"
+          [disabled]="isSubmitting"
+        >
+          Оформити замовлення
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
