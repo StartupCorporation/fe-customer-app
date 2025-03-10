@@ -1,5 +1,5 @@
-<div class="order-popup-container">
-  <div class="order-form-container">
+<div class="order-popup-container" (click)="onBackgroundClick($event)">
+  <div class="order-form-container" (click)="$event.stopPropagation()">
     <h2>Оформлення замовлення</h2>
     <p>
       Заповніть форму нижче, і ми зв'яжемося з вами найближчим часом для підтвердження замовлення.

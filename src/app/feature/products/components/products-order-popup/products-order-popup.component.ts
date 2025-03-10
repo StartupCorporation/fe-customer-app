@@ -139,4 +139,12 @@ export class ProductsOrderPopupComponent implements OnInit {
   private getControl(path: string): FormControl {
     return this.orderForm.get(path) as FormControl;
   }
+
+  onBackgroundClick(event: MouseEvent): void {
+    // Only close if clicking directly on the background, not on the form
+    if (event.target === event.currentTarget) {
+      event.stopPropagation(); // Prevent the event from reaching the cart popup
+      this.closePopup.emit();
+    }
+  }
 }

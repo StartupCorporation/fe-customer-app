@@ -101,7 +101,6 @@ export class PopupComponent implements OnInit, OnDestroy {
       // Remove the component when closed
       orderPopupComponentRef.destroy();
       document.body.removeChild(orderPopup);
-      this.closeModal(); // Close the cart modal too
     });
     
     // Append the component's element to our container
