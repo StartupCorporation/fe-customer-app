@@ -2,8 +2,8 @@
     overflow: scroll;
     flex-wrap: wrap;
     display: flex;
-    justify-content: center;
-    align-items: start;
+    justify-content: flex-start;
+    align-items: flex-start;
     padding: 10px;
     gap: 26px;
     min-height: calc(100vh - 97px - 40px - 100px - 230px);
@@ -12,5 +12,34 @@
 
     &::-webkit-scrollbar { 
         display: none;
+    }
+
+    &:empty {
+        align-items: center;
+    }
+}
+
+.loader-container {
+    width: 100%;
+    height: calc(100vh - 97px - 40px - 100px - 230px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #31418b;
+}
+
+.loader {
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
 }

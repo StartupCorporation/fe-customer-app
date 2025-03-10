@@ -25,9 +25,8 @@
         </div>
         <div class="products-list">
           <app-products-list
-            [products]="products$ | async | safeArray"
+            [products]="isLoading ? [] : (products$ | async | safeArray)"
           ></app-products-list>
-
         </div>
         <div class="products-page__pagination">
           <app-table-products-pagination

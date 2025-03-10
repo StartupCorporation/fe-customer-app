@@ -39,6 +39,8 @@ import { PaginationModel } from 'src/app/shared/models/pagination-model';
 export class ProductsPageComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private route = inject(ActivatedRoute);
+  
+  isLoading = true; // Add loading state
 
   constructor(
     private router: Router,
@@ -76,6 +78,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   // We'll fetch products based on the current query params
   products$ = this.route.queryParams.pipe(
     takeUntil(this.destroy$),
+    tap(() => this.isLoading = true),
     switchMap((params) => {
       const queryObj = this.buildQueryObjectFromParams(params);
       return this.productsService.getProducts(queryObj).pipe(
@@ -86,6 +89,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
             this.paginationFilters.page = response.pagination.page;
             this.paginationFilters.size = response.pagination.size;
           }
+          this.isLoading = false;
         }),
         map(response => response.content || [])
       );

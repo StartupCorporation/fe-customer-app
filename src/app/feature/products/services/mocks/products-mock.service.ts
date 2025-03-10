@@ -201,7 +201,7 @@ export class ProductsMockService extends ApiService {
         page: page,
         size: size
       }
-    }).pipe(delay(300)); // Simulate network delay
+    }).pipe(delay(1000)); // Simulate network delay
   }
 
   getProductById(productId: string): Observable<Product> {

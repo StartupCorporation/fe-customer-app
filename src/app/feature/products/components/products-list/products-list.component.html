@@ -1,9 +1,13 @@
-
 <div class="products-list">
-  @for (product of products; track product) {
-
-    <app-products-card class="products-list__card"
-    [product]="product"
-    ></app-products-card>
+  @if (products.length > 0) {
+    @for (product of products; track product) {
+      <app-products-card class="products-list__card"
+      [product]="product"
+      ></app-products-card>
+    }
+  } @else {
+    <div class="loader-container">
+      <div class="loader"></div>
+    </div>
   }
 </div>
