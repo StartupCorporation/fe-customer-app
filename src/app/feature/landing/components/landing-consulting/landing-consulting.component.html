@@ -22,7 +22,7 @@
       <div class="input-group">
         <input
           type="text"
-          placeholder="+380 99 909 00 99*"
+          placeholder="(380) 99 909 00 99*"
           [formControl]="phoneControl"
           (input)="onPhoneInput($event)"
         />
@@ -30,7 +30,7 @@
           class="error-message"
           *ngIf="phoneControl.touched && phoneControl.invalid && myform.submitted"
         >
-          Введіть номер телефону у форматі +380 99 360 98 03
+          Введіть номер телефону у форматі (380) 99 909 00 99
         </div>
       </div>
     </div>

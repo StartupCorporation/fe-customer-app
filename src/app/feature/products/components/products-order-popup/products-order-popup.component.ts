@@ -1,91 +1,90 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { MessageService } from 'src/app/core/services/message.service';
 import { CartService } from 'src/app/core/services/cart.service';
 import { CartItem } from 'src/app/core/services/modal/cart.interface';
 import { MessageTypeEnum } from 'src/app/shared/enums/message-type-enum';
+import { OrderService } from '../../services/order.service';
+import { OrderProduct, OrderRequest } from '../../models/order.model';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-products-order-popup',
   templateUrl: './products-order-popup.component.html',
   styleUrls: ['./products-order-popup.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf]
+  imports: [ReactiveFormsModule, NgIf],
 })
 export class ProductsOrderPopupComponent implements OnInit {
   @Output() closePopup = new EventEmitter<void>();
-  
+
   orderForm!: FormGroup;
   isSubmitting = false;
 
   constructor(
     private fb: FormBuilder,
     private messageService: MessageService,
-    private cartService: CartService
-  ) { }
+    private cartService: CartService,
+    private orderService: OrderService
+  ) {}
 
-  ngOnInit() {
-    this.initializeForm();
-  }
-
-  private initializeForm(): void {
-    this.orderForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      phone: ['', [Validators.required, Validators.pattern(/^\+380\s\d{2}\s\d{3}\s\d{2}\s\d{2}$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      comment: [''],
-      contactInMessenger: [false]
-    });
+  ngOnInit(): void {
+    this.initForm();
   }
 
   get nameControl(): FormControl {
-    return this.getControl('name');
+    return this.orderForm.get('name') as FormControl;
   }
 
   get phoneControl(): FormControl {
-    return this.getControl('phone');
+    return this.orderForm.get('phone') as FormControl;
   }
 
   get emailControl(): FormControl {
-    return this.getControl('email');
+    return this.orderForm.get('email') as FormControl;
   }
 
   get commentControl(): FormControl {
-    return this.getControl('comment');
+    return this.orderForm.get('comment') as FormControl;
   }
 
   get contactInMessengerControl(): FormControl {
-    return this.getControl('contactInMessenger');
+    return this.orderForm.get('contactInMessenger') as FormControl;
+  }
+
+  initForm(): void {
+    this.orderForm = this.fb.group({
+      name: ['', [Validators.required]],
+      phone: ['', [Validators.required, Validators.pattern('^[- +()0-9]+$')]],
+      email: ['', [Validators.required, Validators.email]],
+      comment: [''],
+      contactInMessenger: [false],
+    });
   }
 
   onPhoneInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/\D/g, '');
-    
-    if (value.startsWith('380')) {
-      value = '+' + value;
-    } else if (value.startsWith('0')) {
-      value = '+38' + value;
-    } else if (!value.startsWith('+')) {
-      value = '+380' + value;
-    }
-    
-    // Format: +380 XX XXX XX XX
-    if (value.length > 4) {
-      value = value.substring(0, 4) + ' ' + value.substring(4);
-    }
-    if (value.length > 7) {
-      value = value.substring(0, 7) + ' ' + value.substring(7);
-    }
-    if (value.length > 11) {
-      value = value.substring(0, 11) + ' ' + value.substring(11);
-    }
-    if (value.length > 14) {
-      value = value.substring(0, 14) + ' ' + value.substring(14);
-    }
-    
     this.phoneControl.setValue(value);
+  }
+
+  onBackgroundClick(event: MouseEvent): void {
+    if (
+      (event.target as HTMLElement).classList.contains('order-popup-container')
+    ) {
+      this.cancel();
+    }
+  }
+
+  cancel(): void {
+    this.closePopup.emit();
   }
 
   onSubmit(): void {
@@ -98,53 +97,69 @@ export class ProductsOrderPopupComponent implements OnInit {
 
     // Get cart items
     let cartItems: CartItem[] = [];
-    this.cartService.cartItems$.subscribe(items => {
-      cartItems = items;
-    }).unsubscribe();
-    
-    // Create order object
-    const order = {
-      customerName: this.nameControl.value,
-      customerPhone: this.phoneControl.value,
-      customerEmail: this.emailControl.value,
+    this.cartService.cartItems$
+      .subscribe((items) => {
+        cartItems = items;
+      })
+      .unsubscribe();
+
+    // Map cart items to order products
+    const orderProducts: OrderProduct[] = cartItems.map((item) => ({
+      productId: item.id,
+      quantity: item.quantity,
+    }));
+
+    // Create order request
+    const orderRequest: OrderRequest = {
+      products: orderProducts,
+      personalInformation: {
+        name: this.nameControl.value,
+        email: this.emailControl.value,
+        phoneNumber: '+' +this.phoneControl.value,
+      },
       customerComment: this.commentControl.value,
-      contactInMessenger: this.contactInMessengerControl.value,
-      items: cartItems,
-      totalPrice: cartItems.reduce((sum: number, item: CartItem) => sum + (item.price * item.quantity), 0)
+      messageCustomer: this.contactInMessengerControl.value,
     };
 
-    // In a real app, you would send this to a service
-    console.log('Order submitted:', order);
-    
-    // Show success message
-    this.messageService.addMessage({
-      status: 200,
-      message: ['Ваше замовлення успішно відправлено! Ми зв\'яжемося з вами найближчим часом.'],
-      type: MessageTypeEnum.Success
-    });
+    // Submit order
+    this.orderService
+      .submitOrder(orderRequest)
+      .pipe(
+        finalize(() => {
+          this.isSubmitting = false;
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('Order submitted successfully:', response);
 
-    // Clear cart
-    this.cartService.clearCart();
-    
-    // Close popup
-    this.closePopup.emit();
-    
-    this.isSubmitting = false;
-  }
+          // Show success message
+          this.messageService.addMessage({
+            status: 200,
+            message: [
+              "Ваше замовлення успішно відправлено! Ми зв'яжемося з вами найближчим часом.",
+            ],
+            type: MessageTypeEnum.Success,
+          });
 
-  cancel(): void {
-    this.closePopup.emit();
-  }
+          // Clear cart
+          this.cartService.clearCart();
 
-  private getControl(path: string): FormControl {
-    return this.orderForm.get(path) as FormControl;
-  }
+          // Close popup
+          this.closePopup.emit();
+        },
+        error: (error) => {
+          console.error('Error submitting order:', error);
 
-  onBackgroundClick(event: MouseEvent): void {
-    // Only close if clicking directly on the background, not on the form
-    if (event.target === event.currentTarget) {
-      event.stopPropagation(); // Prevent the event from reaching the cart popup
-      this.closePopup.emit();
-    }
+          // Show error message
+          this.messageService.addMessage({
+            status: 500,
+            message: [
+              'Виникла помилка при оформленні замовлення. Будь ласка, спробуйте ще раз.',
+            ],
+            type: MessageTypeEnum.Error,
+          });
+        },
+      });
   }
 }

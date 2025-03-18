@@ -18,7 +18,7 @@ export class ProductsMockService extends ApiService {
 
   private mockProduct: Product =
     {
-      id: '1',
+      id: '6f30269e-7d10-4d51-9adf-62ac4a50f9af',
       name: 'Інвертор Deye SUN-6K-SG03LP1-EU',
       images: ['/assets/images/category-1-Photoroom.png'],
       price: 49051.0,

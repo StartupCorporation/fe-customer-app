@@ -20,5 +20,12 @@
     <div class="products-detail__footer">
       <app-landing-footer />
     </div>
+    
+    <!-- Toast messages -->
+    <app-toast 
+      *ngIf="(messages$ | async | safeArray).length > 0"
+      [messages]="messages$ | async | safeArray"
+      (deleteMessagesEvent)="deleteMessages()"
+    ></app-toast>
   </div>
 </div>
