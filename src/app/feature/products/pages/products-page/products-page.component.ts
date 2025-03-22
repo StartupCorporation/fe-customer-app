@@ -53,7 +53,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   // Example product filters array: one range filter + one text filter
   productFilters: any[] = [
     {
-      label: 'Ціна',
+      label: '',
       type: FilterType.RANGE,
       id: 'price',
       value: [0, 1000000], // Using a large initial range that will be updated with actual product prices

@@ -1,5 +1,6 @@
 .categories {
   margin: 0 auto;
+  border-bottom: 1px solid #8D8BA7B2;
 
   &__wrapper {
     display: flex;
@@ -16,7 +17,7 @@
     font-weight: 700;
     margin-bottom: 20px;
     text-align: center;
-    color: #ffffff;
+    color: $bg-secondary;
   }
 
   &__item {
@@ -46,11 +47,11 @@
     transform-style: preserve-3d;
     margin: 0 auto; // Center the inner container
     transition: transform 0.5s ease, box-shadow 0.3s ease;
-    &:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-      z-index: 2;
-    }
+    // &:hover {
+    //   transform: scale(1.05);
+    //   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    //   z-index: 2;
+    // }
   }
 
   &__front,
@@ -64,7 +65,6 @@
     backface-visibility: hidden;
     background-color: #ffffff;
     border-radius: 30px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
   }
 

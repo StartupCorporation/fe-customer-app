@@ -1,11 +1,11 @@
 .products-list {
-    overflow: scroll;
-    flex-wrap: wrap;
+    overflow: auto;
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-start;
     align-items: flex-start;
     padding: 10px;
-    gap: 26px;
+    gap: 0;
     min-height: calc(100vh - 97px - 40px - 100px - 230px);
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -16,6 +16,72 @@
 
     &:empty {
         align-items: center;
+    }
+    
+    &__card {
+        width: 25%;
+        box-sizing: border-box;
+        padding: 15px;
+        overflow: hidden;
+        position: relative;
+        
+        // Add right border to all except last in row
+        &:not(:nth-child(4n)) {
+            border-right: 1px solid #8D8BA7B2;
+        }
+        
+        // Add bottom border to all cards except those in the last row
+        // For a grid with 10 items total (4 per row), the last row starts with item 9
+        &:not(:nth-child(n+9)) {
+            border-bottom: 1px solid #8D8BA7B2;
+        }
+        
+        // Responsive borders
+        @media (max-width: 1200px) {
+            width: 33.333%;
+            
+            // Reset borders first
+            border-right: none;
+            
+            // Add right border to all except last in row (now 3 per row)
+            &:not(:nth-child(3n)) {
+                border-right: 1px solid #8D8BA7B2;
+            }
+            
+            // For a grid with 10 items (3 per row), the last row starts with item 10
+            // First row: 1-3, Second row: 4-6, Third row: 7-9, Last row: 10
+            &:not(:nth-child(n+10)) {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            width: 50%;
+            
+            // Reset borders first
+            border-right: none;
+            
+            // Add right border to all except last in row (now 2 per row)
+            &:not(:nth-child(2n)) {
+                border-right: 1px solid rgba(0, 0, 0, 0.5);
+            }
+            
+            // For a grid with 10 items (2 per row), the last row starts with item 9
+            // 10 items means 5 rows of 2 items each
+            &:not(:nth-child(n+9)) {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+            }
+        }
+        
+        @media (max-width: 576px) {
+            width: 100%;
+            border-right: none;
+            
+            // Single column, only bottom borders, except last
+            &:not(:last-child) {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+            }
+        }
     }
 }
 

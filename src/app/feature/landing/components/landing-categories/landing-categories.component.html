@@ -42,7 +42,7 @@
         </div>
         <!-- Back side -->
         <div class="categories__back">
-          <div class="image-wrapper" (click)="toggleCard(category.id)">
+          <div class="image-wrapper" (click)="toggleCard(category.id); $event.stopPropagation()">
             <svg
               class="categories__cross-btn"
               id="cross"
