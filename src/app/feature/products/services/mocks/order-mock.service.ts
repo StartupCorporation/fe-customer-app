@@ -20,7 +20,6 @@ export class OrderMockService extends ApiService {
     if (orderApiUrl) {
       this.setApiUrl(orderApiUrl);
     }
-    console.log(`OrderMockService using API URL: ${this.getApiUrl()}`);
   }
 
   /**
@@ -43,8 +42,6 @@ export class OrderMockService extends ApiService {
     // Store the order in our mock database
     this.orders.push(newOrder);
     
-    console.log('Mock order submitted:', newOrder);
-    console.log('Would have sent to:', `${this.getApiUrl()}/${this.urlPath}`);
     
     // Return the mock response after a delay to simulate network latency
     return of(newOrder).pipe(delay(800));
@@ -55,10 +52,7 @@ export class OrderMockService extends ApiService {
    * @param orderId The order ID to retrieve
    * @returns An observable with the mock order details
    */
-  getOrderById(orderId: string): Observable<OrderResponse> {
-    console.log('Mock getting order by ID:', orderId);
-    console.log('Would have requested from:', `${this.getApiUrl()}/${this.urlPath}/${orderId}`);
-    
+  getOrderById(orderId: string): Observable<OrderResponse> {    
     const order = this.orders.find(o => o.id === orderId);
     
     if (order) {

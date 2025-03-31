@@ -1,5 +1,5 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { Product } from '../../models/product-model';
+import { Product, ProductImage } from '../../models/product-model';
 import { TruncateNumberPipe } from "../../../../shared/pipes/truncate-number.pipe";
 import { Router } from '@angular/router';
 
@@ -17,8 +17,18 @@ export class ProductsCardComponent implements OnInit {
   ngOnInit() {
   }
 
-  getImageName(name: string) {
-    return `http://localhost:9999/images/${name}`;
+  getImageName(image: ProductImage | undefined) {
+    if (!image) {
+      return 'assets/images/placeholder.png';
+    }
+    
+    // Check if the link starts with http - if so use it directly
+    if (image.link.startsWith('http')) {
+      return image.link;
+    }
+    
+    // Otherwise prepend the base URL
+    return `http://localhost:9999/images/${image.link}`;
   }
 
   redirectToDetailPage() {

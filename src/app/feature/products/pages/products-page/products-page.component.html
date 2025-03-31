@@ -23,15 +23,16 @@
             </button>
           </mat-form-field>
         </div>
+        
         <div class="products-list">
           <app-products-list
-            [products]="isLoading ? [] : (products$ | async | safeArray)"
+            [products]="products"
             [isLoading]="isLoading"
           ></app-products-list>
         </div>
         <div class="products-page__pagination">
           <app-table-products-pagination
-          [products]="products$ | async | safeArray"
+          [products]="products"
           [pagination]="paginationFilters"
           (paginationChanged)="onPaginationChanged()"
           ></app-table-products-pagination>

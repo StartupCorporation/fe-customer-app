@@ -19,7 +19,6 @@ export class OrderService extends ApiService {
     if (orderApiUrl) {
       this.setApiUrl(orderApiUrl);
     }
-    console.log(`OrderService using API URL: ${this.getApiUrl()}`);
   }
 
   /**

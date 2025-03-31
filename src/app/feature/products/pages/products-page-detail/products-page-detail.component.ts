@@ -61,7 +61,7 @@ export class ProductsPageDetailComponent implements OnInit, OnDestroy {
       name: product.name,
       price: product.price,
       quantity: 1,
-      imageUrl: product.images[0]
+      imageUrl: product.images[0].link
     });
     
     // Add success message

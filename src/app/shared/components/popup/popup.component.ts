@@ -87,7 +87,6 @@ export class PopupComponent implements OnInit, OnDestroy {
   // Example nav handlers -- you'd wire them up to your router or logic:
   continueShopping(): void {
     // e.g. navigate to product listing: this.router.navigate(['/products']);
-    console.log('Continue shopping clicked.');
   }
 
   checkout(): void {

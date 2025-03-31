@@ -131,7 +131,6 @@ export class ProductsOrderPopupComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          console.log('Order submitted successfully:', response);
 
           // Show success message
           this.messageService.addMessage({

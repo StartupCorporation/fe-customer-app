@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, tap, throwError } from 'rxjs';
 import { QueryParamsModel } from '../models/query-params-model';
 import { EnvironmentService } from 'src/app/core/services/environment.service';
 
@@ -11,7 +11,7 @@ export class ApiService {
   protected apiUrl = '';
 
   constructor(protected http: HttpClient, protected envService: EnvironmentService) { 
-    this.apiUrl = this.envService.getEnvVar('API_URL') || 'Not Set';  
+    this.apiUrl = this.envService.getEnvVar('API_URL') || 'Not Set';
   }
 
   /**
@@ -40,7 +40,11 @@ export class ApiService {
     const headers = this.getHeaders();
     const url = `${customApiUrl || this.apiUrl}/${path}`;
 
-    return this.http.get<R>(url, headers);
+    return this.http.get<R>(url, headers).pipe(
+      catchError(error => {
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
@@ -132,20 +136,27 @@ export class ApiService {
   }
 
   /**
-   * Generate query parameters string from an object
-   * @param params The query parameters object
-   * @returns A query string
+   * Generate query parameter string from object
+   * @param params Object containing parameter key-value pairs
+   * @returns Query string (without leading ?)
    */
   protected generateQueryParams(params: Record<string, any>): string {
-    return Object.entries(params)
-      .filter(([_, value]) => value !== undefined && value !== null)
-      .map(([key, value]) => {
-        if (Array.isArray(value)) {
-          return value.map(v => `${key}=${encodeURIComponent(v)}`).join('&');
+    const queryParams: string[] = [];
+    
+    for (const key in params) {
+      if (params.hasOwnProperty(key) && params[key] !== undefined) {
+        // Handle arrays
+        if (Array.isArray(params[key])) {
+          params[key].forEach((value: any) => {
+            queryParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+          });
+        } else {
+          queryParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
         }
-        return `${key}=${encodeURIComponent(value)}`;
-      })
-      .join('&');
+      }
+    }
+    
+    return queryParams.join('&');
   }
 
   /**

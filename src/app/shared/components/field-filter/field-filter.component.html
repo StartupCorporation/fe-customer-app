@@ -1,88 +1,90 @@
-<ng-container [ngSwitch]="filter.type">
+<ng-container [ngSwitch]="filter?.type">
   
   <!-- 1) CHECKBOX TYPE -->
-  <mat-checkbox
-    *ngSwitchCase="FilterType.CHECKBOX"
-    [(ngModel)]="filter.value"
-    (ngModelChange)="onValueChanged()"
-    name="chk-{{ filter.label }}"
-  >
-    {{ filter.label }}
-  </mat-checkbox>
+  <ng-container *ngSwitchCase="FilterType.CHECKBOX">
+    <mat-checkbox
+      [(ngModel)]="filter.value"
+      (ngModelChange)="onValueChanged()"
+      [disabled]="filter.disabled"
+      [color]="'primary'"
+      [checked]="filter.value"
+      name="chk-{{ filter.label }}"
+    >
+      {{ filter.label }}
+    </mat-checkbox>
+  </ng-container>
 
   <!-- 2) RANGE TYPE (Dual-thumb slider with numeric inputs) -->
-  <div *ngSwitchCase="FilterType.RANGE" class="filter-range">
+  <ng-container *ngSwitchCase="FilterType.RANGE">
+    <div class="filter-range">
+      <label class="filter-range-label">{{ filter.label }}</label>
 
-    <label class="filter-range-label">{{ filter.label }}</label>
+      <!-- Two Number Inputs for Manual Entry -->
+      <div class="filter-range-inputs">
+        <!-- <label class="filter-range-input-label">Від:</label> -->
+        <input
+          type="text"
+          [(ngModel)]="filter.value[0]"
+          (ngModelChange)="onRangeInputChange()"
+          (focus)="onRangeInputFocus(0)"
+          (blur)="onRangeInputBlur()"
+          [min]="filter.minRange"
+          [max]="filter.maxRange"
+          [disabled]="filter.disabled"
+          class="filter-range-input"
+        />
 
-    <!-- Two Number Inputs for Manual Entry -->
-    <div class="filter-range-inputs">
-      <!-- <label class="filter-range-input-label">Від:</label> -->
-      <input
-        type="number"
-        [(ngModel)]="filter.value[0]"
-        (ngModelChange)="onValueChanged()"
-        [min]="filter.minRange || 0"
-        [max]="filter.maxRange || 1000"
-        [step]="filter.step || 1"
-        class="filter-range-input"
-      />
+        <!-- <label class="filter-range-input-label">До:</label> -->
+        <input
+          type="text"
+          [(ngModel)]="filter.value[1]"
+          (ngModelChange)="onRangeInputChange()"
+          (focus)="onRangeInputFocus(1)"
+          (blur)="onRangeInputBlur()"
+          [min]="filter.minRange"
+          [max]="filter.maxRange"
+          [disabled]="filter.disabled"
+          class="filter-range-input"
+        />
+      </div>
 
-      <!-- <label class="filter-range-input-label">До:</label> -->
-      <input
-        type="number"
-        [(ngModel)]="filter.value[1]"
-        (ngModelChange)="onValueChanged()"
-        [min]="filter.minRange || 0"
-        [max]="filter.maxRange || 1000"
-        [step]="filter.step || 1"
-        class="filter-range-input"
-      />
+      <!-- Angular Material Dual-Thumb Slider -->
+      <mat-slider
+        
+        [min]="filter.minRange"
+        [max]="filter.maxRange"
+        [disabled]="filter.disabled"
+      >
+        <input
+          matSliderStartThumb
+          [(ngModel)]="filter.value[0]"
+          (ngModelChange)="onValueChanged()"
+        />
+        <input
+          matSliderEndThumb
+          [(ngModel)]="filter.value[1]"
+          (ngModelChange)="onValueChanged()"
+        />
+      </mat-slider>
     </div>
-
-    <!-- Angular Material Dual-Thumb Slider -->
-    <mat-slider         
-    [min]="filter.minRange || 0"
-    [max]="filter.maxRange || 1000"
->
-      <input
-        matSliderStartThumb
-        [(ngModel)]="filter.value[0]"
-        (ngModelChange)="onValueChanged()"
-        [min]="filter.minRange || 0"
-        [max]="filter.maxRange || 1000"
-        [step]="filter.step || 1"
-        thumbLabel
-        name="rangeStart-{{ filter.label }}"
-      />
-      <input
-        matSliderEndThumb
-        [(ngModel)]="filter.value[1]"
-        (ngModelChange)="onValueChanged()"
-        [min]="filter.minRange || 0"
-        [max]="filter.maxRange || 1000"
-        [step]="filter.step || 1"
-        thumbLabel
-        name="rangeEnd-{{ filter.label }}"
-      />
-    </mat-slider>
-
-  </div>
+  </ng-container>
 
   <!-- 3) STRING TYPE -->
-  <div *ngSwitchCase="FilterType.STRING" class="filter-string">
-    <label>{{ filter.label }}</label>
-    <input
-      matInput
-      [(ngModel)]="filter.textValue"
-      (ngModelChange)="onValueChanged()"
-      name="txt-{{ filter.label }}"
-      placeholder="Type here..."
-    />
-  </div>
+  <ng-container *ngSwitchCase="FilterType.STRING">
+    <div class="filter-string">
+      <label>{{ filter.label }}</label>
+      <input
+        type="text"
+        [(ngModel)]="filter.value"
+        (ngModelChange)="onValueChanged()"
+        [disabled]="filter.disabled"
+        class="filter-string-input"
+      />
+    </div>
+  </ng-container>
 
   <!-- Fallback if unknown -->
   <div *ngSwitchDefault>
-    Unknown filter type: {{ filter.type }}
+    Unknown filter type: {{ filter?.type }}
   </div>
 </ng-container>
