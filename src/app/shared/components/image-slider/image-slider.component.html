@@ -1,4 +1,4 @@
-<div class="slider">
+<div class="slider" *ngIf="slides.length > 0">
   <div class="slider-container" [@slideAnimation]="currentIndex">
     @for (slide of slides; track slide; let i = $index) {
       <div class="slide" *ngIf="isCurrentSlideIndex(i)">
@@ -11,10 +11,10 @@
     }
   </div>
 
-  <button class="arrow prev" (click)="prevSlide()"></button>
-  <button class="arrow next" (click)="nextSlide()"></button>
+  <button class="arrow prev" (click)="prevSlide()" *ngIf="slides.length > 1"></button>
+  <button class="arrow next" (click)="nextSlide()" *ngIf="slides.length > 1"></button>
   
-  <nav class="nav">
+  <nav class="nav" *ngIf="slides.length > 1">
     <div class="wrapper">
       <ul class="dots">
         @for (slide of slides; track slide; let i = $index) {
@@ -28,5 +28,9 @@
       </ul>
     </div>
   </nav>
+</div>
+
+<div class="slider-empty" *ngIf="slides.length === 0">
+  <p>No images available</p>
 </div>
   

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ProductsCardComponent } from "../products-card/products-card.component";
 import { Product } from '../../models/product-model';
 
@@ -8,7 +8,7 @@ import { Product } from '../../models/product-model';
   styleUrls: ['./products-list.component.scss'],
   imports: [ProductsCardComponent]
 })
-export class ProductsListComponent implements OnInit {
+export class ProductsListComponent implements OnInit, OnChanges {
 
   @Input() products: Product[] = [];
   @Input() isLoading = false;
@@ -16,4 +16,6 @@ export class ProductsListComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+  }
 }

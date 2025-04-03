@@ -1,25 +1,132 @@
 @use "variables" as *;
 
 .products-detail {
+    width: 100%;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    background-color: #31418b;
-    min-height: 100vh;
+    background-color: $bg-primary;
 
     &__container {
-        width: 100%;
-        border-radius: 30px;
-        max-width: $breakpoint-xxl;
-        padding: 20px;
-        position: relative;
         display: flex;
         flex-direction: column;
         min-height: 100vh;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+        padding: 0 10px;
     }
 
     &__navbar {
+        margin-bottom: 2rem;
+    }
+
+    &__loading, &__error {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+        min-height: 300px;
+        text-align: center;
+        color: #666;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    &__error {
+        color: #d32f2f;
+        background-color: #fbe9e7;
+        p {
+            font-size: 1.1rem;
+        }
+    }
+
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid $blue;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        margin-bottom: 3rem;
+
+        @media (min-width: 768px) {
+            flex-direction: row;
+            align-items: stretch;
+            min-height: 500px;
+            height: 500px;
+        }
+    }
+
+    &__image {
         width: 100%;
+        max-width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        
+        @media (min-width: 768px) {
+            flex: 0 0 35%;
+            max-width: 35%;
+        }
+
+        app-image-slider {
+            display: block;
+            height: 100%;
+        }
+    }
+
+    &__image-fallback {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f0f0;
+        border-radius: 8px;
+        height: 100%;
+    }
+
+    &__no-image {
+        max-width: 200px;
+        opacity: 0.6;
+    }
+
+    &__description {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        border-radius: 8px;
+        
+        @media (min-width: 768px) {
+            flex: 0 0 65%;
+            max-width: 65%;
+        }
+
+        app-products-detail-description {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+    }
+
+    &__characteristics {
+        margin-bottom: 3rem;
     }
 
     &__footer {
@@ -27,13 +134,12 @@
         padding-top: 30px;
         padding-bottom: 30px;
     }
+}
 
-    &__info {
-        display: flex;
-        align-items: start;
-        justify-content: space-between;
-        margin-top: 35px;
-        gap: 50px;
-        flex: 1;
-    }
+// Toast styling
+app-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
 }

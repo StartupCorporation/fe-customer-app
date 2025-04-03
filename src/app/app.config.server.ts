@@ -17,6 +17,7 @@ export function transferStateFactory(transferState: TransferState) {
   return () => {
     const envVars = {
       API_URL: process.env['API_URL'] || '',
+      API_ORDER_URL: process.env['API_ORDER_URL'] || '',
       USE_MOCKS: process.env['USE_MOCKS'] || '',
     };
     transferState.set(envStateKey, envVars);
@@ -30,7 +31,13 @@ const serverConfig: ApplicationConfig = {
     provideAppInitializer(() => {
       const initFunction = transferStateFactory(inject(TransferState));
       return initFunction();
-    })
+    }),
+    {
+      provide: 'TRANSFER_STATE_INITIALIZER',
+      useFactory: transferStateFactory,
+      deps: [TransferState],
+      multi: true,
+    },
   ]
 };
 

@@ -1,6 +1,12 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { slideAnimation } from '../../animations/slide.animation';
+import { ProductImage } from 'src/app/feature/products/models/product-model';
+
+interface Slide {
+  image: string;
+  description: string;
+}
 
 @Component({
   selector: 'app-image-slider',
@@ -10,17 +16,33 @@ import { slideAnimation } from '../../animations/slide.animation';
   styleUrl: './image-slider.component.scss',
   animations: [slideAnimation]
 })
-export class ImageSliderComponent {
+export class ImageSliderComponent implements OnChanges {
+  @Input() images: ProductImage[] = [];
+  
   currentIndex = 0;
-  slides = [
-    {image: '/assets/images/category-1-Photoroom.png', description: 'Image 00'},
-    {image: '/assets/images/invertor-1.png', description: 'Image 01'},
-    {image: '/assets/images/invertor-1.png', description: 'Image 02'},
-    {image: '/assets/images/category-1-Photoroom.png', description: 'Image 03'},
-  ];
+  slides: Slide[] = [];
+  private apiUrl = 'http://localhost:9999/images/';
 
-  constructor() {
-    this.preloadImages();
+  constructor() {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['images'] && this.images && this.images.length > 0) {
+      this.slides = this.images.map((img) => ({
+        image: this.getFullImageUrl(img.link),
+        description: 'Product Image'
+      }));
+      this.currentIndex = 0;
+      this.preloadImages();
+    } else {
+      this.slides = [];
+    }
+  }
+
+  private getFullImageUrl(imagePath: string): string {
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    return `${this.apiUrl}${imagePath}`;
   }
 
   preloadImages() {

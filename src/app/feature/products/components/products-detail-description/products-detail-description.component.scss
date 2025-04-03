@@ -3,53 +3,175 @@
 .products-detail {
     background-color: $white;
     width: 100%;
-    padding: 40px 60px 60px 60px;
+    height: 100%;
+    padding: 30px 10px;
     border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    min-height: 500px;
+
+    @media (min-width: 768px) {
+        padding: 40px;
+    }
 
     &__title {
         color: $blue;
         font-family: $font-mont;
-        font-size: 36px;
+        font-size: 28px;
         font-weight: 700;
+        margin-bottom: 20px;
+        word-break: break-word;
+
+        @media (min-width: 768px) {
+            font-size: 36px;
+            line-height: 1.22;
+        }
     }
 
     &__description {
         color: #8d8ba7;
         font-family: $font-mont;
-        font-size: 20px;
+        font-size: 16px;
         font-weight: 400;
-        line-height: normal;
+        line-height: 1.22;
         margin-top: 20px;
+        overflow-wrap: break-word;
+        flex: 1;
+        overflow-y: auto;
+        min-height: 150px;
+        max-height: 250px;
+
+        @media (min-width: 768px) {
+            font-size: 20px;
+            line-height: 1.22;
+        }
     }
 
     &__footer {
         display: flex;
+        flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        margin-top: 50px;
+        margin-top: auto;
+        padding-top: 30px;
+        flex-wrap: nowrap;
+        gap: 20px;
+
+        @media (max-width: 767px) {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
     }
 
     &__price {
         color: $blue;
         font-family: $font-mont;
-        font-size: 48px;
+        font-size: 42px;
         font-weight: 700;
-        line-height: normal;
+        line-height: 1.22;
+        word-break: break-word;
+        
+        @media (max-width: 767px) {
+            font-size: 36px;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 5px;
+        }
+        
+        @media (min-width: 768px) {
+            font-size: 48px;
+            max-width: 60%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        &.price-large {
+            font-size: 32px;
+            
+            @media (min-width: 768px) {
+                font-size: 42px;
+            }
+        }
+
+        &.price-xlarge {
+            font-size: 28px;
+            
+            @media (min-width: 768px) {
+                font-size: 36px;
+            }
+        }
     }
 
     &__actions {
         display: flex;
-        align-items: center;
-        gap: 30px;
+        gap: 15px;
+        
+        @media (max-width: 767px) {
+            width: 100%;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        
+        @media (min-width: 768px) {
+            flex-shrink: 0;
+        }
     }
 
-    .button{
-        &--order {
-            width: 160px;
+    .button {
+        border-radius: 30px;
+        font-family: $font-mont;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        text-align: center;
+        border: none;
+
+        @media (min-width: 768px) {
+            font-size: 20px;
+            padding: 15px 30px;
         }
 
-        &--characteristics{
-            width: 240px;
+        &--order {
+            background-color: $blue;
+            color: $white;
+            padding: 15px 22px;
+            
+            @media (max-width: 767px) {
+                flex: 1;
+                min-width: 120px;
+            }
+            
+            @media (min-width: 768px) {
+                min-width: 160px;
+            }
+
+            &:hover {
+                opacity: 0.9;
+            }
+        }
+
+        &--characteristics {
+            background-color: $white;
+            color: $blue;
+            border: 3px solid $blue;
+            padding: 15px 22px;
+            
+            @media (max-width: 767px) {
+                flex: 1;
+                min-width: 160px;
+            }
+            
+            @media (min-width: 768px) {
+                min-width: 120px;
+            }
+
+            &:hover {
+                background-color: rgba($blue, 0.05);
+            }
         }
     }
 }

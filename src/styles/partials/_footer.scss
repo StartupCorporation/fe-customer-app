@@ -13,7 +13,7 @@
         &-link {
             font-family: $font-mont, sans-serif;
             font-weight: 400;
-            color: $white;
+            color: $bg-secondary;
             text-decoration: none;
             font-size: 16px;
             transition: color 0.3s ease-in-out;
@@ -53,7 +53,7 @@
         gap: 45px;
 
         .footer__phone {
-            color: $white;
+            color: $bg-secondary;
             font-size: 16px;
             font-family: $font-mont, sans-serif;
             font-weight: 400;

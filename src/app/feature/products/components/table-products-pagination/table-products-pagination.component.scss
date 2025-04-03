@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 .table {
     &-pagination {
         display: flex;
@@ -61,9 +63,9 @@
     }
 
     &.active {
-        background: #1976d2;
+        background: $bg-secondary;
         color: white;
-        border-color: #1976d2;
+        border-color: $bg-secondary;
     }
 }
 

@@ -1,0 +1,16 @@
+<div class="characteristics-table">
+  <h3 class="characteristics-table__title">Характеристики</h3>
+  
+  <table class="characteristics-table__content" *ngIf="attributes.length > 0">
+    <tbody>
+      <tr *ngFor="let attribute of attributes">
+        <td class="characteristics-table__cell-name">{{ attribute.name }}</td>
+        <td class="characteristics-table__cell-value">{{ getAttributeValueAsString(attribute) }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="characteristics-table__empty" *ngIf="attributes.length === 0">
+    Немає доступних характеристик для цього товару.
+  </div>
+</div>

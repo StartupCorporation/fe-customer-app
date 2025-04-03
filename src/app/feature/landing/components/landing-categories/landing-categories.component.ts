@@ -6,7 +6,7 @@ import {
   CATEGORY_SERVICE_TOKEN,
   ICategoryService,
 } from 'src/app/feature/products/services/interfaces/category.service.interface';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { SvgIconComponent } from 'src/app/shared/components/svg-icon/svg-icon.component';
 import { CarouselComponent } from '../../../../shared/components/carousel/carousel.component';
 import { SafeArrayPipe } from 'src/app/shared/pipes/safeArray.pipe';
@@ -31,7 +31,11 @@ export class LandingCategoriesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.$categories = this.categoryService.getCategories();
+    this.$categories = this.categoryService.getCategories().pipe(
+      map(categories => 
+        [...categories].sort((a, b) => a.name.localeCompare(b.name))
+      )
+    );
   }
 
   toggleCard(categoryId: string): void {
@@ -55,7 +59,7 @@ export class LandingCategoriesComponent implements OnInit {
     this.router.navigate(['/products'], {
       queryParams: {
         categoriesIds: categoryIds,
-        page: 1,
+        page: 0,
         size: 10
       },
     });

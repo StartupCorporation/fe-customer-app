@@ -5,19 +5,21 @@
   </p>
 
   <div class="products-detail__footer">
-    <div class="products-detail__price">
+    <div [ngClass]="getPriceClass(product.price)" class="products-detail__price">
       {{product.price | truncateNumber}}
     </div>
 
     <div class="products-detail__actions">
-      <button class="button button--primary button--order"
-      (click)="onOrderClick()"
+      <button class="button button--order"
+        (click)="onOrderClick()"
       >
-        <p>Замовити</p>
+        Замовити
       </button>
 
-      <button class="button button--secondary button-characteristics">
-        <p>Характеристики</p>
+      <button class="button button--characteristics"
+        (click)="onCharacteristicsClick()"
+      >
+        Характеристики
       </button>
     </div>
   </div>

@@ -1,0 +1,62 @@
+.characteristics-table {
+  margin: 2rem 0;
+  background-color: #FFFFFF;
+  border-radius: 30px;
+  padding: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+
+  &__title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #31418B;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #31418B;
+    text-align: center;
+  }
+
+  &__content {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    
+    tr {
+      border-bottom: 1px solid rgba(205, 204, 206, 0.71);
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+    
+    td {
+      padding: 0.75rem 0;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: #8D8BA7;
+      line-height: 1.2;
+    }
+  }
+  
+  &__cell-name {
+    width: 40%;
+    padding-right: 1rem;
+  }
+  
+  &__cell-value {
+    width: 60%;
+  }
+
+  &__empty {
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    text-align: center;
+    color: #8D8BA7;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+  }
+}
+

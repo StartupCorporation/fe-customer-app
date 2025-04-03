@@ -7,7 +7,7 @@ export class CategoryModel {
   ) {}
 
   public static fromJson(json: any): CategoryModel {
-    return new CategoryModel(json.id, json.name, json.description, json.image);
+    return new CategoryModel(json.id, json.name, json.description, json.image.link);
   }
 
   public static fromArrayJson(json: any[]): CategoryModel[] {

@@ -2,8 +2,21 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EnvironmentService } from 'src/app/core/services/environment.service';
 import { ApiService } from 'src/app/shared/services/api.service';
-import { Product } from '../models/product-model';
-import { map, Observable } from 'rxjs';
+import { Product, ProductImage } from '../models/product-model';
+import { catchError, map, Observable, of, tap } from 'rxjs';
+
+export interface ProductsResponse {
+  content: Product[];
+  priceRange: { min: number; max: number };
+  totalPages: number;
+  totalElements: number;
+  last: boolean;
+  size: number;
+  number: number;
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +28,7 @@ export class ProductsService extends ApiService {
     super(http, envService);
   }
 
-  getProducts(queryParams?: Record<string, any>): Observable<Product[]> {
+  getProducts(queryParams?: Record<string, any>): Observable<ProductsResponse> {
     // Build query string from the provided params
     let path: string = this.urlPath; // "products"
 
@@ -24,19 +37,73 @@ export class ProductsService extends ApiService {
       path = `${path}?${queryString}`;
     }
 
-    // Now call the "get" method from ApiService:
-    return this.get<Product[]>(path).pipe(
-      map((res: any) => Product.fromArrayJson(res.content))
+    return this.get<any>(path).pipe(
+      map((response: any) => {
+        // Ensure content is an array before processing
+        const content = Array.isArray(response.content) ? response.content : [];
+        
+        try {
+          const productsResponse: ProductsResponse = {
+            content: Product.fromArrayJson(content),
+            priceRange: response.priceRange || { min: 0, max: 0 },
+            totalPages: response.totalPages || 0,
+            totalElements: response.totalElements || 0,
+            last: response.last || false,
+            size: response.size || 0,
+            number: response.number || 0,
+            numberOfElements: response.numberOfElements || 0,
+            first: response.first || false,
+            empty: response.empty || true
+          };
+          
+          return productsResponse;
+        } catch (error) {
+          throw error;
+        }
+      }),
+      catchError(error => {
+        // Return a default empty response instead of throwing
+        return of({
+          content: [],
+          priceRange: { min: 0, max: 0 },
+          totalPages: 0,
+          totalElements: 0,
+          last: true,
+          size: 10,
+          number: 0,
+          numberOfElements: 0,
+          first: true,
+          empty: true
+        });
+      })
     );
   }
 
   getProductById(productId: string): Observable<Product> {
     let path: string = `${this.urlPath}/${productId}`;
 
-    return this.get<Product[]>(path)
+    return this.get<any>(path)
       .pipe(
-        map((res) => Product.fromJson(res)
-        )
+        map((res) => {
+          try {
+            // Ensure images paths are valid
+            if (res && Array.isArray(res.images)) {
+              res.images = res.images.filter((img: ProductImage) => 
+                img && typeof img.link === 'string' && img.link.trim() !== ''
+              );
+            }
+            
+            return Product.fromJson(res);
+          } catch (error) {
+            console.error('Error processing product data:', error);
+            throw error;
+          }
+        }),
+        catchError(error => {
+          console.error('Error fetching product:', error);
+          // Return a default empty product instead of throwing
+          return of(new Product());
+        })
       );
   }
 }

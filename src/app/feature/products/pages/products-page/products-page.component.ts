@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { first, Subject, switchMap, takeUntil, tap, map } from 'rxjs';
+import { first, Subject, switchMap, takeUntil, tap, map, distinctUntilChanged, debounceTime, skip, Observable, of, catchError } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ProductsService } from '../../services/products.service';
 import { CategoryService } from '../../services/category.service';
@@ -15,10 +15,9 @@ import { ProductsFilterComponent } from '../../components/products-filter/produc
 import { AsyncPipe } from '@angular/common';
 import { SafeArrayPipe } from 'src/app/shared/pipes/safeArray.pipe';
 import { MatInputModule } from '@angular/material/input';
-import { ProductsMockService } from '../../services/mocks/products-mock.service';
-import { CategoryMockService } from '../../services/mocks/category-mock.service';
 import { TableProductsPaginationComponent } from "../../components/table-products-pagination/table-products-pagination.component";
 import { PaginationModel } from 'src/app/shared/models/pagination-model';
+import { ProductsResponse } from '../../services/products.service';
 
 @Component({
   selector: 'app-products-page',
@@ -39,13 +38,23 @@ import { PaginationModel } from 'src/app/shared/models/pagination-model';
 export class ProductsPageComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private route = inject(ActivatedRoute);
+  private productsSubject = new Subject<{ queryObj: any, forceRefresh?: boolean }>();
+  private lastQueryString: string | null = null;
+  private isInitialLoad = true;
+  
+  // Keep track of global price range
+  private globalPriceRange = {
+    min: 0,
+    max: 1000000
+  };
   
   isLoading = true; // Add loading state
+  products: Product[] = [];
 
   constructor(
     private router: Router,
-    private productsService: ProductsMockService,
-    private categoryService: CategoryMockService
+    private productsService: ProductsService,
+    private categoryService: CategoryService
   ) { }
 
   categoryFilters: any[] = [];
@@ -53,7 +62,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   // Example product filters array: one range filter + one text filter
   productFilters: any[] = [
     {
-      label: 'Ціна',
+      label: '',
       type: FilterType.RANGE,
       id: 'price',
       value: [0, 1000000], // Using a large initial range that will be updated with actual product prices
@@ -75,28 +84,139 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     return this.productFilters.filter((f) => f.label !== 'Пошук');
   }
 
-  // We'll fetch products based on the current query params
-  products$ = this.route.queryParams.pipe(
+  // Check if this is a category being deselected
+  private isCategoryBeingDeselected(queryObj: any): boolean {
+    if (!this.lastQueryString) return false;
+    
+    const prevQueryObj = JSON.parse(this.lastQueryString || '{}');
+    const wasCategorySelected = prevQueryObj?.categoriesIds?.length > 0;
+    const isCategoryDeselected = wasCategorySelected && 
+                              (!queryObj.categoriesIds || queryObj.categoriesIds.length === 0);
+    
+    return isCategoryDeselected;
+  }
+
+  // We'll create a products$ observable that handles duplicate requests
+  products$ = this.productsSubject.pipe(
     takeUntil(this.destroy$),
-    tap(() => this.isLoading = true),
-    switchMap((params) => {
-      const queryObj = this.buildQueryObjectFromParams(params);
+    distinctUntilChanged((prev, curr) => {
+      if (curr.forceRefresh) return false; // Always proceed if force refresh
+      
+      const prevString = JSON.stringify(prev.queryObj);
+      const currString = JSON.stringify(curr.queryObj);
+      return prevString === currString;
+    }),
+    switchMap(({ queryObj, forceRefresh }) => {
+      // Check if this is a category being deselected
+      const isCategoryDeselected = this.isCategoryBeingDeselected(queryObj);
+      
+      // Deduplicate identical queries
+      const queryString = JSON.stringify(queryObj);
+      if (queryString === this.lastQueryString && !this.isInitialLoad && !forceRefresh && !isCategoryDeselected) {
+        return of(this.products); // Return current products
+      }
+      
+      this.lastQueryString = queryString;
+      this.isInitialLoad = false;
+      this.isLoading = true;
+      
+      // If user deselected a category, reset price filters to global range
+      // and remove price range from URL
+      if (isCategoryDeselected) {
+        // Create a clean query without price range filters
+        const cleanQuery = { ...queryObj };
+        delete cleanQuery['priceRange.min'];
+        delete cleanQuery['priceRange.max'];
+        
+        // Update the query object for this request
+        queryObj = cleanQuery;
+        
+        // Update the URL without triggering navigation
+        const queryParams = { ...this.route.snapshot.queryParams };
+        delete queryParams['priceRange.min'];
+        delete queryParams['priceRange.max'];
+        
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams,
+          replaceUrl: true
+        });
+        
+        // Reset the filter in the UI
+        this.resetPriceFilterToGlobalRange(false); // Don't force refresh here
+      }
+      
+      // Ensure size is always 20
+      if (!queryObj.size || queryObj.size !== 20) {
+        queryObj.size = 20;
+      }
+      
       return this.productsService.getProducts(queryObj).pipe(
         tap((response: any) => {
-          // Update pagination info from response
-          if (response.pagination) {
-            this.paginationFilters.totalElements = response.pagination.totalElements;
-            this.paginationFilters.page = response.pagination.page;
-            this.paginationFilters.size = response.pagination.size;
+          // Update price range from response if available, but only if this is
+          // an unfiltered request or the initial load or force refresh or category deselection
+          if (response.priceRange && !(response.priceRange.min === 0 && response.priceRange.max === 0)) {
+            // Check if this is an unfiltered request (no price range filters)
+            const isUnfilteredRequest = !queryObj['priceRange.min'] && !queryObj['priceRange.max'];
+            
+            if (isUnfilteredRequest || this.isInitialLoad || forceRefresh || isCategoryDeselected) {
+              // Update the global price range for unfiltered requests
+              this.globalPriceRange = {
+                min: response.priceRange.min,
+                max: response.priceRange.max
+              };
+              this.updatePriceFilter(response.priceRange.min, response.priceRange.max);
+            } else {
+              // For filtered requests, use the existing global range for min/max
+              // but respect user's current selected values
+              this.preserveUserPriceFilter(response.priceRange);
+            }
+          } else if (response.content && response.content.length === 0) {
+            // If category has no products, keep the global price range
+            console.log('Empty category selected, maintaining global price range');
           }
+          
+          // Update pagination info from response, but keep size fixed at 20
+          this.paginationFilters.totalElements = response.totalElements || 0;
+          this.paginationFilters.page = response.number || 0;
+          // Do not update size from response - always keep it at 20
+          
+          // Extract products from response
+          if (Array.isArray(response.content)) {
+            this.products = response.content;
+          } else {
+            this.products = []; // Reset products if invalid data
+          }
+          
           this.isLoading = false;
         }),
-        map(response => response.content || [])
+        map(response => {
+          if (Array.isArray(response.content)) {
+            return response.content;
+          }
+          return [];
+        }),
+        catchError(error => {
+          this.isLoading = false;
+          this.products = [];
+          return of([]);
+        })
       );
     })
   );
 
   ngOnInit(): void {
+    // Set default page size to 20
+    this.paginationFilters.size = 20;
+
+    // Set up query param subscription to trigger product loading
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        const queryObj = this.buildQueryObjectFromParams(params);
+        this.productsSubject.next({ queryObj });
+      });
+
     // 1) Load categories, then map to checkbox filters
     this.categoryService
       .getCategories()
@@ -114,15 +234,9 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         const params = this.route.snapshot.queryParams;
         this.applyQueryParamsToFilters(params);
       });
-
-    // Get all products first to set the max price range
-    this.productsService.getProducts()
-      .pipe(first())
-      .subscribe((response: any) => {
-        const products = response.content || [];
-        console.log('Initial products for max price:', products.length);
-        this.redefineProductsMaxPriceRange(products);
-      });
+      
+    // Subscribe to our managed products$ observable
+    this.products$.subscribe();
   }
 
   redefineProductsMaxPriceRange(products: Product[]) {
@@ -139,22 +253,47 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       const minPrice = Math.min(...prices);
       const maxPrice = Math.max(...prices);
       
+      this.updatePriceRangeFilter(minPrice, maxPrice);
+    }
+  }
+
+  private updatePriceRangeFilter(minPrice: number, maxPrice: number) {
+    // Find the price range filter
+    const rangeFilter = this.productFilters.find(
+      (f) => f.type === FilterType.RANGE && f.id === 'price'
+    );
+    
+    if (rangeFilter) {
+      // Get current user parameters
+      const params = this.route.snapshot.queryParams;
+      const hasUserPriceFilter = params['priceRange.min'] !== undefined || params['priceRange.max'] !== undefined;
+      
       // Round down min and up max for cleaner UI
       const roundedMinPrice = Math.floor(minPrice / 100) * 100;
       const roundedMaxPrice = Math.ceil(maxPrice / 100) * 100;
       
-      console.log('Price range found:', minPrice, maxPrice, 'Rounded to:', roundedMinPrice, roundedMaxPrice);
-      
-      // Update the filter's range and value
-      rangeFilter.minRange = roundedMinPrice;
-      rangeFilter.maxRange = roundedMaxPrice;
-      
-      // Only set the values if they're not already set by user filters
-      const params = this.route.snapshot.queryParams;
-      const hasUserPriceFilter = params['price.min'] !== undefined || params['price.max'] !== undefined;
-      
-      if (!hasUserPriceFilter) {
+      // Only update the slider range constraints if this is the initial load 
+      // or if there's no active price filter from the user
+      if (!hasUserPriceFilter || this.isInitialLoad) {
+        // Update the range constraints to reflect the full range of available products
+        rangeFilter.minRange = roundedMinPrice;
+        rangeFilter.maxRange = roundedMaxPrice;
+        
+        // Set initial values too if no user filter exists
         rangeFilter.value = [roundedMinPrice, roundedMaxPrice];
+      } else {
+        // If user has an active filter, keep their min value
+        // but ensure max value doesn't exceed the actual maximum
+        const currentValue = [...rangeFilter.value];
+        
+        // If max exceeds available max, cap it
+        if (currentValue[1] > roundedMaxPrice) {
+          currentValue[1] = roundedMaxPrice;
+          rangeFilter.value = currentValue;
+        }
+        
+        // Don't update minRange/maxRange when filtering is active
+        // This preserves the slider's full range
       }
     }
   }
@@ -179,10 +318,11 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     // 2) Build a new queryParams object from the updated filters
     const queryParams = this.buildQueryParamsFromFilters();
 
-    // 3) Update the URL
+    // 3) Update the URL with replaceUrl to prevent adding to browser history
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams,
+      replaceUrl: true // Replace current URL instead of pushing to history
     });
   }
 
@@ -206,8 +346,8 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     // Apply product filters
     this.productFilters.forEach((filter) => {
       if (filter.type === FilterType.RANGE) {
-        const minParam = params[`${filter.id}.min`];
-        const maxParam = params[`${filter.id}.max`];
+        const minParam = params[`priceRange.min`];
+        const maxParam = params[`priceRange.max`];
         if (minParam !== undefined && maxParam !== undefined) {
           filter.value = [Number(minParam), Number(maxParam)];
         }
@@ -220,14 +360,19 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     if (params.page) {
       this.paginationFilters.page = Number(params.page);
     }
-    if (params.size) {
-      this.paginationFilters.size = Number(params.size);
+    
+    // Always set fixed size of 20, regardless of URL parameters
+    this.paginationFilters.size = 20;
+    
+    // After applying filters, trigger data reloading with current query
+    const queryObj = this.buildQueryObjectFromParams(params);
+    if (Object.keys(params).length > 0) {
+      this.productsSubject.next({ queryObj });
     }
   }
 
   /**
    * Build a queryParams object from the local filters.
-   * Now using priceRange as a single JSON-ified object
    */
   private buildQueryParamsFromFilters(): any {
     const params: any = {};
@@ -243,20 +388,20 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     // Add product filters
     this.productFilters.forEach((filter) => {
       if (filter.type === FilterType.RANGE && filter.value) {
-        params[`${filter.id}.min`] = filter.value[0];
-        params[`${filter.id}.max`] = filter.value[1];
+        params[`priceRange.min`] = filter.value[0];
+        params[`priceRange.max`] = filter.value[1];
       } else if (filter.type === FilterType.STRING && filter.value) {
         params[filter.id] = filter.value;
       }
     });
 
-    // Add pagination
+    // Add pagination - always use page from pagination filters but fixed size of 20
     if (this.paginationFilters.page) {
       params.page = this.paginationFilters.page;
     }
-    if (this.paginationFilters.size) {
-      params.size = this.paginationFilters.size;
-    }
+    
+    // Always use fixed size of 20
+    params.size = 20;
 
     return params;
   }
@@ -274,16 +419,16 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     }
 
     // 2) Handle price range parameters
-    const minPrice = params['price.min'] !== undefined ? Number(params['price.min']) : undefined;
-    const maxPrice = params['price.max'] !== undefined ? Number(params['price.max']) : undefined;
+    const minPrice = params['priceRange.min'] !== undefined ? Number(params['priceRange.min']) : undefined;
+    const maxPrice = params['priceRange.max'] !== undefined ? Number(params['priceRange.max']) : undefined;
 
     return {
       categoriesIds: catIds,
       name: params['name'] || '',
-      'price.min': minPrice,
-      'price.max': maxPrice,
+      'priceRange.min': minPrice,
+      'priceRange.max': maxPrice,
       page: params['page'] || 0,
-      size: params['size'] || 10
+      size: 20 // Always use fixed size of 20
     };
   }
 
@@ -302,12 +447,107 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams,
-      queryParamsHandling: 'merge'
+      replaceUrl: true // Replace current URL instead of pushing to history
     });
+  }
+
+  // Force a refresh by passing forceRefresh: true
+  forceRefresh(): void {
+    const queryObj = this.buildQueryObjectFromParams(this.route.snapshot.queryParams);
+    this.productsSubject.next({ queryObj, forceRefresh: true });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  // New helper method to preserve user's price filter while respecting global range
+  private preserveUserPriceFilter(currentRangeFromApi: { min: number, max: number }) {
+    const rangeFilter = this.productFilters.find(
+      (f) => f.type === FilterType.RANGE && f.id === 'price'
+    );
+    
+    if (rangeFilter) {
+      // Get current user values
+      const params = this.route.snapshot.queryParams;
+      const userMinPrice = params['priceRange.min'] !== undefined ? Number(params['priceRange.min']) : null;
+      const userMaxPrice = params['priceRange.max'] !== undefined ? Number(params['priceRange.max']) : null;
+      
+      // Preserve the user's filter values
+      if (userMinPrice !== null && userMaxPrice !== null) {
+        rangeFilter.value = [userMinPrice, userMaxPrice];
+      }
+      
+      // Ensure the slider range (min/max constraints) stays set to the global range
+      // This prevents the slider from shrinking when filtered results come back
+      rangeFilter.minRange = this.globalPriceRange.min;
+      rangeFilter.maxRange = this.globalPriceRange.max;
+    }
+  }
+  
+  // Replace the old updatePriceRangeFilter with this new method
+  private updatePriceFilter(minPrice: number, maxPrice: number) {
+    const rangeFilter = this.productFilters.find(
+      (f) => f.type === FilterType.RANGE && f.id === 'price'
+    );
+    
+    if (rangeFilter) {
+      // Ignore invalid price ranges (where both min and max are 0, which happens with empty categories)
+      if (minPrice === 0 && maxPrice === 0) {
+        return;
+      }
+
+      // Round down min and up max for cleaner UI
+      const roundedMinPrice = Math.floor(minPrice / 100) * 100;
+      const roundedMaxPrice = Math.ceil(maxPrice / 100) * 100;
+      
+      // Set the range constraints to reflect the full range of available products
+      rangeFilter.minRange = roundedMinPrice;
+      rangeFilter.maxRange = roundedMaxPrice;
+      
+      // Update the global price range as well
+      this.globalPriceRange.min = roundedMinPrice;
+      this.globalPriceRange.max = roundedMaxPrice;
+      
+      // Get current user parameters
+      const params = this.route.snapshot.queryParams;
+      const hasUserPriceFilter = params['priceRange.min'] !== undefined || params['priceRange.max'] !== undefined;
+      
+      // Only set values if no user filter exists
+      if (!hasUserPriceFilter) {
+        rangeFilter.value = [roundedMinPrice, roundedMaxPrice];
+      }
+    }
+  }
+
+  // Add a method to reset price filter to global range
+  private resetPriceFilterToGlobalRange(shouldForceRefresh: boolean = true): void {
+    const rangeFilter = this.productFilters.find(
+      (f) => f.type === FilterType.RANGE && f.id === 'price'
+    );
+    
+    if (rangeFilter) {
+      // Check if we have valid global price range
+      if (this.globalPriceRange.max > 0 && this.globalPriceRange.min < this.globalPriceRange.max) {
+        // Reset to the global range
+        rangeFilter.minRange = this.globalPriceRange.min;
+        rangeFilter.maxRange = this.globalPriceRange.max;
+        rangeFilter.value = [this.globalPriceRange.min, this.globalPriceRange.max];
+      } else {
+        // If no valid global range exists yet (empty category case), 
+        // use default values and force a refresh
+        rangeFilter.minRange = 0;
+        rangeFilter.maxRange = 1000000;
+        rangeFilter.value = [0, 1000000];
+        
+        // Force a refresh to get actual values, only if requested
+        if (shouldForceRefresh) {
+          setTimeout(() => {
+            this.forceRefresh();
+          }, 0);
+        }
+      }
+    }
   }
 }
