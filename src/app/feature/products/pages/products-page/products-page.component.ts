@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { first, Subject, switchMap, takeUntil, tap, map, distinctUntilChanged, debounceTime, skip, Observable, of, catchError } from 'rxjs';
+import { first, Subject, switchMap, takeUntil, tap, map, distinctUntilChanged, debounceTime, skip, Observable, of, catchError, finalize } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ProductsService } from '../../services/products.service';
 import { CategoryService } from '../../services/category.service';
@@ -41,6 +41,8 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   private productsSubject = new Subject<{ queryObj: any, forceRefresh?: boolean }>();
   private lastQueryString: string | null = null;
   private isInitialLoad = true;
+  private filtersInitialized = false;
+  private categoriesLoaded = false;
   
   // Keep track of global price range
   private globalPriceRange = {
@@ -209,36 +211,25 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     // Set default page size to 20
     this.paginationFilters.size = 20;
 
-    // Subscribe to our managed products$ observable - IMPORTANT to do this first
-    this.products$.subscribe();
+    // Subscribe to our products$ observable first to ensure it's ready
+    const productsSubscription = this.products$.subscribe();
+    this.filtersInitialized = false;
 
-    // IMPORTANT: Force-trigger an immediate product load regardless of URL params
-    // This ensures products load on page refresh even without query params
-    setTimeout(() => {
-      // Use a simple object that will guarantee API call happens
-      this.productsSubject.next({ 
-        queryObj: {
-          categoriesIds: [],
-          name: '',
-          page: 0,
-          size: 20
-        }, 
-        forceRefresh: true 
-      });
-    }, 0);
+    // Get the current route params before making any API calls
+    const routeParams = this.route.snapshot.queryParams;
+    const hasQueryParams = Object.keys(routeParams).length > 0;
 
-    // Set up query param subscription to trigger product loading
-    this.route.queryParams
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(params => {
-        const queryObj = this.buildQueryObjectFromParams(params);
-        this.productsSubject.next({ queryObj });
-      });
-
-    // 1) Load categories, then map to checkbox filters
+    // 1) Load categories FIRST, since we need them before we can properly apply filters
     this.categoryService
       .getCategories()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        // Ensure we complete this step before proceeding
+        finalize(() => {
+          this.categoriesLoaded = true;
+          this.loadProductsAfterInitialization(routeParams, hasQueryParams);
+        })
+      )
       .subscribe((categories: CategoryModel[]) => {
         // Convert each category to a checkbox filter
         this.categoryFilters = categories.map((cat) => ({
@@ -248,10 +239,55 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
           id: cat.id,
         }));
 
-        // 2) Apply current query params to these filters (if any)
-        const params = this.route.snapshot.queryParams;
-        this.applyQueryParamsToFilters(params);
+        // Apply current query params to these filters
+        this.applyQueryParamsToFilters(routeParams);
       });
+
+    // 2) Set up query param subscription AFTER initial load is complete
+    // This handles navigation changes AFTER the component is initialized
+    this.route.queryParams
+      .pipe(
+        takeUntil(this.destroy$),
+        // Skip the first emission which is handled separately
+        skip(1)
+      )
+      .subscribe(params => {
+        // This only runs for subsequent URL changes
+        const queryObj = this.buildQueryObjectFromParams(params);
+        this.productsSubject.next({ queryObj });
+      });
+  }
+  
+  // This method ensures proper load sequence after initialization
+  private loadProductsAfterInitialization(params: any, hasQueryParams: boolean): void {
+    // Mark filters as initialized to prevent parallel loading
+    this.filtersInitialized = true;
+    
+    // Build query object from the current params
+    const queryObj = this.buildQueryObjectFromParams(params);
+    
+    // Check if we have price range parameters
+    const hasPriceRange = params['priceRange.min'] !== undefined || params['priceRange.max'] !== undefined;
+    
+    // If we have query params, use those filters, otherwise do a general load
+    if (hasQueryParams) {
+      // For routes with params, use the filtered query
+      this.productsSubject.next({ 
+        queryObj, 
+        // Force refresh when there's a price range to ensure API returns correct price range
+        forceRefresh: hasPriceRange 
+      });
+    } else {
+      // For empty routes, do a general load
+      const emptyQuery = {
+        categoriesIds: [],
+        name: '',
+        page: 0,
+        size: 20
+      };
+      // Always force refresh on initial load to get correct price ranges
+      this.productsSubject.next({ queryObj: emptyQuery, forceRefresh: true });
+    }
   }
 
   redefineProductsMaxPriceRange(products: Product[]) {
@@ -364,7 +400,21 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         const minParam = params[`priceRange.min`];
         const maxParam = params[`priceRange.max`];
         if (minParam !== undefined && maxParam !== undefined) {
+          // Set value from URL params
           filter.value = [Number(minParam), Number(maxParam)];
+          
+          // Temporarily set the min/max range to match the values
+          // This prevents the slider from showing a giant range while loading
+          if (Number(minParam) < Number(maxParam)) {
+            // Only update ranges if values make sense
+            const bufferAmount = Math.ceil((Number(maxParam) - Number(minParam)) * 0.1); // 10% buffer
+            filter.minRange = Math.max(0, Number(minParam) - bufferAmount);
+            filter.maxRange = Number(maxParam) + bufferAmount;
+            
+            // Also update the global range temporarily
+            this.globalPriceRange.min = filter.minRange;
+            this.globalPriceRange.max = filter.maxRange;
+          }
         }
       } else if (filter.type === FilterType.STRING) {
         filter.value = params[filter.id] || '';
