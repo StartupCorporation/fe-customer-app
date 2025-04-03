@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EnvironmentService } from 'src/app/core/services/environment.service';
 import { ApiService } from 'src/app/shared/services/api.service';
-import { Product } from '../models/product-model';
+import { Product, ProductImage } from '../models/product-model';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 
 export interface ProductsResponse {
@@ -86,12 +86,21 @@ export class ProductsService extends ApiService {
       .pipe(
         map((res) => {
           try {
+            // Ensure images paths are valid
+            if (res && Array.isArray(res.images)) {
+              res.images = res.images.filter((img: ProductImage) => 
+                img && typeof img.link === 'string' && img.link.trim() !== ''
+              );
+            }
+            
             return Product.fromJson(res);
           } catch (error) {
+            console.error('Error processing product data:', error);
             throw error;
           }
         }),
         catchError(error => {
+          console.error('Error fetching product:', error);
           // Return a default empty product instead of throwing
           return of(new Product());
         })

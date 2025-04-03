@@ -4,17 +4,44 @@
       <app-landing-welcome-window />
     </div>
 
-    <div class="products-detail__info">
+    <!-- Loading indicator -->
+    <div class="products-detail__loading" *ngIf="isLoading">
+      <div class="loading-spinner"></div>
+      <p>Завантаження товару...</p>
+    </div>
 
-      <div class="products-detail__image">
-        <app-image-slider></app-image-slider>
+    <!-- Product content -->
+    <ng-container *ngIf="!isLoading && !loadError">
+      <div class="products-detail__info">
+        <div class="products-detail__image">
+          <app-image-slider 
+            *ngIf="product.images && product.images.length > 0" 
+            [images]="product.images"
+          ></app-image-slider>
+          <div *ngIf="!product.images || product.images.length === 0" class="products-detail__image-fallback">
+            <img src="/assets/images/no-image.png" alt="No image available" class="products-detail__no-image">
+          </div>
+        </div>
+        <div class="products-detail__description">
+          <app-products-detail-description
+            [product]="product"
+            (addToCart)="addToCart($event)"
+            (showCharacteristics)="scrollToCharacteristics()"
+          ></app-products-detail-description>
+        </div>
       </div>
-      <div class="products-detail__description">
-        <app-products-detail-description
-        [product]="product"
-        (addToCart)="addToCart($event)"
-        ></app-products-detail-description>
+
+      <!-- Product Characteristics Table -->
+      <div class="products-detail__characteristics">
+        <app-products-characteristics-table 
+          [attributes]="product.attributes"
+        ></app-products-characteristics-table>
       </div>
+    </ng-container>
+
+    <!-- Error state -->
+    <div class="products-detail__error" *ngIf="!isLoading && loadError">
+      <p>Не вдалося завантажити інформацію про товар. Спробуйте пізніше.</p>
     </div>
 
     <div class="products-detail__footer">

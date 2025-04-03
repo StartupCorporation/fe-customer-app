@@ -3,6 +3,26 @@ export interface ProductImage {
   link: string;
 }
 
+export interface AttributeDefinition {
+  attributeType: string;
+  values?: (string | number)[];
+  min?: number;
+  max?: number;
+}
+
+export interface RangeValue {
+  min: number;
+  max: number;
+}
+
+export interface ProductAttribute {
+  id: string;
+  name: string;
+  description: string;
+  definition: AttributeDefinition;
+  value: string | number | RangeValue;
+}
+
 export class Product {
   constructor(
     public id = '',
@@ -12,7 +32,8 @@ export class Product {
     public description = '',
     public stockQuantity = 0,
     public categoryId = '',
-    public categoryName = ''
+    public categoryName = '',
+    public attributes: ProductAttribute[] = []
   ) { }
 
   public static fromJson(json: any): Product {
@@ -26,6 +47,12 @@ export class Product {
       if (Array.isArray(json.images)) {
         productImages = json.images;
       }
+
+      // Ensure attributes is properly mapped
+      let productAttributes: ProductAttribute[] = [];
+      if (Array.isArray(json.attributes)) {
+        productAttributes = json.attributes;
+      }
       
       const product = new Product(
         json.id || '',
@@ -35,7 +62,8 @@ export class Product {
         json.description || '',
         json.stockQuantity || 0,
         json.categoryId || '',
-        json.categoryName || ''
+        json.categoryName || '',
+        productAttributes
       );
       
       return product;
