@@ -8,14 +8,15 @@
           class="products-card__icon"
         />
       </div>
-      <div class="products-card__name">{{ product.name }}</div>
-      <div class="products-card__label">
-        <div class="products-card__price">
-          {{ product.price | truncateNumber }}
-        </div>
-
-        <div class="products-card__button">
-          <button class="button button-describe" (click)="redirectToDetailPage()">Докладніше</button>
+      <div class="products-card__content">
+        <div class="products-card__name">{{ product.name }}</div>
+        <div class="products-card__label">
+          <div class="products-card__price">
+            {{ product.price | truncateNumber }}
+          </div>
+          <div class="products-card__button">
+            <button class="button button-describe" (click)="redirectToDetailPage()">Детальніше</button>
+          </div>
         </div>
       </div>
     </div>
