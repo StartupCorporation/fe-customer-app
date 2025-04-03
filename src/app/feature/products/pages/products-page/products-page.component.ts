@@ -209,6 +209,24 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     // Set default page size to 20
     this.paginationFilters.size = 20;
 
+    // Subscribe to our managed products$ observable - IMPORTANT to do this first
+    this.products$.subscribe();
+
+    // IMPORTANT: Force-trigger an immediate product load regardless of URL params
+    // This ensures products load on page refresh even without query params
+    setTimeout(() => {
+      // Use a simple object that will guarantee API call happens
+      this.productsSubject.next({ 
+        queryObj: {
+          categoriesIds: [],
+          name: '',
+          page: 0,
+          size: 20
+        }, 
+        forceRefresh: true 
+      });
+    }, 0);
+
     // Set up query param subscription to trigger product loading
     this.route.queryParams
       .pipe(takeUntil(this.destroy$))
@@ -234,9 +252,6 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         const params = this.route.snapshot.queryParams;
         this.applyQueryParamsToFilters(params);
       });
-      
-    // Subscribe to our managed products$ observable
-    this.products$.subscribe();
   }
 
   redefineProductsMaxPriceRange(products: Product[]) {
@@ -363,12 +378,6 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     
     // Always set fixed size of 20, regardless of URL parameters
     this.paginationFilters.size = 20;
-    
-    // After applying filters, trigger data reloading with current query
-    const queryObj = this.buildQueryObjectFromParams(params);
-    if (Object.keys(params).length > 0) {
-      this.productsSubject.next({ queryObj });
-    }
   }
 
   /**
