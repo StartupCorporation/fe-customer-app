@@ -37,6 +37,13 @@
           [attributes]="product.attributes"
         ></app-products-characteristics-table>
       </div>
+
+      <!-- Product Comments Section -->
+      <div class="products-detail__comments">
+        <app-product-detail-comments
+          [productId]="product.id"
+        ></app-product-detail-comments>
+      </div>
     </ng-container>
 
     <!-- Error state -->

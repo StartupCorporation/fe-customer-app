@@ -15,6 +15,7 @@ import { MessageTypeEnum } from 'src/app/shared/enums/message-type-enum';
 import { ToastComponent } from 'src/app/shared/components/toast/toast.component';
 import { SafeArrayPipe } from "../../../../shared/pipes/safeArray.pipe";
 import { ProductsCharacteristicsTableComponent } from "../../components/products-characteristics-table/products-characteristics-table.component";
+import { ProductDetailCommentsComponent } from "../../components/product-detail-comments/product-detail-comments.component";
 
 @Component({
   selector: 'app-products-page-detail',
@@ -26,6 +27,7 @@ import { ProductsCharacteristicsTableComponent } from "../../components/products
     ImageSliderComponent,
     ProductsDetailDescriptionComponent,
     ProductsCharacteristicsTableComponent,
+    ProductDetailCommentsComponent,
     ToastComponent,
     NgIf,
     AsyncPipe,
