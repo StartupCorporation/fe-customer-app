@@ -1,0 +1,81 @@
+<div class="product-comments">
+  <h2 class="product-comments__title">Відгуки клієнтів</h2>
+
+  <!-- Comment Form -->
+  <div class="product-comments__form-container">
+    <form [formGroup]="commentForm" (ngSubmit)="submitComment()" class="product-comments__form">
+      <div class="product-comments__form-row">
+        <div class="product-comments__form-field">
+          <label for="author" class="product-comments__label">Ім'я</label>
+          <input 
+            type="text" 
+            id="author" 
+            formControlName="author" 
+            class="product-comments__input"
+            [class.product-comments__input--invalid]="commentForm.get('author')?.invalid && commentForm.get('author')?.touched"
+          >
+          <div *ngIf="commentForm.get('author')?.invalid && commentForm.get('author')?.touched" class="product-comments__error">
+            <span *ngIf="commentForm.get('author')?.errors?.['required']">Ім'я обов'язкове</span>
+            <span *ngIf="commentForm.get('author')?.errors?.['maxlength']">Ім'я надто довге</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-comments__form-row">
+        <div class="product-comments__form-field">
+          <label for="content" class="product-comments__label">Коментар</label>
+          <textarea 
+            id="content" 
+            formControlName="content" 
+            class="product-comments__textarea"
+            [class.product-comments__textarea--invalid]="commentForm.get('content')?.invalid && commentForm.get('content')?.touched"
+            rows="4"
+          ></textarea>
+          <div *ngIf="commentForm.get('content')?.invalid && commentForm.get('content')?.touched" class="product-comments__error">
+            <span *ngIf="commentForm.get('content')?.errors?.['required']">Текст коментаря обов'язковий</span>
+            <span *ngIf="commentForm.get('content')?.errors?.['maxlength']">Коментар надто довгий</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-comments__form-actions">
+        <button 
+          type="submit" 
+          class="product-comments__submit-btn" 
+          [disabled]="isSubmitting || commentForm.invalid"
+        >
+          <span *ngIf="!isSubmitting">Надіслати відгук</span>
+          <span *ngIf="isSubmitting">Надсилання...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Comments List -->
+  <div class="product-comments__list-container">
+    <div *ngIf="isLoading" class="product-comments__loading">
+      <div class="loading-spinner"></div>
+      <p>Завантаження відгуків...</p>
+    </div>
+
+    <ng-container *ngIf="!isLoading">
+      <div *ngIf="comments.length === 0" class="product-comments__empty">
+        <p>Поки що немає відгуків. Будьте першим, хто залишить відгук!</p>
+      </div>
+
+      <div *ngIf="comments.length > 0" class="product-comments__list">
+        <div *ngFor="let comment of comments" class="product-comments__item">
+          <div class="product-comments__author">
+            <strong>{{ comment.author }}</strong>
+            <span *ngIf="comment.createdAt" class="product-comments__date">
+              {{ comment.createdAt | date:'medium' }}
+            </span>
+          </div>
+          <div class="product-comments__content">
+            {{ comment.content }}
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div> 
