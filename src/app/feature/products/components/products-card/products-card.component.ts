@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { Product, ProductImage } from '../../models/product-model';
 import { TruncateNumberPipe } from "../../../../shared/pipes/truncate-number.pipe";
@@ -7,7 +8,8 @@ import { Router } from '@angular/router';
   selector: 'app-products-card',
   templateUrl: './products-card.component.html',
   styleUrls: ['./products-card.component.scss'],
-  imports: [TruncateNumberPipe]
+  standalone: true,
+  imports: [CommonModule, TruncateNumberPipe]
 })
 export class ProductsCardComponent implements OnInit {
   private router = inject(Router);
@@ -19,7 +21,7 @@ export class ProductsCardComponent implements OnInit {
 
   getImageName(image: ProductImage | undefined) {
     if (!image) {
-      return 'assets/images/placeholder.png';
+      return 'assets/images/product-image.png'; // Default to Figma image
     }
     
     // Check if the link starts with http - if so use it directly
