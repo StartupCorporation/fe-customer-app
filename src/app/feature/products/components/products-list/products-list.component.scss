@@ -26,6 +26,14 @@
         padding: 15px 10px;
         overflow: hidden;
         position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background-color: #fff;
+        
+        &:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index:9999;
+        }
         
         // Add right border to all except last in row
         &:not(:nth-child(4n)) {
