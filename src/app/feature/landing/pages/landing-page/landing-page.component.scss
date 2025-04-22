@@ -1,7 +1,13 @@
+
+
 .landing-page {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+
+    &__welcome {
+        border-bottom: 1px solid rgba(205, 204, 206, 0.71);
+    }
 
     &__container {
         flex: 1;

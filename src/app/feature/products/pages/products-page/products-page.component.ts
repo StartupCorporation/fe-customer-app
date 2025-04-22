@@ -320,8 +320,8 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       const hasUserPriceFilter = params['priceRange.min'] !== undefined || params['priceRange.max'] !== undefined;
       
       // Round down min and up max for cleaner UI
-      const roundedMinPrice = Math.floor(minPrice / 100) * 100;
-      const roundedMaxPrice = Math.ceil(maxPrice / 100) * 100;
+      const roundedMinPrice = Math.floor(minPrice);
+      const roundedMaxPrice = Math.ceil(maxPrice);
       
       // Only update the slider range constraints if this is the initial load 
       // or if there's no active price filter from the user
@@ -456,7 +456,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
 
     // Add pagination - always use page from pagination filters but fixed size of 20
     if (this.paginationFilters.page) {
-      params.page = this.paginationFilters.page;
+      params.page = this.paginationFilters.page - 1;
     }
     
     // Always use fixed size of 20
@@ -558,8 +558,8 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       }
 
       // Round down min and up max for cleaner UI
-      const roundedMinPrice = Math.floor(minPrice / 100) * 100;
-      const roundedMaxPrice = Math.ceil(maxPrice / 100) * 100;
+      const roundedMinPrice = Math.floor(minPrice);
+      const roundedMaxPrice = Math.ceil(maxPrice);
       
       // Set the range constraints to reflect the full range of available products
       rangeFilter.minRange = roundedMinPrice;
