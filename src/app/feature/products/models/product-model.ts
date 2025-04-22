@@ -1,6 +1,7 @@
 export interface ProductImage {
   id: string;
   link: string;
+  order?: number;
 }
 
 export interface AttributeDefinition {

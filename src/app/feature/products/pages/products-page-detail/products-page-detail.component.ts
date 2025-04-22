@@ -6,7 +6,7 @@ import { ImageSliderComponent } from "../../../../shared/components/image-slider
 import { ProductsDetailDescriptionComponent } from "../../components/products-detail-description/products-detail-description.component";
 import { ProductsService } from '../../services/products.service';
 import { Product } from '../../models/product-model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject, finalize, takeUntil } from 'rxjs';
 import { CartService } from 'src/app/core/services/cart.service';
 import { MessageService } from 'src/app/core/services/message.service';
@@ -15,6 +15,8 @@ import { MessageTypeEnum } from 'src/app/shared/enums/message-type-enum';
 import { ToastComponent } from 'src/app/shared/components/toast/toast.component';
 import { SafeArrayPipe } from "../../../../shared/pipes/safeArray.pipe";
 import { ProductsCharacteristicsTableComponent } from "../../components/products-characteristics-table/products-characteristics-table.component";
+import { ProductDetailCommentsComponent } from "../../components/product-detail-comments/product-detail-comments.component";
+import { IconComponent } from "../../../../shared/components/icon/icon.component";
 
 @Component({
   selector: 'app-products-page-detail',
@@ -26,10 +28,12 @@ import { ProductsCharacteristicsTableComponent } from "../../components/products
     ImageSliderComponent,
     ProductsDetailDescriptionComponent,
     ProductsCharacteristicsTableComponent,
+    ProductDetailCommentsComponent,
     ToastComponent,
     NgIf,
     AsyncPipe,
-    SafeArrayPipe
+    SafeArrayPipe,
+    IconComponent
   ],
   standalone: true
 })
@@ -39,6 +43,7 @@ export class ProductsPageDetailComponent implements OnInit, OnDestroy {
   private activatedRoute = inject(ActivatedRoute);
   private cartService = inject(CartService);
   private messageService = inject(MessageService);
+  private router = inject(Router);
 
   product = new Product();
   messages$: Observable<MessageModel[]>;
@@ -51,6 +56,10 @@ export class ProductsPageDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadProductDetails();
+  }
+
+  navigateToProductsList(): void {
+    this.router.navigate(['/products']);
   }
 
   private loadProductDetails() {
