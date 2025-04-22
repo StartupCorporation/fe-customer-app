@@ -17,6 +17,23 @@ export class ProductsCardComponent implements OnInit {
   ngOnInit() {
   }
 
+  getFirstImageByOrder(): ProductImage | undefined {
+    if (!this.product.images || this.product.images.length === 0) {
+      return undefined;
+    }
+    
+    // Sort images by order (if order is defined)
+    const sortedImages = [...this.product.images].sort((a, b) => {
+      // If order is undefined, treat it as highest order
+      const orderA = a.order !== undefined ? a.order : Number.MAX_SAFE_INTEGER;
+      const orderB = b.order !== undefined ? b.order : Number.MAX_SAFE_INTEGER;
+      
+      return orderA - orderB;
+    });
+    
+    return sortedImages[0];
+  }
+
   getImageName(image: ProductImage | undefined) {
     if (!image) {
       return 'assets/images/placeholder.png';

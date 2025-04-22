@@ -3,7 +3,7 @@
     <div class="products-card__front">
       <div class="products-card__image-wrap">
         <img
-          [src]="getImageName(product.images[0])"
+          [src]="getImageName(getFirstImageByOrder())"
           [alt]="product.name"
           class="products-card__icon"
         />
