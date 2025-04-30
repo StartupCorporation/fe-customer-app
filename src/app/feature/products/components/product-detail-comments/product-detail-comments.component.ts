@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, LOCALE_ID, OnInit, inject } from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommentService } from '../../services/comment.service';
 import { Comment } from '../../models/comment.model';
@@ -7,6 +7,9 @@ import { Observable, Subject, finalize, takeUntil } from 'rxjs';
 import { MessageService } from 'src/app/core/services/message.service';
 import { MessageModel } from 'src/app/shared/models/message-model';
 import { MessageTypeEnum } from 'src/app/shared/enums/message-type-enum';
+import localeUk from '@angular/common/locales/uk';
+
+registerLocaleData(localeUk);
 
 @Component({
   selector: 'app-product-detail-comments',
@@ -16,7 +19,9 @@ import { MessageTypeEnum } from 'src/app/shared/enums/message-type-enum';
   imports: [
     CommonModule,
     ReactiveFormsModule
-  ]
+  ],
+  providers: [{ provide: LOCALE_ID, useValue: 'uk' }],
+
 })
 export class ProductDetailCommentsComponent implements OnInit {
   @Input() productId!: string;

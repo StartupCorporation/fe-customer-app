@@ -57,7 +57,7 @@
     </div>
     <div class="popup-footer">
       <div class="cart-summary" *ngIf="cartItems$ | async as items">
-        <span>Total:</span>
+        <span>Сума:</span>
         <strong>{{
           getTotal(items) | truncateNumber
         }}</strong>
