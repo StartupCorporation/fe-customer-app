@@ -35,16 +35,16 @@
             z-index:9999;
         }
         
-        // Add right border to all except last in row
-        &:not(:nth-child(4n)) {
-            border-right: 1px solid #8D8BA7B2;
-        }
+        // // Add right border to all except last in row
+        // &:not(:nth-child(4n)) {
+        //     border-right: 1px solid #8D8BA7B2;
+        // }
         
-        // Add bottom border to all cards except those in the last row
-        // For a grid with 10 items total (4 per row), the last row starts with item 9
-        &:not(:nth-child(n+9)) {
-            border-bottom: 1px solid #8D8BA7B2;
-        }
+        // // Add bottom border to all cards except those in the last row
+        // // For a grid with 10 items total (4 per row), the last row starts with item 9
+        // &:not(:nth-child(n+9)) {
+        //     border-bottom: 1px solid #8D8BA7B2;
+        // }
         
         // Responsive borders
         @media (max-width: 1200px) {
