@@ -148,7 +148,7 @@ export class ProductsOrderPopupComponent implements OnInit {
           this.closePopup.emit();
         },
         error: (error) => {
-          console.error('Error submitting order:', error);
+          console.error('Помилка при створенні замовлення:', error);
 
           // Show error message
           this.messageService.addMessage({

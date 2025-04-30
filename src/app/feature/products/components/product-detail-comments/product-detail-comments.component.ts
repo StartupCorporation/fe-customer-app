@@ -60,7 +60,7 @@ export class ProductDetailCommentsComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error loading comments:', error);
-          this.showErrorMessage('Failed to load comments');
+          this.showErrorMessage('Виникла помилка при завантаженні коментарів');
         }
       });
   }
@@ -89,14 +89,14 @@ export class ProductDetailCommentsComponent implements OnInit {
           // Add the new comment to the list optimistically
           this.comments = [newComment, ...this.comments];
           this.commentForm.reset();
-          this.showSuccessMessage('Comment submitted successfully');
+          this.showSuccessMessage('Відгук створено успішно');
           
           // Refresh the comments list from the server
           setTimeout(() => this.loadComments(), 500);
         },
         error: (error) => {
           // Extract the error detail if available, otherwise use a generic message
-          const errorMessage = error.error?.detail || error.detail || 'Failed to submit comment';
+          const errorMessage = error.error?.detail || error.detail || 'Виникла помилка при створенні коментара';
           this.showErrorMessage(errorMessage);
         }
       });

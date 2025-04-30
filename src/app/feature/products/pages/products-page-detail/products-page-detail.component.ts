@@ -65,7 +65,7 @@ export class ProductsPageDetailComponent implements OnInit, OnDestroy {
   private loadProductDetails() {
     const productId = String(this.activatedRoute.snapshot.params['id']);
     if (!productId) {
-      this.handleError('Product ID is missing');
+      this.handleError('ID товару не знайдено');
       return;
     }
 
@@ -78,13 +78,13 @@ export class ProductsPageDetailComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: (product) => {
         if (!product || !product.id) {
-          this.handleError('Product not found');
+          this.handleError('Товар не знайдено');
           return;
         }
         this.product = product;
       },
       error: (error) => {
-        this.handleError('Failed to load product details');
+        this.handleError('Помилка при запиті деталей товару');
         console.error('Error loading product:', error);
       }
     });
