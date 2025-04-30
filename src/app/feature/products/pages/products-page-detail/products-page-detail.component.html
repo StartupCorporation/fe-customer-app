@@ -39,7 +39,7 @@
         <div class="products-detail__image">
           <app-image-slider
             *ngIf="product.images && product.images.length > 0"
-            [images]="product.images"
+            [images]="getImagesByOrder()"
           ></app-image-slider>
           <div
             *ngIf="!product.images || product.images.length === 0"

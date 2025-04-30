@@ -5,7 +5,7 @@ import { LandingWelcomeWindowComponent } from "../../../landing/components/landi
 import { ImageSliderComponent } from "../../../../shared/components/image-slider/image-slider.component";
 import { ProductsDetailDescriptionComponent } from "../../components/products-detail-description/products-detail-description.component";
 import { ProductsService } from '../../services/products.service';
-import { Product } from '../../models/product-model';
+import { Product, ProductImage } from '../../models/product-model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject, finalize, takeUntil } from 'rxjs';
 import { CartService } from 'src/app/core/services/cart.service';
@@ -99,6 +99,23 @@ export class ProductsPageDetailComponent implements OnInit, OnDestroy {
     );
     this.messageService.addMessage(errorMessage);
   }
+
+    getImagesByOrder(): ProductImage[] {
+      if (!this.product.images || this.product.images.length === 0) {
+        return [];
+      }
+      
+      // Sort images by order (if order is defined)
+      const sortedImages = [...this.product.images].sort((a, b) => {
+        // If order is undefined, treat it as highest order
+        const orderA = a.order !== undefined ? a.order : Number.MAX_SAFE_INTEGER;
+        const orderB = b.order !== undefined ? b.order : Number.MAX_SAFE_INTEGER;
+        
+        return orderA - orderB;
+      });
+      
+      return sortedImages;
+    }
 
   addToCart(product: Product): void {
     this.cartService.increment({
