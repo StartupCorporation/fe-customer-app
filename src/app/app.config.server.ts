@@ -18,6 +18,9 @@ export function transferStateFactory(transferState: TransferState) {
     const envVars = {
       API_URL: process.env['API_URL'] || '',
       API_ORDER_URL: process.env['API_ORDER_URL'] || '',
+      API_COMMENTS_URL: process.env['API_COMMENTS_URL'] || '',
+      API_CALLBACK_URL: process.env['API_CALLBACK_URL'] || '',
+      IMAGES_CONTAINER_URL: process.env['IMAGES_CONTAINER_URL'] || '',
       USE_MOCKS: process.env['USE_MOCKS'] || '',
     };
     transferState.set(envStateKey, envVars);

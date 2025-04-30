@@ -13,6 +13,8 @@ export class ConsultingService extends ApiService {
 
   constructor(httpClient: HttpClient, envService: EnvironmentService) {
     super(httpClient, envService);
+    const consultingApiUrl = this.envService.getEnvVar('API_CALLBACK_URL')!;
+    this.setApiUrl(consultingApiUrl);
   }
 
   createConsultingRequest(consultingModel: ConsultingModel) { 
