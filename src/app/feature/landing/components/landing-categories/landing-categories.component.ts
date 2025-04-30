@@ -11,6 +11,7 @@ import { SvgIconComponent } from 'src/app/shared/components/svg-icon/svg-icon.co
 import { CarouselComponent } from '../../../../shared/components/carousel/carousel.component';
 import { SafeArrayPipe } from 'src/app/shared/pipes/safeArray.pipe';
 import { Router } from '@angular/router';
+import { ImageService } from 'src/app/core/services/image.service';
 
 @Component({
   selector: 'app-landing-categories',
@@ -20,6 +21,7 @@ import { Router } from '@angular/router';
 })
 export class LandingCategoriesComponent implements OnInit {
   private router = inject(Router);
+  private imageService = inject(ImageService);
 
   $categories!: Observable<CategoryModel[]>;
   flippedCards: { [key: string]: boolean } = {};
@@ -52,7 +54,8 @@ export class LandingCategoriesComponent implements OnInit {
   }
 
   getImageName(name: string) {
-    return `http://localhost:9999/images/${name}`;
+    const imageContainerLinkUrl = `${this.imageService.getImageContainerUrl()}/${name}`
+    return imageContainerLinkUrl;
   }
 
   navigateToCategory(categoryIds: string) {
