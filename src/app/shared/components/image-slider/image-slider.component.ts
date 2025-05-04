@@ -33,7 +33,6 @@ export class ImageSliderComponent implements OnChanges {
         image: this.getFullImageUrl(img.link),
         description: 'Product Image'
       }));
-      this.currentIndex = 0;
       this.preloadImages();
     } else {
       this.slides = [];
