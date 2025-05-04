@@ -29,15 +29,15 @@ export class TableProductsPaginationComponent {
   }
 
   get isPreviousPageDisabled(): boolean {
-    return this.pagination.page <= 1;
+    return this.pagination.page + 1 <= 1;
   }
 
   get isNextPageDisabled(): boolean {
-    return this.pagination.page >= this.pagesCount.length;
+    return this.pagination.page + 1 >= this.pagesCount.length;
   }
 
   previousPage() {
-    if (this.pagination.page > 1) {
+    if (this.pagination.page + 1 > 1) {
       this.pagination.page--;
       this.paginationChanged.emit();
     }
@@ -51,8 +51,8 @@ export class TableProductsPaginationComponent {
   }
 
   goToPage(page: number) {
-    if (page !== this.pagination.page) {
-      this.pagination.page = page;
+    if (page !== this.pagination.page + 1) {
+      this.pagination.page = page - 1;
       this.paginationChanged.emit();
     }
   }

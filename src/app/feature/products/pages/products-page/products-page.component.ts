@@ -192,8 +192,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
           
           // Update pagination info from response, but keep size fixed at 20
           this.paginationFilters.totalElements = response.totalElements || 0;
-          this.paginationFilters.page = response.number || 0;
-          // Do not update size from response - always keep it at 20
+          //this.paginationFilters.page = response.number || 0;
           
           // Extract products from response
           if (Array.isArray(response.content)) {
@@ -493,7 +492,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
 
     // Add pagination - always use page from pagination filters but fixed size of 20
     if (this.paginationFilters.page) {
-      params.page = this.paginationFilters.page - 1;
+      params.page = this.paginationFilters.page;
     }
     
     // Always use fixed size of 20
