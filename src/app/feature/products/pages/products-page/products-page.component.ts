@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first, Subject, switchMap, takeUntil, tap, map, distinctUntilChanged, debounceTime, skip, Observable, of, catchError, finalize } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -56,7 +56,8 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private productsService: ProductsService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   categoryFilters: any[] = [];
@@ -98,6 +99,14 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     return isCategoryDeselected;
   }
 
+  // Check if this is a new category being selected or changed
+  private isCategoryBeingSelected(updatedFilter: GenericFilter): boolean {
+    // Check if the filter is a category filter and it's being turned on
+    return updatedFilter.type === FilterType.CHECKBOX && 
+           'value' in updatedFilter && 
+           updatedFilter.value === true;
+  }
+
   // We'll create a products$ observable that handles duplicate requests
   products$ = this.productsSubject.pipe(
     takeUntil(this.destroy$),
@@ -112,9 +121,12 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       // Check if this is a category being deselected
       const isCategoryDeselected = this.isCategoryBeingDeselected(queryObj);
       
+      // Check if this is a new category being selected
+      const isCategorySelected = this.isCategoryNewlySelected(queryObj);
+      
       // Deduplicate identical queries
       const queryString = JSON.stringify(queryObj);
-      if (queryString === this.lastQueryString && !this.isInitialLoad && !forceRefresh && !isCategoryDeselected) {
+      if (queryString === this.lastQueryString && !this.isInitialLoad && !forceRefresh && !isCategoryDeselected && !isCategorySelected) {
         return of(this.products); // Return current products
       }
       
@@ -124,7 +136,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       
       // If user deselected a category, reset price filters to global range
       // and remove price range from URL
-      if (isCategoryDeselected) {
+      if (isCategoryDeselected || isCategorySelected) {
         // Create a clean query without price range filters
         const cleanQuery = { ...queryObj };
         delete cleanQuery['priceRange.min'];
@@ -202,6 +214,10 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           this.products = [];
           return of([]);
+        }),
+        finalize(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges(); // Force change detection
         })
       );
     })
@@ -231,8 +247,13 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((categories: CategoryModel[]) => {
+        // Sort categories alphabetically by name
+        const sortedCategories = [...categories].sort((a, b) => 
+          a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+        );
+        
         // Convert each category to a checkbox filter
-        this.categoryFilters = categories.map((cat) => ({
+        this.categoryFilters = sortedCategories.map((cat) => ({
           label: cat.name,
           type: FilterType.CHECKBOX,
           value: false,
@@ -354,6 +375,9 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
    * We merge this updated filter, then rebuild the query params and navigate.
    */
   onFilterChanged(updatedFilter: GenericFilter): void {
+    // Check if this is a category being selected
+    const isCategorySelected = this.isCategoryBeingSelected(updatedFilter);
+    
     // 1) Determine which array holds this filter (productFilters or categoryFilters)
     let found = this.productFilters.find((f) => f.label === updatedFilter.label);
     if (found) {
@@ -364,6 +388,11 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       if (found) {
         Object.assign(found, updatedFilter);
       }
+    }
+
+    // If a category is selected, reset the price filter to global range
+    if (isCategorySelected) {
+      this.resetPriceFilterToGlobalRange(false); // Don't force refresh here
     }
 
     // 2) Build a new queryParams object from the updated filters
@@ -447,8 +476,16 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     // Add product filters
     this.productFilters.forEach((filter) => {
       if (filter.type === FilterType.RANGE && filter.value) {
-        params[`priceRange.min`] = filter.value[0];
-        params[`priceRange.max`] = filter.value[1];
+        // Skip adding price range filters for just selected categories
+        // to ensure we get the full range of products in the category
+        const categoryJustSelected = selectedCategories.length === 1 && 
+                                    this.lastQueryString && 
+                                    !JSON.parse(this.lastQueryString)?.categoriesIds?.includes(selectedCategories[0]);
+        
+        if (!categoryJustSelected) {
+          params[`priceRange.min`] = filter.value[0];
+          params[`priceRange.max`] = filter.value[1];
+        }
       } else if (filter.type === FilterType.STRING && filter.value) {
         params[filter.id] = filter.value;
       }
@@ -592,7 +629,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         // Reset to the global range
         rangeFilter.minRange = this.globalPriceRange.min;
         rangeFilter.maxRange = this.globalPriceRange.max;
-        rangeFilter.value = [this.globalPriceRange.min, this.globalPriceRange.max];
+        rangeFilter.value = [this.globalPriceRange.min, this.globalPriceRange.max];        
       } else {
         // If no valid global range exists yet (empty category case), 
         // use default values and force a refresh
@@ -608,5 +645,25 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  // Helper method to check if a category is newly selected
+  private isCategoryNewlySelected(queryObj: any): boolean {
+    if (!this.lastQueryString) return false;
+    
+    const prevQueryObj = JSON.parse(this.lastQueryString || '{}');
+    
+    // Check if categories changed
+    const prevCategoriesIds = prevQueryObj.categoriesIds || [];
+    const currCategoriesIds = queryObj.categoriesIds || [];
+    
+    // If there's a new category ID that wasn't in the previous query
+    for (const categoryId of currCategoriesIds) {
+      if (!prevCategoriesIds.includes(categoryId)) {
+        return true;
+      }
+    }
+    
+    return false;
   }
 }
