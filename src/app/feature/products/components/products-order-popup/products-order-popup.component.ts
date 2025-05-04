@@ -136,7 +136,7 @@ export class ProductsOrderPopupComponent implements OnInit {
           this.messageService.addMessage({
             status: 200,
             message: [
-              "Ваше замовлення успішно відправлено! Ми зв'яжемося з вами найближчим часом.",
+              "Ваше замовлення успішно створено! Ми зв'яжемося з вами найближчим часом.",
             ],
             type: MessageTypeEnum.Success,
           });

@@ -18,7 +18,7 @@ export class ConsultingService extends ApiService {
   }
 
   createConsultingRequest(consultingModel: ConsultingModel) { 
-    const url = `${this.urlPath}`;
+    const url = `${this.urlPath}/`;
     return this.post<ConsultingModel,ConsultingModel>(url, consultingModel).pipe(
       map((response) => {
         const company = ConsultingModel.fromJson(response);
