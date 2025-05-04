@@ -21,6 +21,11 @@ export class ConsultingService extends ApiService {
     const url = `${this.urlPath}/`;
     return this.post<ConsultingModel,ConsultingModel>(url, consultingModel).pipe(
       map((response) => {
+        // Handle null response from API
+        if (!response) {
+          return consultingModel; // Return the original model if API returns null
+        }
+        
         const consulting = ConsultingModel.fromJson(response);
         return consulting;
       }) 
