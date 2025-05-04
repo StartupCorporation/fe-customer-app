@@ -18,7 +18,7 @@
           <p>Ви поки що не додали нічого в корзину</p>
         </div>
         <div class="cart-item" *ngFor="let item of items; trackBy: trackByFn">
-          <img class="item-image" [src]="item.imageUrl" [alt]="item.name" />
+          <img class="item-image" [src]="getImageName(item.imageUrl)" [alt]="item.name" />
           <div class="cart-item-info">
             <div>{{ item.name }}</div>
             <div>{{ item.description }}</div>

@@ -1,24 +1,38 @@
 import { AsyncPipe, CurrencyPipe, NgFor, NgIf } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnInit, OnDestroy, Output, HostListener, ChangeDetectionStrategy, ViewContainerRef } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  OnDestroy,
+  Output,
+  HostListener,
+  ChangeDetectionStrategy,
+  ViewContainerRef,
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import { CartService } from 'src/app/core/services/cart.service';
 import { CartItem } from 'src/app/core/services/modal/cart.interface';
 import { TruncateNumberPipe } from '../../pipes/truncate-number.pipe';
 import { ProductsOrderPopupComponent } from 'src/app/feature/products/components/products-order-popup/products-order-popup.component';
+import { ImageService } from 'src/app/core/services/image.service';
 
 @Component({
   selector: 'app-popup',
   templateUrl: './popup.component.html',
   styleUrls: ['./popup.component.scss'],
   imports: [NgFor, NgIf, AsyncPipe, TruncateNumberPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopupComponent implements OnInit, OnDestroy {
   private cartService = inject(CartService);
   private viewContainerRef = inject(ViewContainerRef);
+  private imageService = inject(ImageService);
+
   @Input() popupTitle = 'Корзина';
   @Output() popupCloseEvent = new EventEmitter();
-  
+
   cartItems$: Observable<CartItem[]> = this.cartService.cartItems$;
 
   trackByFn(index: number, item: CartItem): string {
@@ -32,7 +46,7 @@ export class PopupComponent implements OnInit, OnDestroy {
   updateQuantity(item: CartItem, event: Event): void {
     const input = event.target as HTMLInputElement;
     const newQuantity = parseInt(input.value);
-    
+
     if (newQuantity > 0) {
       this.cartService.updateQuantity(item, newQuantity);
     } else {
@@ -42,9 +56,18 @@ export class PopupComponent implements OnInit, OnDestroy {
     }
   }
 
+  getImageName(imageURL: string) {
+    const imageContainerLinkUrl = `${this.imageService.getImageContainerUrl()}/${imageURL}`;
+
+    return imageContainerLinkUrl;
+  }
+
   @HostListener('wheel', ['$event'])
   onWheel(event: WheelEvent) {
-    if (event.target instanceof Element && event.target.closest('.modal-overlay')) {
+    if (
+      event.target instanceof Element &&
+      event.target.closest('.modal-overlay')
+    ) {
       event.preventDefault();
       event.stopPropagation();
     }
@@ -52,7 +75,10 @@ export class PopupComponent implements OnInit, OnDestroy {
 
   @HostListener('touchmove', ['$event'])
   onTouchMove(event: TouchEvent) {
-    if (event.target instanceof Element && event.target.closest('.modal-overlay')) {
+    if (
+      event.target instanceof Element &&
+      event.target.closest('.modal-overlay')
+    ) {
       event.preventDefault();
       event.stopPropagation();
     }
@@ -94,14 +120,16 @@ export class PopupComponent implements OnInit, OnDestroy {
     const orderPopup = document.createElement('div');
     orderPopup.id = 'order-popup-container';
     document.body.appendChild(orderPopup);
-    
-    const orderPopupComponentRef = this.viewContainerRef.createComponent(ProductsOrderPopupComponent);
+
+    const orderPopupComponentRef = this.viewContainerRef.createComponent(
+      ProductsOrderPopupComponent
+    );
     orderPopupComponentRef.instance.closePopup.subscribe(() => {
       // Remove the component when closed
       orderPopupComponentRef.destroy();
       document.body.removeChild(orderPopup);
     });
-    
+
     // Append the component's element to our container
     orderPopup.appendChild(orderPopupComponentRef.location.nativeElement);
   }
