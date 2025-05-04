@@ -36,9 +36,9 @@ export class LandingConsultingComponent implements OnInit {
 
   private initializeForm(): void {
     this.contactForm = this.fb.group({
-      customer: this.fb.group({
+      personalInformation: this.fb.group({
         name: ['', Validators.required],
-        phone: [
+        phoneNumber: [
           '',
           {
             validators: [
@@ -47,26 +47,31 @@ export class LandingConsultingComponent implements OnInit {
             ],
           }
         ],
+        email: ['', [Validators.required, Validators.email]]
       }),
-      comment: [''],
-      messageMe: [false],
+      customerNote: [''],
+      messageCustomer: [false],
     });
   }
 
   get nameControl(): FormControl {
-    return this.getControl('customer.name');
+    return this.getControl('personalInformation.name');
   }
 
   get phoneControl(): FormControl {
-    return this.getControl('customer.phone');
+    return this.getControl('personalInformation.phoneNumber');
+  }
+  
+  get emailControl(): FormControl {
+    return this.getControl('personalInformation.email');
   }
 
   get commentControl(): FormControl {
-    return this.getControl('comment');
+    return this.getControl('customerNote');
   }
 
   get messageMeControl(): FormControl {
-    return this.getControl('messageMe');
+    return this.getControl('messageCustomer');
   }
 
   onPhoneInput(event: Event): void {
@@ -83,7 +88,11 @@ export class LandingConsultingComponent implements OnInit {
     }
 
     const formValue = { ...this.contactForm.value };
-    formValue.customer.phone = formValue.customer.phone.replace(/\s+/g, '');
+    formValue.personalInformation.phoneNumber = formValue.personalInformation.phoneNumber.replace(/\s+/g, '');
+    
+    if (formValue.personalInformation.phoneNumber && !formValue.personalInformation.phoneNumber.startsWith('+')) {
+      formValue.personalInformation.phoneNumber = '+' + formValue.personalInformation.phoneNumber;
+    }
 
     const consultingModel = ConsultingModel.fromJson(formValue);
 
@@ -124,12 +133,13 @@ export class LandingConsultingComponent implements OnInit {
 
   private resetForm(): void {
     this.contactForm.reset({
-      customer: {
+      personalInformation: {
         name: '',
-        phone: '',
+        phoneNumber: '',
+        email: ''
       },
-      comment: '',
-      messageMe: false,
+      customerNote: '',
+      messageCustomer: false,
     });
   }
 

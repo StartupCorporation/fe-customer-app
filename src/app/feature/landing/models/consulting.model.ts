@@ -1,15 +1,15 @@
 export class ConsultingModel {
   constructor(
-    public customer: Customer = { name: '', phone: '' },
-    public comment = '',
-    public messageMe = false
+    public personalInformation: PersonalInformation = { name: '', phoneNumber: '', email: '' },
+    public customerNote = '',
+    public messageCustomer = false
   ) {}
 
   public static fromJson(json: Partial<ConsultingModel>): ConsultingModel {
     return new ConsultingModel(
-      json.customer ?? { name: '', phone: '' },
-      json.comment ?? '',
-      json.messageMe ?? false
+      json.personalInformation ?? { name: '', phoneNumber: '', email: '' },
+      json.customerNote ?? '',
+      json.messageCustomer ?? false
     );
   }
 
@@ -19,14 +19,15 @@ export class ConsultingModel {
 
   public toJson(): Partial<ConsultingModel> {
     return {
-      customer: this.customer,
-      comment: this.comment,
-      messageMe: this.messageMe
+      personalInformation: this.personalInformation,
+      customerNote: this.customerNote,
+      messageCustomer: this.messageCustomer
     };
   }
 }
 
-export interface Customer {
+export interface PersonalInformation {
   name: string;
-  phone: string;
+  phoneNumber: string;
+  email: string;
 }

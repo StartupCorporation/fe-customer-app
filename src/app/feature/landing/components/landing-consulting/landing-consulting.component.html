@@ -1,5 +1,5 @@
 <div class="contact-form-container">
-  <h2>Зв’яжіться з нами</h2>
+  <h2>Зв'яжіться з нами</h2>
   <p>
     Швидкий спосіб замовити те, що Вам потрібно або <br />
     отримати консультацію з продукції нашого сайту.
@@ -9,12 +9,12 @@
     <div class="form-row">
       <!-- Name Field -->
       <div class="input-group">
-        <input type="text" placeholder="Ім’я*" [formControl]="nameControl" />
+        <input type="text" placeholder="Ім'я*" [formControl]="nameControl" />
         <div
           class="error-message"
           *ngIf="nameControl.touched && nameControl.invalid && myform.submitted"
         >
-          Введіть Ім’я
+          Введіть Ім'я
         </div>
       </div>
 
@@ -35,7 +35,24 @@
       </div>
     </div>
 
-    <div class="form-row  form-row--full-width">
+    <div class="form-row">
+      <!-- Email Field -->
+      <div class="input-group input-group--wide">
+        <input
+          type="email"
+          placeholder="Email*"
+          [formControl]="emailControl"
+        />
+        <div
+          class="error-message"
+          *ngIf="emailControl.touched && emailControl.invalid && myform.submitted"
+        >
+          Введіть коректну електронну пошту
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row form-row--full-width">
       <!-- Comment Field -->
       <div class="input-group input-group--wide">
         <textarea 
@@ -48,7 +65,7 @@
 
     <div class="form-checkbox">
       <label class="container">
-        Зв’яжіться зі мною у Telegram або Viber
+        Зв'яжіться зі мною у Telegram або Viber
         <input type="checkbox" [formControl]="messageMeControl" />
         <span class="checkmark"></span>
       </label>
@@ -58,7 +75,7 @@
       type="submit"
       class="button button-form"
     >
-      Зв’яжіться з нами
+      Зв'яжіться з нами
     </button>
   </form>
 </div>
