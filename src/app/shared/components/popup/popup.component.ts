@@ -47,8 +47,12 @@ export class PopupComponent implements OnInit, OnDestroy {
     const input = event.target as HTMLInputElement;
     const newQuantity = parseInt(input.value);
 
-    if (newQuantity > 0) {
+    if (newQuantity > 0 && newQuantity <= 1000) {
       this.cartService.updateQuantity(item, newQuantity);
+    } else if (newQuantity > 1000) {
+      // Cap at maximum value
+      input.value = '1000';
+      this.cartService.updateQuantity(item, 1000);
     } else {
       // Reset to 1 if invalid value
       input.value = '1';
@@ -99,7 +103,9 @@ export class PopupComponent implements OnInit, OnDestroy {
   }
 
   increment(item: CartItem): void {
-    this.cartService.increment(item);
+    if (item.quantity < 1000) {
+      this.cartService.increment(item);
+    }
   }
 
   decrement(item: CartItem): void {
